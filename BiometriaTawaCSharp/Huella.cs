@@ -124,8 +124,8 @@ namespace Suprema
         }
         private void DrawCapturedImage(UFScanner Scanner)
         {
-            System.Drawing.Graphics graphics = this.pbImageFrame.CreateGraphics();
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, this.pbImageFrame.Width, this.pbImageFrame.Height);
+            Graphics graphics = this.pbImageFrame.CreateGraphics();
+            Rectangle rect = new Rectangle(0, 0, this.pbImageFrame.Width, this.pbImageFrame.Height);
             try
             {
                 Scanner.DrawCaptureImageBuffer(graphics, rect, false);
@@ -222,7 +222,7 @@ namespace Suprema
         private bool ExtractTemplate(byte[] Template, out int TemplateSize)
         {
             this.m_Scanner.ClearCaptureImageBuffer();
-            this.tbxMessage.AppendText("Place Finger\r\n");
+            this.tbxMessage.AppendText("Colocar dedo\r\n");
             TemplateSize = 0;
             UFS_STATUS uFS_STATUS;
             while (true)
@@ -239,13 +239,13 @@ namespace Suprema
                     goto IL_A4;
                 }
                 UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFScanner Extract: " + this.m_strError + "\r\n");
+                this.tbxMessage.AppendText("UFScanner Extracto: " + this.m_strError + "\r\n");
             }
             UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFScanner CaptureSingleImage: " + this.m_strError + "\r\n");
+            this.tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + this.m_strError + "\r\n");
             return false;
         IL_A4:
-            this.tbxMessage.AppendText("UFScanner Extract: OK\r\n");
+            this.tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
             return true;
         }
         private void btnEnroll_Click(object sender, EventArgs e)
@@ -256,17 +256,17 @@ namespace Suprema
             }
             this.DrawCapturedImage(this.m_Scanner);
             UserInfoForms userInfoForm = new UserInfoForms(false);
-            this.tbxMessage.AppendText("Input user data\r\n");
+            this.tbxMessage.AppendText("Ingrese data de usuario\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                this.tbxMessage.AppendText("User data input is cancelled by user\r\n");
+                this.tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
                 return;
             }
             UFD_STATUS uFD_STATUS = this.m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, this.m_Template1, this.m_Template1Size, null, 0, userInfoForm.Memo);
             if (uFD_STATUS != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFDatabase AddData: " + this.m_strError + "\r\n");
+                this.tbxMessage.AppendText("UFDatabase AgregarData: " + this.m_strError + "\r\n");
             }
             else
             {
@@ -306,10 +306,10 @@ namespace Suprema
             }
             if (num != -1)
             {
-                this.tbxMessage.AppendText("Identification succeed (Serial = " + array2[num] + ")\r\n");
+                this.tbxMessage.AppendText("Identificación exitos (Serial = " + array2[num] + ")\r\n");
                 return;
             }
-            this.tbxMessage.AppendText("Identification failed\r\n");
+            this.tbxMessage.AppendText("Identificación fallida\r\n");
         }
         private void btnDeleteAll_Click(object sender, EventArgs e)
         {
@@ -327,7 +327,7 @@ namespace Suprema
         {
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Select data\r\n");
+                this.tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
@@ -346,18 +346,18 @@ namespace Suprema
             UserInfoForms userInfoForm = new UserInfoForms(true);
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Select data\r\n");
+                this.tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             userInfoForm.UserID = this.lvDatabaseList.SelectedItems[0].SubItems[1].Text;
             userInfoForm.FingerIndex = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[2].Text);
             userInfoForm.Memo = this.lvDatabaseList.SelectedItems[0].SubItems[5].Text;
-            this.tbxMessage.AppendText("Update user data\r\n");
-            this.tbxMessage.AppendText("UserID and FingerIndex will not be updated\r\n");
+            this.tbxMessage.AppendText("Datos de usuario actualizado\r\n");
+            this.tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                this.tbxMessage.AppendText("User data input is cancelled by user\r\n");
+                this.tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
                 return;
             }
             UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, null, 0, null, 0, userInfoForm.Memo);
@@ -374,7 +374,7 @@ namespace Suprema
         {
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Select data\r\n");
+                this.tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
@@ -398,7 +398,7 @@ namespace Suprema
             byte[] array = new byte[1024];
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Select data\r\n");
+                this.tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int num = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
@@ -425,16 +425,16 @@ namespace Suprema
             }
             if (flag)
             {
-                this.tbxMessage.AppendText("Verification succeed (Serial = " + num + ")\r\n");
+                this.tbxMessage.AppendText("Verificación exitosa (Serial = " + num + ")\r\n");
                 return;
             }
-            this.tbxMessage.AppendText("Verification failed\r\n");
+            this.tbxMessage.AppendText("Verificación fallo\r\n");
         }
         private void bScanTemplateType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.m_Scanner == null)
             {
-                this.tbxMessage.AppendText("No Scanner Instance\r\n");
+                tbxMessage.AppendText("Sin instancias de escaner\r\n");
                 return;
             }
             switch (this.cbScanTemplateType.SelectedIndex)
@@ -488,362 +488,214 @@ namespace Suprema
             this.label1 = new Label();
             this.cbScanTemplateType = new ComboBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)this.pbImageFrame).BeginInit();
-            base.SuspendLayout();
+            ((ISupportInitialize)(pbImageFrame)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // btnInit
+            // 
             this.btnInit.AccessibleDescription = "";
-            this.btnInit.Location = new System.Drawing.Point(12, 12);
+            this.btnInit.Location = new Point(12, 12);
             this.btnInit.Name = "btnInit";
-            this.btnInit.Size = new System.Drawing.Size(84, 24);
+            this.btnInit.Size = new Size(84, 24);
             this.btnInit.TabIndex = 0;
-            this.btnInit.Text = "Init";
+            this.btnInit.Text = "Iniciar";
             this.btnInit.UseVisualStyleBackColor = true;
-            this.btnInit.Click += new EventHandler(this.btnInit_Click);
+            this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
+            // 
+            // btnUninit
+            // 
             this.btnUninit.AccessibleDescription = "";
-            this.btnUninit.Location = new System.Drawing.Point(12, 40);
+            this.btnUninit.Location = new Point(12, 40);
             this.btnUninit.Name = "btnUninit";
-            this.btnUninit.Size = new System.Drawing.Size(84, 24);
+            this.btnUninit.Size = new Size(84, 24);
             this.btnUninit.TabIndex = 1;
-            this.btnUninit.Text = "Uninit";
+            this.btnUninit.Text = "Desconectar";
             this.btnUninit.UseVisualStyleBackColor = true;
             this.btnUninit.Click += new EventHandler(this.btnUninit_Click);
+            // 
+            // btnEnroll
+            // 
             this.btnEnroll.AccessibleDescription = "";
-            this.btnEnroll.Location = new System.Drawing.Point(12, 84);
+            this.btnEnroll.Location = new Point(12, 84);
             this.btnEnroll.Name = "btnEnroll";
-            this.btnEnroll.Size = new System.Drawing.Size(84, 24);
+            this.btnEnroll.Size = new Size(84, 24);
             this.btnEnroll.TabIndex = 2;
-            this.btnEnroll.Text = "Enroll";
+            this.btnEnroll.Text = "Registrar";
             this.btnEnroll.UseVisualStyleBackColor = true;
-            this.btnEnroll.Click += new EventHandler(this.btnEnroll_Click);
+            this.btnEnroll.Click += new EventHandler(btnEnroll_Click);
+            // 
+            // btnIdentify
+            // 
             this.btnIdentify.AccessibleDescription = "";
-            this.btnIdentify.Location = new System.Drawing.Point(12, 112);
+            this.btnIdentify.Location = new Point(12, 112);
             this.btnIdentify.Name = "btnIdentify";
-            this.btnIdentify.Size = new System.Drawing.Size(84, 24);
+            this.btnIdentify.Size = new Size(84, 24);
             this.btnIdentify.TabIndex = 3;
-            this.btnIdentify.Text = "Identify";
+            this.btnIdentify.Text = "Identificar";
             this.btnIdentify.UseVisualStyleBackColor = true;
-            this.btnIdentify.Click += new EventHandler(this.btnIdentify_Click);
-            this.groupBox1.Controls.Add(this.btnSelectionVerify);
-            this.groupBox1.Controls.Add(this.btnSelectionUpdateTemplate);
-            this.groupBox1.Controls.Add(this.btnSelectionUpdateUserInfo);
-            this.groupBox1.Controls.Add(this.btnSelectionDelete);
-            this.groupBox1.Location = new System.Drawing.Point(12, 208);
+            this.btnIdentify.Click += new EventHandler(btnIdentify_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(btnSelectionVerify);
+            this.groupBox1.Controls.Add(btnSelectionUpdateTemplate);
+            this.groupBox1.Controls.Add(btnSelectionUpdateUserInfo);
+            this.groupBox1.Controls.Add(btnSelectionDelete);
+            this.groupBox1.Location = new Point(12, 208);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(84, 168);
+            this.groupBox1.Size = new Size(84, 168);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selection";
+            // 
+            // btnSelectionVerify
+            // 
             this.btnSelectionVerify.AccessibleDescription = "";
-            this.btnSelectionVerify.Location = new System.Drawing.Point(8, 136);
+            this.btnSelectionVerify.Location = new Point(8, 136);
             this.btnSelectionVerify.Name = "btnSelectionVerify";
-            this.btnSelectionVerify.Size = new System.Drawing.Size(68, 24);
+            this.btnSelectionVerify.Size = new Size(68, 24);
             this.btnSelectionVerify.TabIndex = 8;
-            this.btnSelectionVerify.Text = "Verify";
+            this.btnSelectionVerify.Text = "Verificar";
             this.btnSelectionVerify.UseVisualStyleBackColor = true;
-            this.btnSelectionVerify.Click += new EventHandler(this.btnSelectionVerify_Click);
+            this.btnSelectionVerify.Click += new EventHandler(btnSelectionVerify_Click);
+            // 
+            // btnSelectionUpdateTemplate
+            // 
             this.btnSelectionUpdateTemplate.AccessibleDescription = "";
-            this.btnSelectionUpdateTemplate.Location = new System.Drawing.Point(8, 92);
+            this.btnSelectionUpdateTemplate.Location = new Point(8, 92);
             this.btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
-            this.btnSelectionUpdateTemplate.Size = new System.Drawing.Size(68, 40);
+            this.btnSelectionUpdateTemplate.Size = new Size(68, 40);
             this.btnSelectionUpdateTemplate.TabIndex = 7;
-            this.btnSelectionUpdateTemplate.Text = "Update Template";
+            this.btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
             this.btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
             this.btnSelectionUpdateTemplate.Click += new EventHandler(this.btnSelectionUpdateTemplate_Click);
+            // 
+            // btnSelectionUpdateUserInfo
+            // 
             this.btnSelectionUpdateUserInfo.AccessibleDescription = "";
-            this.btnSelectionUpdateUserInfo.Location = new System.Drawing.Point(8, 48);
+            this.btnSelectionUpdateUserInfo.Location = new Point(8, 48);
             this.btnSelectionUpdateUserInfo.Name = "btnSelectionUpdateUserInfo";
-            this.btnSelectionUpdateUserInfo.Size = new System.Drawing.Size(68, 40);
+            this.btnSelectionUpdateUserInfo.Size = new Size(68, 40);
             this.btnSelectionUpdateUserInfo.TabIndex = 6;
-            this.btnSelectionUpdateUserInfo.Text = "Update User Info";
+            this.btnSelectionUpdateUserInfo.Text = "Actualizar Usuario";
             this.btnSelectionUpdateUserInfo.UseVisualStyleBackColor = true;
             this.btnSelectionUpdateUserInfo.Click += new EventHandler(this.btnSelectionUpdateUserInfo_Click);
+            // 
+            // btnSelectionDelete
+            // 
             this.btnSelectionDelete.AccessibleDescription = "";
-            this.btnSelectionDelete.Location = new System.Drawing.Point(8, 20);
+            this.btnSelectionDelete.Location = new Point(8, 20);
             this.btnSelectionDelete.Name = "btnSelectionDelete";
-            this.btnSelectionDelete.Size = new System.Drawing.Size(68, 24);
+            this.btnSelectionDelete.Size = new Size(68, 24);
             this.btnSelectionDelete.TabIndex = 5;
-            this.btnSelectionDelete.Text = "Delete";
+            this.btnSelectionDelete.Text = "Eliminar";
             this.btnSelectionDelete.UseVisualStyleBackColor = true;
-            this.btnSelectionDelete.Click += new EventHandler(this.btnSelectionDelete_Click);
+            this.btnSelectionDelete.Click += new EventHandler(btnSelectionDelete_Click);
+            // 
+            // btnDeleteAll
+            // 
             this.btnDeleteAll.AccessibleDescription = "";
-            this.btnDeleteAll.Location = new System.Drawing.Point(12, 152);
+            this.btnDeleteAll.Location = new Point(12, 152);
             this.btnDeleteAll.Name = "btnDeleteAll";
-            this.btnDeleteAll.Size = new System.Drawing.Size(84, 24);
+            this.btnDeleteAll.Size = new Size(84, 24);
             this.btnDeleteAll.TabIndex = 5;
-            this.btnDeleteAll.Text = "Delete All";
+            this.btnDeleteAll.Text = "Eliminar Todo";
             this.btnDeleteAll.UseVisualStyleBackColor = true;
             this.btnDeleteAll.Click += new EventHandler(this.btnDeleteAll_Click);
+            // 
+            // lvDatabaseList
+            // 
             this.lvDatabaseList.Activation = ItemActivation.OneClick;
             this.lvDatabaseList.FullRowSelect = true;
             this.lvDatabaseList.GridLines = true;
-            this.lvDatabaseList.Location = new System.Drawing.Point(347, 12);
+            this.lvDatabaseList.HideSelection = false;
+            this.lvDatabaseList.Location = new Point(347, 12);
             this.lvDatabaseList.MultiSelect = false;
             this.lvDatabaseList.Name = "lvDatabaseList";
-            this.lvDatabaseList.Size = new System.Drawing.Size(420, 296);
+            this.lvDatabaseList.Size = new Size(420, 296);
             this.lvDatabaseList.TabIndex = 6;
             this.lvDatabaseList.UseCompatibleStateImageBehavior = false;
             this.lvDatabaseList.View = View.Details;
-            this.tbxMessage.Location = new System.Drawing.Point(102, 320);
+            // 
+            // tbxMessage
+            // 
+            this.tbxMessage.Location = new Point(102, 320);
             this.tbxMessage.Multiline = true;
             this.tbxMessage.Name = "tbxMessage";
-            this.tbxMessage.Size = new System.Drawing.Size(609, 84);
+            this.tbxMessage.Size = new Size(609, 84);
             this.tbxMessage.TabIndex = 7;
+            // 
+            // btnClear
+            // 
             this.btnClear.AccessibleDescription = "";
-            this.btnClear.Location = new System.Drawing.Point(719, 320);
+            this.btnClear.Location = new Point(719, 320);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(48, 84);
+            this.btnClear.Size = new Size(48, 84);
             this.btnClear.TabIndex = 8;
-            this.btnClear.Text = "Clear";
+            this.btnClear.Text = "Limpiar";
             this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new EventHandler(this.btnClear_Click);
-            this.pbImageFrame.Location = new System.Drawing.Point(102, 12);
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // pbImageFrame
+            // 
+            this.pbImageFrame.Location = new Point(102, 12);
             this.pbImageFrame.Name = "pbImageFrame";
-            this.pbImageFrame.Size = new System.Drawing.Size(228, 252);
+            this.pbImageFrame.Size = new Size(228, 252);
             this.pbImageFrame.TabIndex = 9;
             this.pbImageFrame.TabStop = false;
+            // 
+            // label1
+            // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(101, 278);
+            this.label1.Location = new Point(101, 278);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 12);
+            this.label1.Size = new Size(81, 13);
             this.label1.TabIndex = 10;
-            this.label1.Text = "Template Type";
-            this.cbScanTemplateType.BackColor = System.Drawing.Color.White;
+            this.label1.Text = "Tipo de plantilla";
+            // 
+            // cbScanTemplateType
+            // 
+            this.cbScanTemplateType.BackColor = Color.White;
             this.cbScanTemplateType.FormattingEnabled = true;
-            this.cbScanTemplateType.Items.AddRange(new object[]
-            {
-                "suprema",
-                "iso19479_2",
-                "ansi378"
-            });
-            this.cbScanTemplateType.Location = new System.Drawing.Point(205, 276);
+            this.cbScanTemplateType.Items.AddRange(new object[] {
+            "suprema",
+            "iso19479_2",
+            "ansi378"});
+            this.cbScanTemplateType.Location = new Point(205, 276);
             this.cbScanTemplateType.Name = "cbScanTemplateType";
-            this.cbScanTemplateType.Size = new System.Drawing.Size(124, 20);
+            this.cbScanTemplateType.Size = new Size(124, 21);
             this.cbScanTemplateType.TabIndex = 11;
-            this.cbScanTemplateType.SelectedIndexChanged += new EventHandler(this.bScanTemplateType_SelectedIndexChanged);
-            base.AutoScaleDimensions = new System.Drawing.SizeF(96f, 96f);
-            base.AutoScaleMode = AutoScaleMode.Dpi;
-            base.ClientSize = new System.Drawing.Size(779, 414);
-            base.Controls.Add(this.cbScanTemplateType);
-            base.Controls.Add(this.label1);
-            base.Controls.Add(this.pbImageFrame);
-            base.Controls.Add(this.btnClear);
-            base.Controls.Add(this.tbxMessage);
-            base.Controls.Add(this.lvDatabaseList);
-            base.Controls.Add(this.btnDeleteAll);
-            base.Controls.Add(this.groupBox1);
-            base.Controls.Add(this.btnIdentify);
-            base.Controls.Add(this.btnEnroll);
-            base.Controls.Add(this.btnUninit);
-            base.Controls.Add(this.btnInit);
-            base.FormBorderStyle = FormBorderStyle.FixedSingle;
-            base.MaximizeBox = false;
-            base.Name = "UFE30_DatabaseDemo";
+            this.cbScanTemplateType.SelectedIndexChanged += new System.EventHandler(this.bScanTemplateType_SelectedIndexChanged);
+            // 
+            // UFE30_DatabaseDemo
+            // 
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.ClientSize = new Size(779, 414);
+            this.Controls.Add(cbScanTemplateType);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pbImageFrame);
+            this.Controls.Add(this.btnClear);
+            this.Controls.Add(this.tbxMessage);
+            this.Controls.Add(this.lvDatabaseList);
+            this.Controls.Add(this.btnDeleteAll);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnIdentify);
+            this.Controls.Add(this.btnEnroll);
+            this.Controls.Add(this.btnUninit);
+            this.Controls.Add(this.btnInit);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.Name = "UFE30_DatabaseDemo";
             this.Text = "Suprema PC SDK Database Demo (VC#)";
-            base.Load += new EventHandler(this.UFE30_DatabaseDemo_Load);
-            base.FormClosing += new FormClosingEventHandler(this.UFE30_DatabaseDemo_FormClosing);
+            this.FormClosing += new FormClosingEventHandler(this.UFE30_DatabaseDemo_FormClosing);
+            this.Load += new System.EventHandler(this.UFE30_DatabaseDemo_Load);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)this.pbImageFrame).EndInit();
-            base.ResumeLayout(false);
-            base.PerformLayout();
+            ((ISupportInitialize)(this.pbImageFrame)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
     }
-    public class UserInfoForms : Form
-    {
-        private System.ComponentModel.IContainer components;
-        private Label label1;
-        private Label label2;
-        private Label label3;
-        private TextBox tbxUserID;
-        private TextBox tbxFingerIndex;
-        private TextBox tbxMemo;
-        private Button btnOK;
-        private Button btnCancel;
-        public string UserID
-        {
-            get
-            {
-                return this.tbxUserID.Text;
-            }
-            set
-            {
-                this.tbxUserID.Text = value;
-            }
-        }
-        public int FingerIndex
-        {
-            get
-            {
-                return Convert.ToInt32(this.tbxFingerIndex.Text);
-            }
-            set
-            {
-                this.tbxFingerIndex.Text = Convert.ToString(value);
-            }
-        }
-        public string Memo
-        {
-            get
-            {
-                return this.tbxMemo.Text;
-            }
-            set
-            {
-                this.tbxMemo.Text = Convert.ToString(value);
-            }
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && this.components != null)
-            {
-                this.components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-        private void InitializeComponent()
-        {
-            this.label1 = new Label();
-            this.label2 = new Label();
-            this.label3 = new Label();
-            this.tbxUserID = new TextBox();
-            this.tbxFingerIndex = new TextBox();
-            this.tbxMemo = new TextBox();
-            this.btnOK = new Button();
-            this.btnCancel = new Button();
-            base.SuspendLayout();
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "UserID";
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 12);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "FingerIndex";
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(40, 72);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Memo";
-            this.tbxUserID.Location = new System.Drawing.Point(96, 12);
-            this.tbxUserID.MaxLength = 50;
-            this.tbxUserID.Name = "tbxUserID";
-            this.tbxUserID.Size = new System.Drawing.Size(96, 21);
-            this.tbxUserID.TabIndex = 3;
-            this.tbxFingerIndex.Location = new System.Drawing.Point(96, 40);
-            this.tbxFingerIndex.MaxLength = 1;
-            this.tbxFingerIndex.Name = "tbxFingerIndex";
-            this.tbxFingerIndex.Size = new System.Drawing.Size(40, 21);
-            this.tbxFingerIndex.TabIndex = 4;
-            this.tbxMemo.Location = new System.Drawing.Point(96, 68);
-            this.tbxMemo.MaxLength = 100;
-            this.tbxMemo.Multiline = true;
-            this.tbxMemo.Name = "tbxMemo";
-            this.tbxMemo.Size = new System.Drawing.Size(144, 100);
-            this.tbxMemo.TabIndex = 5;
-            this.btnOK.DialogResult = DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(12, 180);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(108, 20);
-            this.btnOK.TabIndex = 6;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new EventHandler(this.btnOK_Click);
-            this.btnCancel.DialogResult = DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(132, 180);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(108, 20);
-            this.btnCancel.TabIndex = 7;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            base.AcceptButton = this.btnOK;
-            base.AutoScaleDimensions = new System.Drawing.SizeF(96f, 96f);
-            base.AutoScaleMode = AutoScaleMode.Dpi;
-            base.CancelButton = this.btnCancel;
-            base.ClientSize = new System.Drawing.Size(254, 211);
-            base.Controls.Add(this.btnCancel);
-            base.Controls.Add(this.btnOK);
-            base.Controls.Add(this.tbxMemo);
-            base.Controls.Add(this.tbxFingerIndex);
-            base.Controls.Add(this.tbxUserID);
-            base.Controls.Add(this.label3);
-            base.Controls.Add(this.label2);
-            base.Controls.Add(this.label1);
-            base.FormBorderStyle = FormBorderStyle.FixedDialog;
-            base.MaximizeBox = false;
-            base.MinimizeBox = false;
-            base.Name = "UserInfoForm";
-            base.ShowInTaskbar = false;
-            base.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "User Info";
-            base.ResumeLayout(false);
-            base.PerformLayout();
-        }
-        public UserInfoForms(bool Update)
-        {
-            this.InitializeComponent();
-            this.tbxUserID.Text = "UserID";
-            this.tbxFingerIndex.Text = "0";
-            this.tbxMemo.Text = "Memo";
-            if (Update)
-            {
-                this.tbxUserID.ReadOnly = true;
-                this.tbxFingerIndex.ReadOnly = true;
-            }
-        }
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-        }
-    }
-}
-namespace UFE30_DatabaseDemoCS.Properties
-{
-    [System.CodeDom.Compiler.GeneratedCode("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "8.0.0.0"), CompilerGenerated]
-    internal sealed class Settings : System.Configuration.ApplicationSettingsBase
-    {
-        private static Settings defaultInstance = (Settings)System.Configuration.SettingsBase.Synchronized(new Settings());
-        public static Settings Default
-        {
-            get
-            {
-                return Settings.defaultInstance;
-            }
-        }
-    }
-    [System.CodeDom.Compiler.GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0"), DebuggerNonUserCode, CompilerGenerated]
-    internal class Resources
-    {
-        private static ResourceManager resourceMan;
-        private static CultureInfo resourceCulture;
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static ResourceManager ResourceManager
-        {
-            get
-            {
-                if (Resources.resourceMan == null)
-                {
-                    ResourceManager resourceManager = new ResourceManager("UFE30_DatabaseDemoCS.Properties.Resources", typeof(Resources).Assembly);
-                    Resources.resourceMan = resourceManager;
-                }
-                return Resources.resourceMan;
-            }
-        }
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static CultureInfo Culture
-        {
-            get
-            {
-                return Resources.resourceCulture;
-            }
-            set
-            {
-                Resources.resourceCulture = value;
-            }
-        }
-        internal Resources()
-        {
-        }
-    }
+ 
 }
