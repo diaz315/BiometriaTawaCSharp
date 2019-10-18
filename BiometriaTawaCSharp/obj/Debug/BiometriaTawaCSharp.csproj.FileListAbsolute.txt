@@ -1,0 +1,12 @@
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\BiometriaTawaCSharp.exe.config
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\BiometriaTawaCSharp.exe
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\BiometriaTawaCSharp.pdb
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\Suprema.UFDatabase.dll
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\Suprema.UFExtractor.dll
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\Suprema.UFMatcher.dll
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\Suprema.UFScanner.dll
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.Properties.Resources.resources
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.csproj.GenerateResource.cache
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.csproj.CopyComplete
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.exe
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.pdb
