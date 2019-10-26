@@ -61,12 +61,11 @@ namespace Suprema
             this.m_Matcher = null;
             m_Template1 = new byte[1024];
             this.m_Template2 = new byte[1024];
-            this.lvDatabaseList.Columns.Add("Serial", 50, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("UserID", 60, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("FingerIndex", 80, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Template1", 80, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Template2", 80, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Memo", 60, HorizontalAlignment.Left);
+            this.lvDatabaseList.Columns.Add("N#", 50, HorizontalAlignment.Left);
+            this.lvDatabaseList.Columns.Add("Nombres", 170, HorizontalAlignment.Left);
+            this.lvDatabaseList.Columns.Add("Tipo. Doc", 80, HorizontalAlignment.Left);
+            this.lvDatabaseList.Columns.Add("Nro. Doc", 80, HorizontalAlignment.Left);
+            this.lvDatabaseList.Columns.Add("Codigo", 80, HorizontalAlignment.Left);
         }
         private void Huella_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -77,14 +76,13 @@ namespace Suprema
         {
             tbxMessage.Clear();
         }
-        private void AddRow(int Serial, string UserID, int FingerIndex, bool bTemplate1, bool bTemplate2, string Memo)
+        private void AddRow(int numero,string Nombres, string TipoDoc, string NroDoc,string CodColaborador)
         {
-            ListViewItem listViewItem = this.lvDatabaseList.Items.Add(Convert.ToString(Serial));
-            listViewItem.SubItems.Add(UserID);
-            listViewItem.SubItems.Add(Convert.ToString(FingerIndex));
-            listViewItem.SubItems.Add(bTemplate1 ? "O" : "X");
-            listViewItem.SubItems.Add(bTemplate2 ? "O" : "X");
-            listViewItem.SubItems.Add(Memo);
+            ListViewItem listViewItem = lvDatabaseList.Items.Add(Convert.ToString(numero));
+            listViewItem.SubItems.Add(Nombres);
+            listViewItem.SubItems.Add(TipoDoc);
+            listViewItem.SubItems.Add(NroDoc);
+            listViewItem.SubItems.Add(CodColaborador);
         }
 
         private void UpdateDatabaseList()
@@ -99,16 +97,12 @@ namespace Suprema
             {
                 tbxMessage.AppendText("UFDatabase GetDataNumber: " + num + "\r\n");
                 this.lvDatabaseList.Items.Clear();
-                for (int i = 0; i < num; i++)
-                {
-                    uFD_STATUS = this.m_Database.GetDataByIndex(i, out this.m_Serial, out this.m_UserID, out this.m_FingerIndex, m_Template1, out m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
-                    if (uFD_STATUS != UFD_STATUS.OK)
-                    {
-                        UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-                        tbxMessage.AppendText("UFDatabase GetDataByIndex: " + m_strError + "\r\n");
-                        return;
-                    }
-                    this.AddRow(this.m_Serial, this.m_UserID, this.m_FingerIndex, m_Template1Size != 0, this.m_Template2Size != 0, this.m_Memo);
+
+                var Empleados = ObtenerEmpleado();
+                int i = 1;
+                foreach (Empleado obj in Empleados) {
+                    this.AddRow(i,obj.nombres,obj.tipoDoc,obj.nroDoc,obj.codigo);
+                    i++;
                 }
                 return;
             }
@@ -156,6 +150,7 @@ namespace Suprema
 
         private void InicializarBD() {
             if (BdIniciada==0) {
+                BdIniciada = 1;
                 Cursor.Current = Cursors.WaitCursor;
                 UFS_STATUS uFS_STATUS = m_ScannerManager.Init();
                 Cursor.Current = this.Cursor;
@@ -199,7 +194,6 @@ namespace Suprema
                 }
                 UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
                 tbxMessage.AppendText("UFDatabase Open: " + m_strError + "\r\n");
-                BdIniciada = 1;
             }
             
         }
@@ -355,6 +349,25 @@ namespace Suprema
                 while (reader.Read()) {
                     Empleado.Add(reader[0].ToString());
                     Empleado.Add(reader[1].ToString());
+                }
+                return Empleado;
+
+            }
+        }
+
+        private List<Empleado> ObtenerEmpleado()
+        {
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            {
+                conection.Open();
+                var query = "Select Nombres,CodEmpleado,Documento,NroDocumento From Fingerprints where Estado=1";
+                var command = new OleDbCommand(query, conection);
+                var reader = command.ExecuteReader();
+                var Empleado = new List<Empleado>();
+
+                while (reader.Read())
+                {
+                    Empleado.Add(new Empleado() { nombres= reader[0].ToString(),codigo= reader[1].ToString(),tipoDoc= reader[2].ToString(),nroDoc= reader[3].ToString() });
                 }
                 return Empleado;
 
