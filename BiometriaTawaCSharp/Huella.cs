@@ -32,12 +32,10 @@ namespace Suprema
         private IContainer components;
         private Button btnInit;
         private Button btnUninit;
-        private Button btnEnroll;
         private Button btnIdentify;
         private GroupBox groupBox1;
         private Button btnSelectionDelete;
         private Button btnSelectionVerify;
-        private Button btnSelectionUpdateTemplate;
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
         private ListView lvDatabaseList;
@@ -47,7 +45,9 @@ namespace Suprema
         private Label label1;
         private Button button1;
         private ComboBox cbScanTemplateType;
+        private Button btnSelectionUpdateTemplate;
         public static int form;
+        public static int HuellaTomada=0;
         public Huella()
         {
             this.InitializeComponent();
@@ -133,10 +133,11 @@ namespace Suprema
             else {
                 Graphics graphics2 = RegistroEmpleado.pbImageFrame.CreateGraphics();
 
-                Rectangle rect = new Rectangle(0, 0, pbImageFrame.Width, pbImageFrame.Height);
+                Rectangle rect = new Rectangle(0, 0, RegistroEmpleado.pbImageFrame.Width, RegistroEmpleado.pbImageFrame.Height);
                 try
                 {
                     Scanner.DrawCaptureImageBuffer(graphics2, rect, false);
+                    HuellaTomada = 1;
                 }
                 finally
                 {
@@ -357,7 +358,8 @@ namespace Suprema
         public static void RegistrarEmpleado(Empleado obj) {
             using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
             {
-                string data = "'"+obj.nombres+"'"+ "," + "'"+obj.nroDoc+ "'" + "," + obj.dedo + "," + (obj.huella==null?"0": "'"+obj.huella+ "'") + "," + 0 + "," + "'"+obj.nroDoc+ "'" + "," + "'"+obj.codigo+"'";
+                //(obj.huella == null ? "0" : "'" + obj.huella + "'")
+                string data = "'"+obj.nombres+"'"+ "," + "'"+obj.nroDoc+ "'" + "," + obj.dedo + "," + obj.huellaByte + "," + 0 + "," + "'"+obj.nroDoc+ "'" + "," + "'"+obj.codigo+"'";
                 conection.Open();
                 OleDbCommand cmd = conection.CreateCommand();
                 cmd.CommandType = CommandType.Text;
@@ -365,6 +367,7 @@ namespace Suprema
                 "values("+data+")";
                 cmd.ExecuteNonQuery();
                 conection.Close();
+                HuellaTomada = 0;
                 MessageBox.Show("Guardo con exito");
             }
         }
@@ -528,82 +531,71 @@ namespace Suprema
         }
         private void InitializeComponent()
         {
-            btnInit = new Button();
-            btnUninit = new Button();
-            btnEnroll = new Button();
-            btnIdentify = new Button();
-            this.groupBox1 = new GroupBox();
-            this.cbScanTemplateType = new ComboBox();
-            btnSelectionVerify = new Button();
-            this.label1 = new Label();
-            btnSelectionUpdateUserInfo = new Button();
-            btnSelectionDelete = new Button();
-            btnDeleteAll = new Button();
-            btnSelectionUpdateTemplate = new Button();
-            this.lvDatabaseList = new ListView();
-            tbxMessage = new TextBox();
-            btnClear = new Button();
-            pbImageFrame = new PictureBox();
-            this.button1 = new Button();
+            this.btnInit = new System.Windows.Forms.Button();
+            this.btnUninit = new System.Windows.Forms.Button();
+            this.btnIdentify = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbScanTemplateType = new System.Windows.Forms.ComboBox();
+            this.btnSelectionVerify = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnSelectionUpdateUserInfo = new System.Windows.Forms.Button();
+            this.btnSelectionDelete = new System.Windows.Forms.Button();
+            this.btnDeleteAll = new System.Windows.Forms.Button();
+            this.lvDatabaseList = new System.Windows.Forms.ListView();
+            tbxMessage = new System.Windows.Forms.TextBox();
+            this.btnClear = new System.Windows.Forms.Button();
+            pbImageFrame = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnSelectionUpdateTemplate = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            ((ISupportInitialize)(pbImageFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
             // 
-            btnInit.AccessibleDescription = "";
-            btnInit.Location = new Point(12, 12);
-            btnInit.Name = "btnInit";
-            btnInit.Size = new Size(84, 24);
-            btnInit.TabIndex = 0;
-            btnInit.Text = "Iniciar";
-            btnInit.UseVisualStyleBackColor = true;
-            btnInit.Click += new EventHandler(btnInit_Click);
+            this.btnInit.AccessibleDescription = "";
+            this.btnInit.Location = new System.Drawing.Point(12, 12);
+            this.btnInit.Name = "btnInit";
+            this.btnInit.Size = new System.Drawing.Size(84, 24);
+            this.btnInit.TabIndex = 0;
+            this.btnInit.Text = "Iniciar";
+            this.btnInit.UseVisualStyleBackColor = true;
+            this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
             // 
             // btnUninit
             // 
-            btnUninit.AccessibleDescription = "";
-            btnUninit.Location = new Point(11, 42);
-            btnUninit.Name = "btnUninit";
-            btnUninit.Size = new Size(84, 24);
-            btnUninit.TabIndex = 1;
-            btnUninit.Text = "Desconectar";
-            btnUninit.UseVisualStyleBackColor = true;
-            btnUninit.Click += new EventHandler(btnUninit_Click);
-            // 
-            // btnEnroll
-            // 
-            btnEnroll.AccessibleDescription = "";
-            btnEnroll.Location = new Point(12, 84);
-            btnEnroll.Name = "btnEnroll";
-            btnEnroll.Size = new Size(84, 24);
-            btnEnroll.TabIndex = 2;
-            btnEnroll.Text = "Registrar";
-            btnEnroll.UseVisualStyleBackColor = true;
-            btnEnroll.Click += new EventHandler(btnEnroll_Click);
+            this.btnUninit.AccessibleDescription = "";
+            this.btnUninit.Location = new System.Drawing.Point(11, 42);
+            this.btnUninit.Name = "btnUninit";
+            this.btnUninit.Size = new System.Drawing.Size(84, 24);
+            this.btnUninit.TabIndex = 1;
+            this.btnUninit.Text = "Desconectar";
+            this.btnUninit.UseVisualStyleBackColor = true;
+            this.btnUninit.Click += new System.EventHandler(this.btnUninit_Click);
             // 
             // btnIdentify
             // 
-            btnIdentify.AccessibleDescription = "";
-            btnIdentify.Location = new Point(12, 112);
-            btnIdentify.Name = "btnIdentify";
-            btnIdentify.Size = new Size(84, 24);
-            btnIdentify.TabIndex = 3;
-            btnIdentify.Text = "Identificar";
-            btnIdentify.UseVisualStyleBackColor = true;
-            btnIdentify.Click += new EventHandler(btnIdentify_Click);
+            this.btnIdentify.AccessibleDescription = "";
+            this.btnIdentify.Location = new System.Drawing.Point(11, 72);
+            this.btnIdentify.Name = "btnIdentify";
+            this.btnIdentify.Size = new System.Drawing.Size(84, 24);
+            this.btnIdentify.TabIndex = 3;
+            this.btnIdentify.Text = "Identificar";
+            this.btnIdentify.UseVisualStyleBackColor = true;
+            this.btnIdentify.Click += new System.EventHandler(this.btnIdentify_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cbScanTemplateType);
-            this.groupBox1.Controls.Add(btnSelectionVerify);
+            this.groupBox1.Controls.Add(this.btnSelectionUpdateTemplate);
+            this.groupBox1.Controls.Add(this.btnSelectionVerify);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(btnSelectionUpdateUserInfo);
-            this.groupBox1.Controls.Add(btnSelectionDelete);
-            this.groupBox1.Controls.Add(btnDeleteAll);
-            this.groupBox1.Location = new Point(11, 383);
+            this.groupBox1.Controls.Add(this.btnSelectionUpdateUserInfo);
+            this.groupBox1.Controls.Add(this.btnSelectionDelete);
+            this.groupBox1.Controls.Add(this.btnDeleteAll);
+            this.groupBox1.Location = new System.Drawing.Point(11, 388);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new Size(75, 21);
+            this.groupBox1.Size = new System.Drawing.Size(75, 16);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Seleccion";
@@ -611,158 +603,156 @@ namespace Suprema
             // 
             // cbScanTemplateType
             // 
-            this.cbScanTemplateType.BackColor = Color.White;
+            this.cbScanTemplateType.BackColor = System.Drawing.Color.White;
             this.cbScanTemplateType.FormattingEnabled = true;
             this.cbScanTemplateType.Items.AddRange(new object[] {
             "suprema",
             "iso19479_2",
             "ansi378"});
-            this.cbScanTemplateType.Location = new Point(199, 23);
+            this.cbScanTemplateType.Location = new System.Drawing.Point(199, 23);
             this.cbScanTemplateType.Name = "cbScanTemplateType";
-            this.cbScanTemplateType.Size = new Size(124, 21);
+            this.cbScanTemplateType.Size = new System.Drawing.Size(124, 21);
             this.cbScanTemplateType.TabIndex = 11;
-            this.cbScanTemplateType.SelectedIndexChanged += new EventHandler(this.bScanTemplateType_SelectedIndexChanged);
+            this.cbScanTemplateType.SelectedIndexChanged += new System.EventHandler(this.bScanTemplateType_SelectedIndexChanged);
             // 
             // btnSelectionVerify
             // 
-            btnSelectionVerify.AccessibleDescription = "";
-            btnSelectionVerify.Location = new Point(8, 94);
-            btnSelectionVerify.Name = "btnSelectionVerify";
-            btnSelectionVerify.Size = new Size(68, 24);
-            btnSelectionVerify.TabIndex = 8;
-            btnSelectionVerify.Text = "Verificar";
-            btnSelectionVerify.UseVisualStyleBackColor = true;
-            btnSelectionVerify.Click += new EventHandler(btnSelectionVerify_Click);
+            this.btnSelectionVerify.AccessibleDescription = "";
+            this.btnSelectionVerify.Location = new System.Drawing.Point(8, 94);
+            this.btnSelectionVerify.Name = "btnSelectionVerify";
+            this.btnSelectionVerify.Size = new System.Drawing.Size(68, 24);
+            this.btnSelectionVerify.TabIndex = 8;
+            this.btnSelectionVerify.Text = "Verificar";
+            this.btnSelectionVerify.UseVisualStyleBackColor = true;
+            this.btnSelectionVerify.Click += new System.EventHandler(this.btnSelectionVerify_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new Point(95, 25);
+            this.label1.Location = new System.Drawing.Point(95, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new Size(81, 13);
+            this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 10;
             this.label1.Text = "Tipo de plantilla";
             // 
             // btnSelectionUpdateUserInfo
             // 
-            btnSelectionUpdateUserInfo.AccessibleDescription = "";
-            btnSelectionUpdateUserInfo.Location = new Point(8, 48);
-            btnSelectionUpdateUserInfo.Name = "btnSelectionUpdateUserInfo";
-            btnSelectionUpdateUserInfo.Size = new Size(68, 40);
-            btnSelectionUpdateUserInfo.TabIndex = 6;
-            btnSelectionUpdateUserInfo.Text = "Actualizar Usuario";
-            btnSelectionUpdateUserInfo.UseVisualStyleBackColor = true;
-            btnSelectionUpdateUserInfo.Click += new EventHandler(btnSelectionUpdateUserInfo_Click);
+            this.btnSelectionUpdateUserInfo.AccessibleDescription = "";
+            this.btnSelectionUpdateUserInfo.Location = new System.Drawing.Point(8, 48);
+            this.btnSelectionUpdateUserInfo.Name = "btnSelectionUpdateUserInfo";
+            this.btnSelectionUpdateUserInfo.Size = new System.Drawing.Size(68, 40);
+            this.btnSelectionUpdateUserInfo.TabIndex = 6;
+            this.btnSelectionUpdateUserInfo.Text = "Actualizar Usuario";
+            this.btnSelectionUpdateUserInfo.UseVisualStyleBackColor = true;
+            this.btnSelectionUpdateUserInfo.Click += new System.EventHandler(this.btnSelectionUpdateUserInfo_Click);
             // 
             // btnSelectionDelete
             // 
-            btnSelectionDelete.AccessibleDescription = "";
-            btnSelectionDelete.Location = new Point(8, 20);
-            btnSelectionDelete.Name = "btnSelectionDelete";
-            btnSelectionDelete.Size = new Size(68, 24);
-            btnSelectionDelete.TabIndex = 5;
-            btnSelectionDelete.Text = "Eliminar";
-            btnSelectionDelete.UseVisualStyleBackColor = true;
-            btnSelectionDelete.Click += new EventHandler(btnSelectionDelete_Click);
+            this.btnSelectionDelete.AccessibleDescription = "";
+            this.btnSelectionDelete.Location = new System.Drawing.Point(8, 20);
+            this.btnSelectionDelete.Name = "btnSelectionDelete";
+            this.btnSelectionDelete.Size = new System.Drawing.Size(68, 24);
+            this.btnSelectionDelete.TabIndex = 5;
+            this.btnSelectionDelete.Text = "Eliminar";
+            this.btnSelectionDelete.UseVisualStyleBackColor = true;
+            this.btnSelectionDelete.Click += new System.EventHandler(this.btnSelectionDelete_Click);
             // 
             // btnDeleteAll
             // 
-            btnDeleteAll.AccessibleDescription = "";
-            btnDeleteAll.Location = new Point(98, 56);
-            btnDeleteAll.Name = "btnDeleteAll";
-            btnDeleteAll.Size = new Size(84, 24);
-            btnDeleteAll.TabIndex = 5;
-            btnDeleteAll.Text = "Eliminar Todo";
-            btnDeleteAll.UseVisualStyleBackColor = true;
-            btnDeleteAll.Click += new EventHandler(btnDeleteAll_Click);
-            // 
-            // btnSelectionUpdateTemplate
-            // 
-            btnSelectionUpdateTemplate.AccessibleDescription = "";
-            btnSelectionUpdateTemplate.Location = new Point(11, 251);
-            btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
-            btnSelectionUpdateTemplate.Size = new Size(68, 40);
-            btnSelectionUpdateTemplate.TabIndex = 7;
-            btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
-            btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
-            btnSelectionUpdateTemplate.Click += new EventHandler(btnSelectionUpdateTemplate_Click);
+            this.btnDeleteAll.AccessibleDescription = "";
+            this.btnDeleteAll.Location = new System.Drawing.Point(98, 56);
+            this.btnDeleteAll.Name = "btnDeleteAll";
+            this.btnDeleteAll.Size = new System.Drawing.Size(84, 24);
+            this.btnDeleteAll.TabIndex = 5;
+            this.btnDeleteAll.Text = "Eliminar Todo";
+            this.btnDeleteAll.UseVisualStyleBackColor = true;
+            this.btnDeleteAll.Click += new System.EventHandler(this.btnDeleteAll_Click);
             // 
             // lvDatabaseList
             // 
-            this.lvDatabaseList.Activation = ItemActivation.OneClick;
+            this.lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvDatabaseList.FullRowSelect = true;
             this.lvDatabaseList.GridLines = true;
             this.lvDatabaseList.HideSelection = false;
-            this.lvDatabaseList.Location = new Point(347, 12);
+            this.lvDatabaseList.Location = new System.Drawing.Point(347, 12);
             this.lvDatabaseList.MultiSelect = false;
             this.lvDatabaseList.Name = "lvDatabaseList";
-            this.lvDatabaseList.Size = new Size(420, 296);
+            this.lvDatabaseList.Size = new System.Drawing.Size(420, 296);
             this.lvDatabaseList.TabIndex = 6;
             this.lvDatabaseList.UseCompatibleStateImageBehavior = false;
-            this.lvDatabaseList.View = View.Details;
+            this.lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new Point(102, 320);
+            tbxMessage.Location = new System.Drawing.Point(102, 320);
             tbxMessage.Multiline = true;
             tbxMessage.Name = "tbxMessage";
-            tbxMessage.Size = new Size(609, 84);
+            tbxMessage.Size = new System.Drawing.Size(609, 84);
             tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
-            btnClear.AccessibleDescription = "";
-            btnClear.Location = new Point(719, 320);
-            btnClear.Name = "btnClear";
-            btnClear.Size = new Size(48, 84);
-            btnClear.TabIndex = 8;
-            btnClear.Text = "Limpiar";
-            btnClear.UseVisualStyleBackColor = true;
-            btnClear.Click += new EventHandler(btnClear_Click);
+            this.btnClear.AccessibleDescription = "";
+            this.btnClear.Location = new System.Drawing.Point(719, 320);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(48, 84);
+            this.btnClear.TabIndex = 8;
+            this.btnClear.Text = "Limpiar";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // pbImageFrame
             // 
-            pbImageFrame.Location = new Point(102, 12);
+            pbImageFrame.Location = new System.Drawing.Point(102, 12);
             pbImageFrame.Name = "pbImageFrame";
-            pbImageFrame.Size = new Size(228, 252);
+            pbImageFrame.Size = new System.Drawing.Size(228, 252);
             pbImageFrame.TabIndex = 9;
             pbImageFrame.TabStop = false;
             // 
             // button1
             // 
-            this.button1.Location = new Point(11, 151);
+            this.button1.Location = new System.Drawing.Point(11, 102);
             this.button1.Name = "button1";
-            this.button1.Size = new Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(84, 23);
             this.button1.TabIndex = 10;
-            this.button1.Text = "RegXD";
+            this.button1.Text = "Registrar";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnSelectionUpdateTemplate
+            // 
+            this.btnSelectionUpdateTemplate.AccessibleDescription = "";
+            this.btnSelectionUpdateTemplate.Location = new System.Drawing.Point(6, 137);
+            this.btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
+            this.btnSelectionUpdateTemplate.Size = new System.Drawing.Size(68, 40);
+            this.btnSelectionUpdateTemplate.TabIndex = 7;
+            this.btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
+            this.btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
+            this.btnSelectionUpdateTemplate.Click += new System.EventHandler(this.btnSelectionUpdateTemplate_Click);
             // 
             // Huella
             // 
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.ClientSize = new Size(793, 428);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(793, 428);
             this.Controls.Add(this.button1);
-            this.Controls.Add(btnSelectionUpdateTemplate);
             this.Controls.Add(pbImageFrame);
-            this.Controls.Add(btnClear);
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(tbxMessage);
             this.Controls.Add(this.lvDatabaseList);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(btnIdentify);
-            this.Controls.Add(btnEnroll);
-            this.Controls.Add(btnUninit);
-            this.Controls.Add(btnInit);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.Controls.Add(this.btnIdentify);
+            this.Controls.Add(this.btnUninit);
+            this.Controls.Add(this.btnInit);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Huella";
             this.Text = "Biometrico Tawa";
-            this.FormClosing += new FormClosingEventHandler(this.Huella_FormClosing);
-            this.Load += new EventHandler(this.Huella_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Huella_FormClosing);
+            this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((ISupportInitialize)(pbImageFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

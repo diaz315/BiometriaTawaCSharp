@@ -7,10 +7,11 @@ namespace BiometriaTawaCSharp
 {
     public partial class RegistroEmpleado : Form
     {
-        private Empleado Resultado;
+        private static Empleado Resultado;
         public RegistroEmpleado()
         {
             InitializeComponent();
+            pbImageFrame.Image = null;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -66,14 +67,22 @@ namespace BiometriaTawaCSharp
             txtNroDoc.Text = "";
             txtCodEmp.Text = "";
             txtCodEmpleado.Text = "";
+            pbImageFrame.Image = null;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if (Resultado != null)
             {
-                Huella.RegistrarEmpleado(Resultado);
-                Limpiar();
+                if (Resultado.huella!=null || Huella.HuellaTomada == 1)
+                {
+                    Huella.RegistrarEmpleado(Resultado);
+                    Limpiar();
+                }
+                else {
+                    MessageBox.Show("Por favor ingrese la huella", "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
             }
             else {
                 MessageBox.Show("No se ha seleccionado ningun registro", "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -83,8 +92,12 @@ namespace BiometriaTawaCSharp
 
         private void pbImageFrame_Click(object sender, EventArgs e)
         {
-            Huella.IniciarEscaneo();
-            //pbImageFrame=Huella.pbImageFrame;
+            if (Resultado != null)
+            {
+                Empleado resul=Huella.IniciarEscaneo();
+                Resultado.huellaByte = resul.huellaByte;
+                Resultado.pesoHuella = resul.pesoHuella;
+            }
         }
     }
 }
