@@ -552,12 +552,12 @@ namespace Suprema
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
             this.lvDatabaseList = new System.Windows.Forms.ListView();
-            this.tbxMessage = new System.Windows.Forms.TextBox();
+            tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
-            this.pbImageFrame = new System.Windows.Forms.PictureBox();
+            pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
@@ -706,11 +706,11 @@ namespace Suprema
             // 
             // tbxMessage
             // 
-            this.tbxMessage.Location = new System.Drawing.Point(102, 320);
-            this.tbxMessage.Multiline = true;
-            this.tbxMessage.Name = "tbxMessage";
-            this.tbxMessage.Size = new System.Drawing.Size(609, 84);
-            this.tbxMessage.TabIndex = 7;
+            tbxMessage.Location = new System.Drawing.Point(102, 320);
+            tbxMessage.Multiline = true;
+            tbxMessage.Name = "tbxMessage";
+            tbxMessage.Size = new System.Drawing.Size(609, 84);
+            tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
@@ -725,11 +725,11 @@ namespace Suprema
             // 
             // pbImageFrame
             // 
-            this.pbImageFrame.Location = new System.Drawing.Point(102, 12);
-            this.pbImageFrame.Name = "pbImageFrame";
-            this.pbImageFrame.Size = new System.Drawing.Size(228, 252);
-            this.pbImageFrame.TabIndex = 9;
-            this.pbImageFrame.TabStop = false;
+            pbImageFrame.Location = new System.Drawing.Point(102, 12);
+            pbImageFrame.Name = "pbImageFrame";
+            pbImageFrame.Size = new System.Drawing.Size(228, 252);
+            pbImageFrame.TabIndex = 9;
+            pbImageFrame.TabStop = false;
             // 
             // button1
             // 
@@ -747,9 +747,9 @@ namespace Suprema
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(793, 428);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.pbImageFrame);
+            this.Controls.Add(pbImageFrame);
             this.Controls.Add(this.btnClear);
-            this.Controls.Add(this.tbxMessage);
+            this.Controls.Add(tbxMessage);
             this.Controls.Add(this.lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnIdentify);
@@ -761,7 +761,7 @@ namespace Suprema
             this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
