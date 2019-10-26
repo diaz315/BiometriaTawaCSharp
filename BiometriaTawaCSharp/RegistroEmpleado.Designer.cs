@@ -48,9 +48,9 @@
             // 
             // txtCodEmpleado
             // 
-            this.txtCodEmpleado.Location = new System.Drawing.Point(118, 16);
+            this.txtCodEmpleado.Location = new System.Drawing.Point(131, 16);
             this.txtCodEmpleado.Name = "txtCodEmpleado";
-            this.txtCodEmpleado.Size = new System.Drawing.Size(219, 20);
+            this.txtCodEmpleado.Size = new System.Drawing.Size(237, 20);
             this.txtCodEmpleado.TabIndex = 0;
             // 
             // label1
@@ -58,9 +58,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(23, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.Size = new System.Drawing.Size(102, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Codigo empleado:";
+            this.label1.Text = "Codigo colaborador:";
             // 
             // button1
             // 
@@ -82,7 +82,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(293, 514);
+            this.button2.Location = new System.Drawing.Point(293, 373);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
@@ -121,9 +121,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 173);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.Size = new System.Drawing.Size(85, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "Nro Documento";
+            this.label4.Text = "Nro. Documento";
             // 
             // txtNroDoc
             // 
@@ -138,9 +138,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(23, 199);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(76, 13);
+            this.label5.Size = new System.Drawing.Size(88, 13);
             this.label5.TabIndex = 11;
-            this.label5.Text = "Cod Empleado";
+            this.label5.Text = "Cod. colaborador";
             // 
             // txtCodEmp
             // 
@@ -154,7 +154,7 @@
             // 
             pbImageFrame.Location = new System.Drawing.Point(6, 18);
             pbImageFrame.Name = "pbImageFrame";
-            pbImageFrame.Size = new System.Drawing.Size(228, 252);
+            pbImageFrame.Size = new System.Drawing.Size(94, 101);
             pbImageFrame.TabIndex = 14;
             pbImageFrame.TabStop = false;
             pbImageFrame.Click += new System.EventHandler(pbImageFrame_Click);
@@ -162,9 +162,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(pbImageFrame);
-            this.groupBox1.Location = new System.Drawing.Point(125, 232);
+            this.groupBox1.Location = new System.Drawing.Point(118, 233);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(243, 276);
+            this.groupBox1.Size = new System.Drawing.Size(111, 129);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Huella";
@@ -173,7 +173,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 545);
+            this.ClientSize = new System.Drawing.Size(416, 409);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtCodEmp);

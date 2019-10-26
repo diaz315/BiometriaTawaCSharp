@@ -48,6 +48,7 @@ namespace Suprema
         private Button btnSelectionUpdateTemplate;
         public static int form;
         public static int HuellaTomada=0;
+        public static int BdIniciada=0;
         public Huella()
         {
             this.InitializeComponent();
@@ -154,49 +155,53 @@ namespace Suprema
         }
 
         private void InicializarBD() {
-            Cursor.Current = Cursors.WaitCursor;
-            UFS_STATUS uFS_STATUS = m_ScannerManager.Init();
-            Cursor.Current = this.Cursor;
-            if (uFS_STATUS != UFS_STATUS.OK)
-            {
-                UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-                tbxMessage.AppendText("UFScanner Init: " + m_strError + "\r\n");
-                return;
-            }
-            tbxMessage.AppendText("UFScanner Init: OK\r\n");
-            int count = m_ScannerManager.Scanners.Count;
-            tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
-            if (count == 0)
-            {
-                tbxMessage.AppendText("There's no available scanner\r\n");
-                return;
-            }
-            tbxMessage.AppendText("First scanner will be used\r\n");
-            m_Scanner = m_ScannerManager.Scanners[0];
-            this.m_Database = new UFDatabase();
-            string fileName = "C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb";
+            if (BdIniciada==0) {
+                Cursor.Current = Cursors.WaitCursor;
+                UFS_STATUS uFS_STATUS = m_ScannerManager.Init();
+                Cursor.Current = this.Cursor;
+                if (uFS_STATUS != UFS_STATUS.OK)
+                {
+                    UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+                    tbxMessage.AppendText("UFScanner Init: " + m_strError + "\r\n");
+                    return;
+                }
+                tbxMessage.AppendText("UFScanner Init: OK\r\n");
+                int count = m_ScannerManager.Scanners.Count;
+                tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
+                if (count == 0)
+                {
+                    tbxMessage.AppendText("There's no available scanner\r\n");
+                    return;
+                }
+                tbxMessage.AppendText("First scanner will be used\r\n");
+                m_Scanner = m_ScannerManager.Scanners[0];
+                this.m_Database = new UFDatabase();
+                string fileName = "C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb";
 
-            string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
-            UFD_STATUS uFD_STATUS = this.m_Database.Open(connection, null, null);
-            if (uFD_STATUS == UFD_STATUS.OK)
-            {
-                tbxMessage.AppendText("UFDatabase Open: OK\r\n");
-                this.UpdateDatabaseList();
-                this.m_Matcher = new UFMatcher();
-                if (this.m_Matcher.InitResult == UFM_STATUS.OK)
+                string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
+                UFD_STATUS uFD_STATUS = this.m_Database.Open(connection, null, null);
+                if (uFD_STATUS == UFD_STATUS.OK)
                 {
-                    tbxMessage.AppendText("UFMatcher Init: OK\r\n");
+                    tbxMessage.AppendText("UFDatabase Open: OK\r\n");
+                    this.UpdateDatabaseList();
+                    this.m_Matcher = new UFMatcher();
+                    if (this.m_Matcher.InitResult == UFM_STATUS.OK)
+                    {
+                        tbxMessage.AppendText("UFMatcher Init: OK\r\n");
+                    }
+                    else
+                    {
+                        UFMatcher.GetErrorString(m_Matcher.InitResult, out m_strError);
+                        tbxMessage.AppendText("UFMatcher Init: " + m_strError + "\r\n");
+                    }
+                    this.cbScanTemplateType.SelectedIndex = 0;
+                    return;
                 }
-                else
-                {
-                    UFMatcher.GetErrorString(m_Matcher.InitResult, out m_strError);
-                    tbxMessage.AppendText("UFMatcher Init: " + m_strError + "\r\n");
-                }
-                this.cbScanTemplateType.SelectedIndex = 0;
-                return;
+                UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+                tbxMessage.AppendText("UFDatabase Open: " + m_strError + "\r\n");
+                BdIniciada = 1;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-            tbxMessage.AppendText("UFDatabase Open: " + m_strError + "\r\n");
+            
         }
 
         private void btnUninit_Click(object sender, EventArgs e)
@@ -299,6 +304,7 @@ namespace Suprema
         }
         private void btnIdentify_Click(object sender, EventArgs e)
         {
+            InicializarBD();
             form = 1;
             byte[] array = new byte[1024];
             byte[][] template2Array = null;
@@ -358,14 +364,17 @@ namespace Suprema
         public static void RegistrarEmpleado(Empleado obj) {
             using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
             {
-                //(obj.huella == null ? "0" : "'" + obj.huella + "'")
-                string data = "'"+obj.nombres+"'"+ "," + "'"+obj.nroDoc+ "'" + "," + obj.dedo + "," + obj.huellaByte + "," + 0 + "," + "'"+obj.nroDoc+ "'" + "," + "'"+obj.codigo+"'";
+                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado) VALUES (?,?,?,?,?,?)", conection);
+                OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
+                parImagen.Value = obj.huellaByte;
+                comm.Parameters.Add("@Nombres", OleDbType.VarChar).Value = obj.nombres.Trim();
+                comm.Parameters.Add("@TipoDoc", OleDbType.VarChar).Value = obj.tipoDoc.Trim();
+                comm.Parameters.Add("@FingerIndex", OleDbType.Integer).Value = obj.dedo;
+                comm.Parameters.Add(parImagen);
+                comm.Parameters.Add("@NroDocumento", OleDbType.VarChar).Value = obj.nroDoc;
+                comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = obj.codigo;
                 conection.Open();
-                OleDbCommand cmd = conection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "insert into Fingerprints(Nombres,Documento,FingerIndex,Template1,Template2,NroDocumento,CodEmpleado) " +
-                "values("+data+")";
-                cmd.ExecuteNonQuery();
+                int iResultado = comm.ExecuteNonQuery();
                 conection.Close();
                 HuellaTomada = 0;
                 MessageBox.Show("Guardo con exito");
@@ -536,25 +545,25 @@ namespace Suprema
             this.btnIdentify = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbScanTemplateType = new System.Windows.Forms.ComboBox();
+            this.btnSelectionUpdateTemplate = new System.Windows.Forms.Button();
             this.btnSelectionVerify = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSelectionUpdateUserInfo = new System.Windows.Forms.Button();
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
             this.lvDatabaseList = new System.Windows.Forms.ListView();
-            tbxMessage = new System.Windows.Forms.TextBox();
+            this.tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
-            pbImageFrame = new System.Windows.Forms.PictureBox();
+            this.pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.btnSelectionUpdateTemplate = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
             // 
             this.btnInit.AccessibleDescription = "";
-            this.btnInit.Location = new System.Drawing.Point(12, 12);
+            this.btnInit.Location = new System.Drawing.Point(6, 183);
             this.btnInit.Name = "btnInit";
             this.btnInit.Size = new System.Drawing.Size(84, 24);
             this.btnInit.TabIndex = 0;
@@ -565,7 +574,7 @@ namespace Suprema
             // btnUninit
             // 
             this.btnUninit.AccessibleDescription = "";
-            this.btnUninit.Location = new System.Drawing.Point(11, 42);
+            this.btnUninit.Location = new System.Drawing.Point(5, 213);
             this.btnUninit.Name = "btnUninit";
             this.btnUninit.Size = new System.Drawing.Size(84, 24);
             this.btnUninit.TabIndex = 1;
@@ -576,7 +585,7 @@ namespace Suprema
             // btnIdentify
             // 
             this.btnIdentify.AccessibleDescription = "";
-            this.btnIdentify.Location = new System.Drawing.Point(11, 72);
+            this.btnIdentify.Location = new System.Drawing.Point(11, 41);
             this.btnIdentify.Name = "btnIdentify";
             this.btnIdentify.Size = new System.Drawing.Size(84, 24);
             this.btnIdentify.TabIndex = 3;
@@ -593,9 +602,11 @@ namespace Suprema
             this.groupBox1.Controls.Add(this.btnSelectionUpdateUserInfo);
             this.groupBox1.Controls.Add(this.btnSelectionDelete);
             this.groupBox1.Controls.Add(this.btnDeleteAll);
-            this.groupBox1.Location = new System.Drawing.Point(11, 388);
+            this.groupBox1.Controls.Add(this.btnUninit);
+            this.groupBox1.Controls.Add(this.btnInit);
+            this.groupBox1.Location = new System.Drawing.Point(11, 385);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(75, 16);
+            this.groupBox1.Size = new System.Drawing.Size(75, 19);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Seleccion";
@@ -614,6 +625,17 @@ namespace Suprema
             this.cbScanTemplateType.Size = new System.Drawing.Size(124, 21);
             this.cbScanTemplateType.TabIndex = 11;
             this.cbScanTemplateType.SelectedIndexChanged += new System.EventHandler(this.bScanTemplateType_SelectedIndexChanged);
+            // 
+            // btnSelectionUpdateTemplate
+            // 
+            this.btnSelectionUpdateTemplate.AccessibleDescription = "";
+            this.btnSelectionUpdateTemplate.Location = new System.Drawing.Point(6, 137);
+            this.btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
+            this.btnSelectionUpdateTemplate.Size = new System.Drawing.Size(68, 40);
+            this.btnSelectionUpdateTemplate.TabIndex = 7;
+            this.btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
+            this.btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
+            this.btnSelectionUpdateTemplate.Click += new System.EventHandler(this.btnSelectionUpdateTemplate_Click);
             // 
             // btnSelectionVerify
             // 
@@ -684,11 +706,11 @@ namespace Suprema
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new System.Drawing.Point(102, 320);
-            tbxMessage.Multiline = true;
-            tbxMessage.Name = "tbxMessage";
-            tbxMessage.Size = new System.Drawing.Size(609, 84);
-            tbxMessage.TabIndex = 7;
+            this.tbxMessage.Location = new System.Drawing.Point(102, 320);
+            this.tbxMessage.Multiline = true;
+            this.tbxMessage.Name = "tbxMessage";
+            this.tbxMessage.Size = new System.Drawing.Size(609, 84);
+            this.tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
@@ -703,15 +725,15 @@ namespace Suprema
             // 
             // pbImageFrame
             // 
-            pbImageFrame.Location = new System.Drawing.Point(102, 12);
-            pbImageFrame.Name = "pbImageFrame";
-            pbImageFrame.Size = new System.Drawing.Size(228, 252);
-            pbImageFrame.TabIndex = 9;
-            pbImageFrame.TabStop = false;
+            this.pbImageFrame.Location = new System.Drawing.Point(102, 12);
+            this.pbImageFrame.Name = "pbImageFrame";
+            this.pbImageFrame.Size = new System.Drawing.Size(228, 252);
+            this.pbImageFrame.TabIndex = 9;
+            this.pbImageFrame.TabStop = false;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(11, 102);
+            this.button1.Location = new System.Drawing.Point(11, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(84, 23);
             this.button1.TabIndex = 10;
@@ -719,31 +741,18 @@ namespace Suprema
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btnSelectionUpdateTemplate
-            // 
-            this.btnSelectionUpdateTemplate.AccessibleDescription = "";
-            this.btnSelectionUpdateTemplate.Location = new System.Drawing.Point(6, 137);
-            this.btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
-            this.btnSelectionUpdateTemplate.Size = new System.Drawing.Size(68, 40);
-            this.btnSelectionUpdateTemplate.TabIndex = 7;
-            this.btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
-            this.btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
-            this.btnSelectionUpdateTemplate.Click += new System.EventHandler(this.btnSelectionUpdateTemplate_Click);
-            // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(793, 428);
             this.Controls.Add(this.button1);
-            this.Controls.Add(pbImageFrame);
+            this.Controls.Add(this.pbImageFrame);
             this.Controls.Add(this.btnClear);
-            this.Controls.Add(tbxMessage);
+            this.Controls.Add(this.tbxMessage);
             this.Controls.Add(this.lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnIdentify);
-            this.Controls.Add(this.btnUninit);
-            this.Controls.Add(this.btnInit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Huella";
@@ -752,7 +761,7 @@ namespace Suprema
             this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -760,6 +769,7 @@ namespace Suprema
 
         private void button1_Click(object sender, EventArgs e)
         {
+            InicializarBD();
             form = 2;
             new RegistroEmpleado().Show();
             //MessageBox.Show(CLocation.GetLocationProperty(), "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
