@@ -1,14 +1,12 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using BiometriaTawaCSharp;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 [assembly: Debuggable(DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
 [assembly: CompilationRelaxations(8)]
@@ -16,31 +14,22 @@ using System.Windows.Forms;
 
 namespace Suprema
 {
-    public class UFE30_DatabaseDemo : Form
+    public class Huella : Form
     {
-        private const int MAX_USERID_SIZE = 50;
-        private const int MAX_TEMPLATE_SIZE = 1024;
-        private const int MAX_MEMO_SIZE = 100;
-        private const int DATABASE_COL_SERIAL = 0;
-        private const int DATABASE_COL_USERID = 1;
-        private const int DATABASE_COL_FINGERINDEX = 2;
-        private const int DATABASE_COL_TEMPLATE1 = 3;
-        private const int DATABASE_COL_TEMPLATE2 = 4;
-        private const int DATABASE_COL_MEMO = 5;
         private UFScannerManager m_ScannerManager;
-        private UFScanner m_Scanner;
+        private static UFScanner m_Scanner;
         private UFDatabase m_Database;
         private UFMatcher m_Matcher;
-        private string m_strError;
+        private static string m_strError;
         private int m_Serial;
         private string m_UserID;
         private int m_FingerIndex;
-        private byte[] m_Template1;
-        private int m_Template1Size;
+        private static byte[] m_Template1;
+        private static int m_Template1Size;
         private byte[] m_Template2;
         private int m_Template2Size;
         private string m_Memo;
-        private System.ComponentModel.IContainer components;
+        private IContainer components;
         private Button btnInit;
         private Button btnUninit;
         private Button btnEnroll;
@@ -52,22 +41,24 @@ namespace Suprema
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
         private ListView lvDatabaseList;
-        private TextBox tbxMessage;
+        public static TextBox tbxMessage;
         private Button btnClear;
-        private PictureBox pbImageFrame;
+        public static PictureBox pbImageFrame;
         private Label label1;
+        private Button button1;
         private ComboBox cbScanTemplateType;
-        public UFE30_DatabaseDemo()
+        public static int form;
+        public Huella()
         {
             this.InitializeComponent();
         }
-        private void UFE30_DatabaseDemo_Load(object sender, EventArgs e)
+        private void Huella_Load(object sender, EventArgs e)
         {
-            this.m_ScannerManager = new UFScannerManager(this);
-            this.m_Scanner = null;
+            m_ScannerManager = new UFScannerManager(this);
+            m_Scanner = null;
             this.m_Database = null;
             this.m_Matcher = null;
-            this.m_Template1 = new byte[1024];
+            m_Template1 = new byte[1024];
             this.m_Template2 = new byte[1024];
             this.lvDatabaseList.Columns.Add("Serial", 50, HorizontalAlignment.Left);
             this.lvDatabaseList.Columns.Add("UserID", 60, HorizontalAlignment.Left);
@@ -76,14 +67,14 @@ namespace Suprema
             this.lvDatabaseList.Columns.Add("Template2", 80, HorizontalAlignment.Left);
             this.lvDatabaseList.Columns.Add("Memo", 60, HorizontalAlignment.Left);
         }
-        private void UFE30_DatabaseDemo_FormClosing(object sender, FormClosingEventArgs e)
+        private void Huella_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.btnUninit_Click(sender, e);
+            btnUninit_Click(sender, e);
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            this.tbxMessage.Clear();
+            tbxMessage.Clear();
         }
         private void AddRow(int Serial, string UserID, int FingerIndex, bool bTemplate1, bool bTemplate2, string Memo)
         {
@@ -94,6 +85,7 @@ namespace Suprema
             listViewItem.SubItems.Add(bTemplate2 ? "O" : "X");
             listViewItem.SubItems.Add(Memo);
         }
+
         private void UpdateDatabaseList()
         {
             if (this.m_Database == null)
@@ -104,169 +96,199 @@ namespace Suprema
             UFD_STATUS uFD_STATUS = this.m_Database.GetDataNumber(out num);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFDatabase GetDataNumber: " + num + "\r\n");
+                tbxMessage.AppendText("UFDatabase GetDataNumber: " + num + "\r\n");
                 this.lvDatabaseList.Items.Clear();
                 for (int i = 0; i < num; i++)
                 {
-                    uFD_STATUS = this.m_Database.GetDataByIndex(i, out this.m_Serial, out this.m_UserID, out this.m_FingerIndex, this.m_Template1, out this.m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
+                    uFD_STATUS = this.m_Database.GetDataByIndex(i, out this.m_Serial, out this.m_UserID, out this.m_FingerIndex, m_Template1, out m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
                     if (uFD_STATUS != UFD_STATUS.OK)
                     {
-                        UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-                        this.tbxMessage.AppendText("UFDatabase GetDataByIndex: " + this.m_strError + "\r\n");
+                        UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+                        tbxMessage.AppendText("UFDatabase GetDataByIndex: " + m_strError + "\r\n");
                         return;
                     }
-                    this.AddRow(this.m_Serial, this.m_UserID, this.m_FingerIndex, this.m_Template1Size != 0, this.m_Template2Size != 0, this.m_Memo);
+                    this.AddRow(this.m_Serial, this.m_UserID, this.m_FingerIndex, m_Template1Size != 0, this.m_Template2Size != 0, this.m_Memo);
                 }
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase GetDataNumber: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase GetDataNumber: " + m_strError + "\r\n");
         }
-        private void DrawCapturedImage(UFScanner Scanner)
+        private static void DrawCapturedImage(UFScanner Scanner)
         {
-            Graphics graphics = this.pbImageFrame.CreateGraphics();
-            Rectangle rect = new Rectangle(0, 0, this.pbImageFrame.Width, this.pbImageFrame.Height);
-            try
+            if (form == 1)
             {
-                Scanner.DrawCaptureImageBuffer(graphics, rect, false);
+                Graphics graphics = pbImageFrame.CreateGraphics();
+
+                Rectangle rect = new Rectangle(0, 0, pbImageFrame.Width, pbImageFrame.Height);
+                try
+                {
+                    Scanner.DrawCaptureImageBuffer(graphics, rect, false);
+                }
+                finally
+                {
+                    graphics.Dispose();
+                }
             }
-            finally
-            {
-                graphics.Dispose();
+            else {
+                Graphics graphics2 = RegistroEmpleado.pbImageFrame.CreateGraphics();
+
+                Rectangle rect = new Rectangle(0, 0, pbImageFrame.Width, pbImageFrame.Height);
+                try
+                {
+                    Scanner.DrawCaptureImageBuffer(graphics2, rect, false);
+                }
+                finally
+                {
+                    graphics2.Dispose();
+                }
             }
+
         }
         private void btnInit_Click(object sender, EventArgs e)
         {
+            InicializarBD();
+            btnUninit.Visible = true;
+            btnInit.Visible = false;
+        }
+
+        private void InicializarBD() {
             Cursor.Current = Cursors.WaitCursor;
-            UFS_STATUS uFS_STATUS = this.m_ScannerManager.Init();
+            UFS_STATUS uFS_STATUS = m_ScannerManager.Init();
             Cursor.Current = this.Cursor;
             if (uFS_STATUS != UFS_STATUS.OK)
             {
-                UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFScanner Init: " + this.m_strError + "\r\n");
+                UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+                tbxMessage.AppendText("UFScanner Init: " + m_strError + "\r\n");
                 return;
             }
-            this.tbxMessage.AppendText("UFScanner Init: OK\r\n");
-            int count = this.m_ScannerManager.Scanners.Count;
-            this.tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
+            tbxMessage.AppendText("UFScanner Init: OK\r\n");
+            int count = m_ScannerManager.Scanners.Count;
+            tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
             if (count == 0)
             {
-                this.tbxMessage.AppendText("There's no available scanner\r\n");
+                tbxMessage.AppendText("There's no available scanner\r\n");
                 return;
             }
-            this.tbxMessage.AppendText("First scanner will be used\r\n");
-            this.m_Scanner = this.m_ScannerManager.Scanners[0];
+            tbxMessage.AppendText("First scanner will be used\r\n");
+            m_Scanner = m_ScannerManager.Scanners[0];
             this.m_Database = new UFDatabase();
-            this.tbxMessage.AppendText("Select a database file\r\n");
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.FileName = "UFDatabase.mdb";
-            openFileDialog.Filter = "Database Files (*.mdb)|*.mdb";
-            openFileDialog.DefaultExt = "mdb";
-            DialogResult dialogResult = openFileDialog.ShowDialog();
-            if (dialogResult != DialogResult.OK)
-            {
-                return;
-            }
-            string fileName = openFileDialog.FileName;
+            string fileName = "C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb";
+
             string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
             UFD_STATUS uFD_STATUS = this.m_Database.Open(connection, null, null);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFDatabase Open: OK\r\n");
+                tbxMessage.AppendText("UFDatabase Open: OK\r\n");
                 this.UpdateDatabaseList();
                 this.m_Matcher = new UFMatcher();
                 if (this.m_Matcher.InitResult == UFM_STATUS.OK)
                 {
-                    this.tbxMessage.AppendText("UFMatcher Init: OK\r\n");
+                    tbxMessage.AppendText("UFMatcher Init: OK\r\n");
                 }
                 else
                 {
-                    UFMatcher.GetErrorString(this.m_Matcher.InitResult, out this.m_strError);
-                    this.tbxMessage.AppendText("UFMatcher Init: " + this.m_strError + "\r\n");
+                    UFMatcher.GetErrorString(m_Matcher.InitResult, out m_strError);
+                    tbxMessage.AppendText("UFMatcher Init: " + m_strError + "\r\n");
                 }
                 this.cbScanTemplateType.SelectedIndex = 0;
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase Open: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase Open: " + m_strError + "\r\n");
         }
+
         private void btnUninit_Click(object sender, EventArgs e)
         {
+            btnUninit.Visible = false;
             Cursor.Current = Cursors.WaitCursor;
-            UFS_STATUS uFS_STATUS = this.m_ScannerManager.Uninit();
+            UFS_STATUS uFS_STATUS = m_ScannerManager.Uninit();
             Cursor.Current = this.Cursor;
             if (uFS_STATUS == UFS_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFScanner Uninit: OK\r\n");
+                tbxMessage.AppendText("UFScanner Uninit: OK\r\n");
             }
             else
             {
-                UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFScanner Uninit: " + this.m_strError + "\r\n");
+                UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+                tbxMessage.AppendText("UFScanner Uninit: " + m_strError + "\r\n");
             }
             if (this.m_Database != null)
             {
                 UFD_STATUS uFD_STATUS = this.m_Database.Close();
                 if (uFD_STATUS == UFD_STATUS.OK)
                 {
-                    this.tbxMessage.AppendText("UFDatabase Close: OK\r\n");
+                    tbxMessage.AppendText("UFDatabase Close: OK\r\n");
                 }
                 else
                 {
-                    UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-                    this.tbxMessage.AppendText("UFDatabase Close: " + this.m_strError + "\r\n");
+                    UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+                    tbxMessage.AppendText("UFDatabase Close: " + m_strError + "\r\n");
                 }
             }
             this.lvDatabaseList.Items.Clear();
+            btnInit.Visible = true;
         }
-        private bool ExtractTemplate(byte[] Template, out int TemplateSize)
+        private static bool ExtractTemplate(byte[] Template, out int TemplateSize)
         {
-            this.m_Scanner.ClearCaptureImageBuffer();
-            this.tbxMessage.AppendText("Colocar dedo\r\n");
+            m_Scanner.ClearCaptureImageBuffer();
+            tbxMessage.AppendText("Colocar dedo\r\n");
             TemplateSize = 0;
             UFS_STATUS uFS_STATUS;
             while (true)
             {
-                uFS_STATUS = this.m_Scanner.CaptureSingleImage();
+                uFS_STATUS = m_Scanner.CaptureSingleImage();
                 if (uFS_STATUS != UFS_STATUS.OK)
                 {
                     break;
                 }
                 int num;
-                uFS_STATUS = this.m_Scanner.ExtractEx(1024, Template, out TemplateSize, out num);
+                uFS_STATUS = m_Scanner.ExtractEx(1024, Template, out TemplateSize, out num);
                 if (uFS_STATUS == UFS_STATUS.OK)
                 {
                     goto IL_A4;
                 }
-                UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFScanner Extracto: " + this.m_strError + "\r\n");
+                UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+                tbxMessage.AppendText("UFScanner Extracto: " + m_strError + "\r\n");
             }
-            UFScanner.GetErrorString(uFS_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + this.m_strError + "\r\n");
+            UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+            tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
             return false;
         IL_A4:
-            this.tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
+            tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
             return true;
+        }
+
+        public static Empleado IniciarEscaneo() {
+            if (!ExtractTemplate(m_Template1, out m_Template1Size))
+            {
+                return null;
+            }
+            else {
+                DrawCapturedImage(m_Scanner);
+                var res = new Empleado();
+                res.huellaByte = m_Template1;
+                res.pesoHuella = m_Template1Size;
+
+                return res;
+            }
+
         }
         private void btnEnroll_Click(object sender, EventArgs e)
         {
-            if (!this.ExtractTemplate(this.m_Template1, out this.m_Template1Size))
-            {
-                return;
-            }
-            this.DrawCapturedImage(this.m_Scanner);
+            IniciarEscaneo();
             UserInfoForms userInfoForm = new UserInfoForms(false);
-            this.tbxMessage.AppendText("Ingrese data de usuario\r\n");
+            tbxMessage.AppendText("Ingrese data de usuario\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                this.tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
+                tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
                 return;
             }
-            UFD_STATUS uFD_STATUS = this.m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, this.m_Template1, this.m_Template1Size, null, 0, userInfoForm.Memo);
+            UFD_STATUS uFD_STATUS = this.m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, m_Template1, m_Template1Size, null, 0, userInfoForm.Memo);
             if (uFD_STATUS != UFD_STATUS.OK)
             {
-                UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFDatabase AgregarData: " + this.m_strError + "\r\n");
+                UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+                tbxMessage.AppendText("UFDatabase AgregarData: " + m_strError + "\r\n");
             }
             else
             {
@@ -276,6 +298,7 @@ namespace Suprema
         }
         private void btnIdentify_Click(object sender, EventArgs e)
         {
+            form = 1;
             byte[] array = new byte[1024];
             byte[][] template2Array = null;
             int[] template2SizeArray = null;
@@ -284,155 +307,189 @@ namespace Suprema
             UFD_STATUS templateListWithSerial = this.m_Database.GetTemplateListWithSerial(out template2Array, out template2SizeArray, out template2Num, out array2);
             if (templateListWithSerial != UFD_STATUS.OK)
             {
-                UFDatabase.GetErrorString(templateListWithSerial, out this.m_strError);
-                this.tbxMessage.AppendText("UFD_GetTemplateListWithSerial: " + this.m_strError + "\r\n");
+                UFDatabase.GetErrorString(templateListWithSerial, out m_strError);
+                tbxMessage.AppendText("UFD_GetTemplateListWithSerial: " + m_strError + "\r\n");
                 return;
             }
             int template1Size;
-            if (!this.ExtractTemplate(array, out template1Size))
+            if (!ExtractTemplate(array, out template1Size))
             {
                 return;
             }
-            this.DrawCapturedImage(this.m_Scanner);
+            DrawCapturedImage(m_Scanner);
             Cursor.Current = Cursors.WaitCursor;
             int num;
             UFM_STATUS uFM_STATUS = this.m_Matcher.Identify(array, template1Size, template2Array, template2SizeArray, template2Num, 5000, out num);
             Cursor.Current = this.Cursor;
             if (uFM_STATUS != UFM_STATUS.OK)
             {
-                UFMatcher.GetErrorString(uFM_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFMatcher Identify: " + this.m_strError + "\r\n");
+                UFMatcher.GetErrorString(uFM_STATUS, out m_strError);
+                tbxMessage.AppendText("UFMatcher Identify: " + m_strError + "\r\n");
                 return;
             }
             if (num != -1)
             {
-                this.tbxMessage.AppendText("Identificación exitos (Serial = " + array2[num] + ")\r\n");
+                var Empleado= ObtenerEmpleado(array2[num]);
+                //tbxMessage.AppendText("Identificación exitosa (Empleado = " + Empleado[0]+" "+ Empleado[1]+ ")\r\n");
+                MessageBox.Show(Empleado[0]+" " +Empleado[1], "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            this.tbxMessage.AppendText("Identificación fallida\r\n");
+            tbxMessage.AppendText("Identificación fallida\r\n");
+        }
+
+        private List<string> ObtenerEmpleado(int id) {
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            {
+                conection.Open();
+                var query = "Select Nombres,CodEmpleado From Fingerprints where Serial="+id;
+                var command = new OleDbCommand(query, conection);
+                var reader = command.ExecuteReader();
+                var Empleado = new List<string>();
+                while (reader.Read()) {
+                    Empleado.Add(reader[0].ToString());
+                    Empleado.Add(reader[1].ToString());
+                }
+                return Empleado;
+
+            }
+        }
+
+        public static void RegistrarEmpleado(Empleado obj) {
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            {
+                string data = "'"+obj.nombres+"'"+ "," + "'"+obj.nroDoc+ "'" + "," + obj.dedo + "," + (obj.huella==null?"0": "'"+obj.huella+ "'") + "," + 0 + "," + "'"+obj.nroDoc+ "'" + "," + "'"+obj.codigo+"'";
+                conection.Open();
+                OleDbCommand cmd = conection.CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "insert into Fingerprints(Nombres,Documento,FingerIndex,Template1,Template2,NroDocumento,CodEmpleado) " +
+                "values("+data+")";
+                cmd.ExecuteNonQuery();
+                conection.Close();
+                MessageBox.Show("Guardo con exito");
+            }
         }
         private void btnDeleteAll_Click(object sender, EventArgs e)
         {
             UFD_STATUS uFD_STATUS = this.m_Database.RemoveAllData();
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
+                tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
                 this.UpdateDatabaseList();
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase RemoveAllData: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase RemoveAllData: " + m_strError + "\r\n");
         }
         private void btnSelectionDelete_Click(object sender, EventArgs e)
         {
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Seleccione el registro\r\n");
+                tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             UFD_STATUS uFD_STATUS = this.m_Database.RemoveDataBySerial(serial);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
+                tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
                 this.UpdateDatabaseList();
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase RemoveDataBySerial: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase RemoveDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionUpdateUserInfo_Click(object sender, EventArgs e)
         {
             UserInfoForms userInfoForm = new UserInfoForms(true);
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Seleccione el registro\r\n");
+                tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             userInfoForm.UserID = this.lvDatabaseList.SelectedItems[0].SubItems[1].Text;
             userInfoForm.FingerIndex = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[2].Text);
             userInfoForm.Memo = this.lvDatabaseList.SelectedItems[0].SubItems[5].Text;
-            this.tbxMessage.AppendText("Datos de usuario actualizado\r\n");
-            this.tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
+            tbxMessage.AppendText("Datos de usuario actualizado\r\n");
+            tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                this.tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
+                tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
                 return;
             }
             UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, null, 0, null, 0, userInfoForm.Memo);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
+                tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
                 this.UpdateDatabaseList();
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionUpdateTemplate_Click(object sender, EventArgs e)
         {
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Seleccione el registro\r\n");
+                tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
-            if (!this.ExtractTemplate(this.m_Template1, out this.m_Template1Size))
+            if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return;
             }
-            this.DrawCapturedImage(this.m_Scanner);
-            UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, this.m_Template1, this.m_Template1Size, null, 0, null);
+            DrawCapturedImage(m_Scanner);
+            UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, m_Template1, m_Template1Size, null, 0, null);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                this.tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
+                tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
                 this.UpdateDatabaseList();
                 return;
             }
-            UFDatabase.GetErrorString(uFD_STATUS, out this.m_strError);
-            this.tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + this.m_strError + "\r\n");
+            UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
+            tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionVerify_Click(object sender, EventArgs e)
         {
             byte[] array = new byte[1024];
             if (this.lvDatabaseList.SelectedIndices.Count == 0)
             {
-                this.tbxMessage.AppendText("Seleccione el registro\r\n");
+                tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int num = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
-            UFD_STATUS dataBySerial = this.m_Database.GetDataBySerial(num, out this.m_UserID, out this.m_FingerIndex, this.m_Template1, out this.m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
+            UFD_STATUS dataBySerial = this.m_Database.GetDataBySerial(num, out this.m_UserID, out this.m_FingerIndex, m_Template1, out m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
             if (dataBySerial != UFD_STATUS.OK)
             {
-                UFDatabase.GetErrorString(dataBySerial, out this.m_strError);
-                this.tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + this.m_strError + "\r\n");
+                UFDatabase.GetErrorString(dataBySerial, out m_strError);
+                tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
                 return;
             }
             int template1Size;
-            if (!this.ExtractTemplate(array, out template1Size))
+            if (!ExtractTemplate(array, out template1Size))
             {
                 return;
             }
-            this.DrawCapturedImage(this.m_Scanner);
+            DrawCapturedImage(m_Scanner);
             bool flag;
-            UFM_STATUS uFM_STATUS = this.m_Matcher.Verify(array, template1Size, this.m_Template1, this.m_Template1Size, out flag);
+            UFM_STATUS uFM_STATUS = this.m_Matcher.Verify(array, template1Size, m_Template1, m_Template1Size, out flag);
             if (uFM_STATUS != UFM_STATUS.OK)
             {
-                UFMatcher.GetErrorString(uFM_STATUS, out this.m_strError);
-                this.tbxMessage.AppendText("UFMatcher Verify: " + this.m_strError + "\r\n");
+                UFMatcher.GetErrorString(uFM_STATUS, out m_strError);
+                tbxMessage.AppendText("UFMatcher Verify: " + m_strError + "\r\n");
                 return;
             }
             if (flag)
             {
-                this.tbxMessage.AppendText("Verificación exitosa (Serial = " + num + ")\r\n");
+                tbxMessage.AppendText("Verificación exitosa (Serial = " + num + ")\r\n");
                 return;
             }
-            this.tbxMessage.AppendText("Verificación fallo\r\n");
+            tbxMessage.AppendText("Verificación fallo\r\n");
         }
         private void bScanTemplateType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.m_Scanner == null)
+            if (m_Scanner == null)
             {
                 tbxMessage.AppendText("Sin instancias de escaner\r\n");
                 return;
@@ -440,19 +497,19 @@ namespace Suprema
             switch (this.cbScanTemplateType.SelectedIndex)
             {
                 case 0:
-                    this.m_Scanner.nTemplateType = 2001;
+                    m_Scanner.nTemplateType = 2001;
 
                     this.m_Matcher.nTemplateType = 2001;
 
                     return;
                 case 1:
-                    this.m_Scanner.nTemplateType = 2002;
+                    m_Scanner.nTemplateType = 2002;
 
                     this.m_Matcher.nTemplateType = 2002;
 
                     return;
                 case 2:
-                    this.m_Scanner.nTemplateType = 2003;
+                    m_Scanner.nTemplateType = 2003;
 
                     this.m_Matcher.nTemplateType = 2003;
 
@@ -471,137 +528,164 @@ namespace Suprema
         }
         private void InitializeComponent()
         {
-            this.btnInit = new Button();
-            this.btnUninit = new Button();
-            this.btnEnroll = new Button();
-            this.btnIdentify = new Button();
+            btnInit = new Button();
+            btnUninit = new Button();
+            btnEnroll = new Button();
+            btnIdentify = new Button();
             this.groupBox1 = new GroupBox();
-            this.btnSelectionVerify = new Button();
-            this.btnSelectionUpdateTemplate = new Button();
-            this.btnSelectionUpdateUserInfo = new Button();
-            this.btnSelectionDelete = new Button();
-            this.btnDeleteAll = new Button();
-            this.lvDatabaseList = new ListView();
-            this.tbxMessage = new TextBox();
-            this.btnClear = new Button();
-            this.pbImageFrame = new PictureBox();
-            this.label1 = new Label();
             this.cbScanTemplateType = new ComboBox();
+            btnSelectionVerify = new Button();
+            this.label1 = new Label();
+            btnSelectionUpdateUserInfo = new Button();
+            btnSelectionDelete = new Button();
+            btnDeleteAll = new Button();
+            btnSelectionUpdateTemplate = new Button();
+            this.lvDatabaseList = new ListView();
+            tbxMessage = new TextBox();
+            btnClear = new Button();
+            pbImageFrame = new PictureBox();
+            this.button1 = new Button();
             this.groupBox1.SuspendLayout();
             ((ISupportInitialize)(pbImageFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
             // 
-            this.btnInit.AccessibleDescription = "";
-            this.btnInit.Location = new Point(12, 12);
-            this.btnInit.Name = "btnInit";
-            this.btnInit.Size = new Size(84, 24);
-            this.btnInit.TabIndex = 0;
-            this.btnInit.Text = "Iniciar";
-            this.btnInit.UseVisualStyleBackColor = true;
-            this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
+            btnInit.AccessibleDescription = "";
+            btnInit.Location = new Point(12, 12);
+            btnInit.Name = "btnInit";
+            btnInit.Size = new Size(84, 24);
+            btnInit.TabIndex = 0;
+            btnInit.Text = "Iniciar";
+            btnInit.UseVisualStyleBackColor = true;
+            btnInit.Click += new EventHandler(btnInit_Click);
             // 
             // btnUninit
             // 
-            this.btnUninit.AccessibleDescription = "";
-            this.btnUninit.Location = new Point(12, 40);
-            this.btnUninit.Name = "btnUninit";
-            this.btnUninit.Size = new Size(84, 24);
-            this.btnUninit.TabIndex = 1;
-            this.btnUninit.Text = "Desconectar";
-            this.btnUninit.UseVisualStyleBackColor = true;
-            this.btnUninit.Click += new EventHandler(this.btnUninit_Click);
+            btnUninit.AccessibleDescription = "";
+            btnUninit.Location = new Point(11, 42);
+            btnUninit.Name = "btnUninit";
+            btnUninit.Size = new Size(84, 24);
+            btnUninit.TabIndex = 1;
+            btnUninit.Text = "Desconectar";
+            btnUninit.UseVisualStyleBackColor = true;
+            btnUninit.Click += new EventHandler(btnUninit_Click);
             // 
             // btnEnroll
             // 
-            this.btnEnroll.AccessibleDescription = "";
-            this.btnEnroll.Location = new Point(12, 84);
-            this.btnEnroll.Name = "btnEnroll";
-            this.btnEnroll.Size = new Size(84, 24);
-            this.btnEnroll.TabIndex = 2;
-            this.btnEnroll.Text = "Registrar";
-            this.btnEnroll.UseVisualStyleBackColor = true;
-            this.btnEnroll.Click += new EventHandler(btnEnroll_Click);
+            btnEnroll.AccessibleDescription = "";
+            btnEnroll.Location = new Point(12, 84);
+            btnEnroll.Name = "btnEnroll";
+            btnEnroll.Size = new Size(84, 24);
+            btnEnroll.TabIndex = 2;
+            btnEnroll.Text = "Registrar";
+            btnEnroll.UseVisualStyleBackColor = true;
+            btnEnroll.Click += new EventHandler(btnEnroll_Click);
             // 
             // btnIdentify
             // 
-            this.btnIdentify.AccessibleDescription = "";
-            this.btnIdentify.Location = new Point(12, 112);
-            this.btnIdentify.Name = "btnIdentify";
-            this.btnIdentify.Size = new Size(84, 24);
-            this.btnIdentify.TabIndex = 3;
-            this.btnIdentify.Text = "Identificar";
-            this.btnIdentify.UseVisualStyleBackColor = true;
-            this.btnIdentify.Click += new EventHandler(btnIdentify_Click);
+            btnIdentify.AccessibleDescription = "";
+            btnIdentify.Location = new Point(12, 112);
+            btnIdentify.Name = "btnIdentify";
+            btnIdentify.Size = new Size(84, 24);
+            btnIdentify.TabIndex = 3;
+            btnIdentify.Text = "Identificar";
+            btnIdentify.UseVisualStyleBackColor = true;
+            btnIdentify.Click += new EventHandler(btnIdentify_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbScanTemplateType);
             this.groupBox1.Controls.Add(btnSelectionVerify);
-            this.groupBox1.Controls.Add(btnSelectionUpdateTemplate);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(btnSelectionUpdateUserInfo);
             this.groupBox1.Controls.Add(btnSelectionDelete);
-            this.groupBox1.Location = new Point(12, 208);
+            this.groupBox1.Controls.Add(btnDeleteAll);
+            this.groupBox1.Location = new Point(11, 383);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new Size(84, 168);
+            this.groupBox1.Size = new Size(75, 21);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Selection";
+            this.groupBox1.Text = "Seleccion";
+            this.groupBox1.Visible = false;
+            // 
+            // cbScanTemplateType
+            // 
+            this.cbScanTemplateType.BackColor = Color.White;
+            this.cbScanTemplateType.FormattingEnabled = true;
+            this.cbScanTemplateType.Items.AddRange(new object[] {
+            "suprema",
+            "iso19479_2",
+            "ansi378"});
+            this.cbScanTemplateType.Location = new Point(199, 23);
+            this.cbScanTemplateType.Name = "cbScanTemplateType";
+            this.cbScanTemplateType.Size = new Size(124, 21);
+            this.cbScanTemplateType.TabIndex = 11;
+            this.cbScanTemplateType.SelectedIndexChanged += new EventHandler(this.bScanTemplateType_SelectedIndexChanged);
             // 
             // btnSelectionVerify
             // 
-            this.btnSelectionVerify.AccessibleDescription = "";
-            this.btnSelectionVerify.Location = new Point(8, 136);
-            this.btnSelectionVerify.Name = "btnSelectionVerify";
-            this.btnSelectionVerify.Size = new Size(68, 24);
-            this.btnSelectionVerify.TabIndex = 8;
-            this.btnSelectionVerify.Text = "Verificar";
-            this.btnSelectionVerify.UseVisualStyleBackColor = true;
-            this.btnSelectionVerify.Click += new EventHandler(btnSelectionVerify_Click);
+            btnSelectionVerify.AccessibleDescription = "";
+            btnSelectionVerify.Location = new Point(8, 94);
+            btnSelectionVerify.Name = "btnSelectionVerify";
+            btnSelectionVerify.Size = new Size(68, 24);
+            btnSelectionVerify.TabIndex = 8;
+            btnSelectionVerify.Text = "Verificar";
+            btnSelectionVerify.UseVisualStyleBackColor = true;
+            btnSelectionVerify.Click += new EventHandler(btnSelectionVerify_Click);
             // 
-            // btnSelectionUpdateTemplate
+            // label1
             // 
-            this.btnSelectionUpdateTemplate.AccessibleDescription = "";
-            this.btnSelectionUpdateTemplate.Location = new Point(8, 92);
-            this.btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
-            this.btnSelectionUpdateTemplate.Size = new Size(68, 40);
-            this.btnSelectionUpdateTemplate.TabIndex = 7;
-            this.btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
-            this.btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
-            this.btnSelectionUpdateTemplate.Click += new EventHandler(this.btnSelectionUpdateTemplate_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new Point(95, 25);
+            this.label1.Name = "label1";
+            this.label1.Size = new Size(81, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Tipo de plantilla";
             // 
             // btnSelectionUpdateUserInfo
             // 
-            this.btnSelectionUpdateUserInfo.AccessibleDescription = "";
-            this.btnSelectionUpdateUserInfo.Location = new Point(8, 48);
-            this.btnSelectionUpdateUserInfo.Name = "btnSelectionUpdateUserInfo";
-            this.btnSelectionUpdateUserInfo.Size = new Size(68, 40);
-            this.btnSelectionUpdateUserInfo.TabIndex = 6;
-            this.btnSelectionUpdateUserInfo.Text = "Actualizar Usuario";
-            this.btnSelectionUpdateUserInfo.UseVisualStyleBackColor = true;
-            this.btnSelectionUpdateUserInfo.Click += new EventHandler(this.btnSelectionUpdateUserInfo_Click);
+            btnSelectionUpdateUserInfo.AccessibleDescription = "";
+            btnSelectionUpdateUserInfo.Location = new Point(8, 48);
+            btnSelectionUpdateUserInfo.Name = "btnSelectionUpdateUserInfo";
+            btnSelectionUpdateUserInfo.Size = new Size(68, 40);
+            btnSelectionUpdateUserInfo.TabIndex = 6;
+            btnSelectionUpdateUserInfo.Text = "Actualizar Usuario";
+            btnSelectionUpdateUserInfo.UseVisualStyleBackColor = true;
+            btnSelectionUpdateUserInfo.Click += new EventHandler(btnSelectionUpdateUserInfo_Click);
             // 
             // btnSelectionDelete
             // 
-            this.btnSelectionDelete.AccessibleDescription = "";
-            this.btnSelectionDelete.Location = new Point(8, 20);
-            this.btnSelectionDelete.Name = "btnSelectionDelete";
-            this.btnSelectionDelete.Size = new Size(68, 24);
-            this.btnSelectionDelete.TabIndex = 5;
-            this.btnSelectionDelete.Text = "Eliminar";
-            this.btnSelectionDelete.UseVisualStyleBackColor = true;
-            this.btnSelectionDelete.Click += new EventHandler(btnSelectionDelete_Click);
+            btnSelectionDelete.AccessibleDescription = "";
+            btnSelectionDelete.Location = new Point(8, 20);
+            btnSelectionDelete.Name = "btnSelectionDelete";
+            btnSelectionDelete.Size = new Size(68, 24);
+            btnSelectionDelete.TabIndex = 5;
+            btnSelectionDelete.Text = "Eliminar";
+            btnSelectionDelete.UseVisualStyleBackColor = true;
+            btnSelectionDelete.Click += new EventHandler(btnSelectionDelete_Click);
             // 
             // btnDeleteAll
             // 
-            this.btnDeleteAll.AccessibleDescription = "";
-            this.btnDeleteAll.Location = new Point(12, 152);
-            this.btnDeleteAll.Name = "btnDeleteAll";
-            this.btnDeleteAll.Size = new Size(84, 24);
-            this.btnDeleteAll.TabIndex = 5;
-            this.btnDeleteAll.Text = "Eliminar Todo";
-            this.btnDeleteAll.UseVisualStyleBackColor = true;
-            this.btnDeleteAll.Click += new EventHandler(this.btnDeleteAll_Click);
+            btnDeleteAll.AccessibleDescription = "";
+            btnDeleteAll.Location = new Point(98, 56);
+            btnDeleteAll.Name = "btnDeleteAll";
+            btnDeleteAll.Size = new Size(84, 24);
+            btnDeleteAll.TabIndex = 5;
+            btnDeleteAll.Text = "Eliminar Todo";
+            btnDeleteAll.UseVisualStyleBackColor = true;
+            btnDeleteAll.Click += new EventHandler(btnDeleteAll_Click);
+            // 
+            // btnSelectionUpdateTemplate
+            // 
+            btnSelectionUpdateTemplate.AccessibleDescription = "";
+            btnSelectionUpdateTemplate.Location = new Point(11, 251);
+            btnSelectionUpdateTemplate.Name = "btnSelectionUpdateTemplate";
+            btnSelectionUpdateTemplate.Size = new Size(68, 40);
+            btnSelectionUpdateTemplate.TabIndex = 7;
+            btnSelectionUpdateTemplate.Text = "Actualizar Plantilla";
+            btnSelectionUpdateTemplate.UseVisualStyleBackColor = true;
+            btnSelectionUpdateTemplate.Click += new EventHandler(btnSelectionUpdateTemplate_Click);
             // 
             // lvDatabaseList
             // 
@@ -619,82 +703,76 @@ namespace Suprema
             // 
             // tbxMessage
             // 
-            this.tbxMessage.Location = new Point(102, 320);
-            this.tbxMessage.Multiline = true;
-            this.tbxMessage.Name = "tbxMessage";
-            this.tbxMessage.Size = new Size(609, 84);
-            this.tbxMessage.TabIndex = 7;
+            tbxMessage.Location = new Point(102, 320);
+            tbxMessage.Multiline = true;
+            tbxMessage.Name = "tbxMessage";
+            tbxMessage.Size = new Size(609, 84);
+            tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
-            this.btnClear.AccessibleDescription = "";
-            this.btnClear.Location = new Point(719, 320);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new Size(48, 84);
-            this.btnClear.TabIndex = 8;
-            this.btnClear.Text = "Limpiar";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            btnClear.AccessibleDescription = "";
+            btnClear.Location = new Point(719, 320);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(48, 84);
+            btnClear.TabIndex = 8;
+            btnClear.Text = "Limpiar";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += new EventHandler(btnClear_Click);
             // 
             // pbImageFrame
             // 
-            this.pbImageFrame.Location = new Point(102, 12);
-            this.pbImageFrame.Name = "pbImageFrame";
-            this.pbImageFrame.Size = new Size(228, 252);
-            this.pbImageFrame.TabIndex = 9;
-            this.pbImageFrame.TabStop = false;
+            pbImageFrame.Location = new Point(102, 12);
+            pbImageFrame.Name = "pbImageFrame";
+            pbImageFrame.Size = new Size(228, 252);
+            pbImageFrame.TabIndex = 9;
+            pbImageFrame.TabStop = false;
             // 
-            // label1
+            // button1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new Point(101, 278);
-            this.label1.Name = "label1";
-            this.label1.Size = new Size(81, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Tipo de plantilla";
+            this.button1.Location = new Point(11, 151);
+            this.button1.Name = "button1";
+            this.button1.Size = new Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "RegXD";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new EventHandler(this.button1_Click);
             // 
-            // cbScanTemplateType
-            // 
-            this.cbScanTemplateType.BackColor = Color.White;
-            this.cbScanTemplateType.FormattingEnabled = true;
-            this.cbScanTemplateType.Items.AddRange(new object[] {
-            "suprema",
-            "iso19479_2",
-            "ansi378"});
-            this.cbScanTemplateType.Location = new Point(205, 276);
-            this.cbScanTemplateType.Name = "cbScanTemplateType";
-            this.cbScanTemplateType.Size = new Size(124, 21);
-            this.cbScanTemplateType.TabIndex = 11;
-            this.cbScanTemplateType.SelectedIndexChanged += new System.EventHandler(this.bScanTemplateType_SelectedIndexChanged);
-            // 
-            // UFE30_DatabaseDemo
+            // Huella
             // 
             this.AutoScaleDimensions = new SizeF(96F, 96F);
             this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.ClientSize = new Size(779, 414);
-            this.Controls.Add(cbScanTemplateType);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pbImageFrame);
-            this.Controls.Add(this.btnClear);
-            this.Controls.Add(this.tbxMessage);
+            this.ClientSize = new Size(793, 428);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(btnSelectionUpdateTemplate);
+            this.Controls.Add(pbImageFrame);
+            this.Controls.Add(btnClear);
+            this.Controls.Add(tbxMessage);
             this.Controls.Add(this.lvDatabaseList);
-            this.Controls.Add(this.btnDeleteAll);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnIdentify);
-            this.Controls.Add(this.btnEnroll);
-            this.Controls.Add(this.btnUninit);
-            this.Controls.Add(this.btnInit);
+            this.Controls.Add(btnIdentify);
+            this.Controls.Add(btnEnroll);
+            this.Controls.Add(btnUninit);
+            this.Controls.Add(btnInit);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "UFE30_DatabaseDemo";
-            this.Text = "Suprema PC SDK Database Demo (VC#)";
-            this.FormClosing += new FormClosingEventHandler(this.UFE30_DatabaseDemo_FormClosing);
-            this.Load += new System.EventHandler(this.UFE30_DatabaseDemo_Load);
+            this.Name = "Huella";
+            this.Text = "Biometrico Tawa";
+            this.FormClosing += new FormClosingEventHandler(this.Huella_FormClosing);
+            this.Load += new EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
-            ((ISupportInitialize)(this.pbImageFrame)).EndInit();
+            this.groupBox1.PerformLayout();
+            ((ISupportInitialize)(pbImageFrame)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            form = 2;
+            new RegistroEmpleado().Show();
+            //MessageBox.Show(CLocation.GetLocationProperty(), "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
  

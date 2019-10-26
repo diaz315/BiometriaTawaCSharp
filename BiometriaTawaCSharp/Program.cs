@@ -17,7 +17,7 @@ namespace BiometriaTawaCSharp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UFE30_DatabaseDemo());
+            Application.Run(new Huella());
         }
     }
 }
