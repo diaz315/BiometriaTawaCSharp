@@ -18,7 +18,7 @@ namespace Suprema
     {
         private UFScannerManager m_ScannerManager;
         private static UFScanner m_Scanner;
-        private UFDatabase m_Database;
+        private static UFDatabase m_Database;
         private UFMatcher m_Matcher;
         private static string m_strError;
         private int m_Serial;
@@ -38,7 +38,7 @@ namespace Suprema
         private Button btnSelectionVerify;
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
-        private ListView lvDatabaseList;
+        private static ListView lvDatabaseList;
         public static TextBox tbxMessage;
         private Button btnClear;
         public static PictureBox pbImageFrame;
@@ -57,15 +57,15 @@ namespace Suprema
         {
             m_ScannerManager = new UFScannerManager(this);
             m_Scanner = null;
-            this.m_Database = null;
+            m_Database = null;
             this.m_Matcher = null;
             m_Template1 = new byte[1024];
             this.m_Template2 = new byte[1024];
-            this.lvDatabaseList.Columns.Add("N#", 50, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Nombres", 170, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Tipo. Doc", 80, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Nro. Doc", 80, HorizontalAlignment.Left);
-            this.lvDatabaseList.Columns.Add("Codigo", 80, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("N#", 50, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Nombres", 170, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Tipo. Doc", 80, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Nro. Doc", 80, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Codigo", 80, HorizontalAlignment.Left);
         }
         private void Huella_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -76,7 +76,7 @@ namespace Suprema
         {
             tbxMessage.Clear();
         }
-        private void AddRow(int numero,string Nombres, string TipoDoc, string NroDoc,string CodColaborador)
+        private static void AddRow(int numero,string Nombres, string TipoDoc, string NroDoc,string CodColaborador)
         {
             ListViewItem listViewItem = lvDatabaseList.Items.Add(Convert.ToString(numero));
             listViewItem.SubItems.Add(Nombres);
@@ -85,23 +85,23 @@ namespace Suprema
             listViewItem.SubItems.Add(CodColaborador);
         }
 
-        private void UpdateDatabaseList()
+        public static void UpdateDatabaseList()
         {
-            if (this.m_Database == null)
+            if (m_Database == null)
             {
                 return;
             }
             int num;
-            UFD_STATUS uFD_STATUS = this.m_Database.GetDataNumber(out num);
+            UFD_STATUS uFD_STATUS = m_Database.GetDataNumber(out num);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 tbxMessage.AppendText("UFDatabase GetDataNumber: " + num + "\r\n");
-                this.lvDatabaseList.Items.Clear();
+                lvDatabaseList.Items.Clear();
 
                 var Empleados = ObtenerEmpleado();
                 int i = 1;
                 foreach (Empleado obj in Empleados) {
-                    this.AddRow(i,obj.nombres,obj.tipoDoc,obj.nroDoc,obj.codigo);
+                    AddRow(i,obj.nombres,obj.tipoDoc,obj.nroDoc,obj.codigo);
                     i++;
                 }
                 return;
@@ -109,6 +109,8 @@ namespace Suprema
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
             tbxMessage.AppendText("UFDatabase GetDataNumber: " + m_strError + "\r\n");
         }
+
+
         private static void DrawCapturedImage(UFScanner Scanner)
         {
             if (form == 1)
@@ -170,15 +172,15 @@ namespace Suprema
                 }
                 tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
-                this.m_Database = new UFDatabase();
+                m_Database = new UFDatabase();
                 string fileName = "C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb";
 
                 string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
-                UFD_STATUS uFD_STATUS = this.m_Database.Open(connection, null, null);
+                UFD_STATUS uFD_STATUS = m_Database.Open(connection, null, null);
                 if (uFD_STATUS == UFD_STATUS.OK)
                 {
                     tbxMessage.AppendText("UFDatabase Open: OK\r\n");
-                    this.UpdateDatabaseList();
+                    UpdateDatabaseList();
                     this.m_Matcher = new UFMatcher();
                     if (this.m_Matcher.InitResult == UFM_STATUS.OK)
                     {
@@ -213,9 +215,9 @@ namespace Suprema
                 UFScanner.GetErrorString(uFS_STATUS, out m_strError);
                 tbxMessage.AppendText("UFScanner Uninit: " + m_strError + "\r\n");
             }
-            if (this.m_Database != null)
+            if (m_Database != null)
             {
-                UFD_STATUS uFD_STATUS = this.m_Database.Close();
+                UFD_STATUS uFD_STATUS = m_Database.Close();
                 if (uFD_STATUS == UFD_STATUS.OK)
                 {
                     tbxMessage.AppendText("UFDatabase Close: OK\r\n");
@@ -226,7 +228,7 @@ namespace Suprema
                     tbxMessage.AppendText("UFDatabase Close: " + m_strError + "\r\n");
                 }
             }
-            this.lvDatabaseList.Items.Clear();
+            lvDatabaseList.Items.Clear();
             btnInit.Visible = true;
         }
         private static bool ExtractTemplate(byte[] Template, out int TemplateSize)
@@ -286,7 +288,7 @@ namespace Suprema
                 tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
                 return;
             }
-            UFD_STATUS uFD_STATUS = this.m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, m_Template1, m_Template1Size, null, 0, userInfoForm.Memo);
+            UFD_STATUS uFD_STATUS = m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, m_Template1, m_Template1Size, null, 0, userInfoForm.Memo);
             if (uFD_STATUS != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -296,7 +298,7 @@ namespace Suprema
             {
                 this.cbScanTemplateType.Enabled = false;
             }
-            this.UpdateDatabaseList();
+            UpdateDatabaseList();
         }
         private void btnIdentify_Click(object sender, EventArgs e)
         {
@@ -307,7 +309,7 @@ namespace Suprema
             int[] template2SizeArray = null;
             int[] array2 = null;
             int template2Num;
-            UFD_STATUS templateListWithSerial = this.m_Database.GetTemplateListWithSerial(out template2Array, out template2SizeArray, out template2Num, out array2);
+            UFD_STATUS templateListWithSerial = m_Database.GetTemplateListWithSerial(out template2Array, out template2SizeArray, out template2Num, out array2);
             if (templateListWithSerial != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(templateListWithSerial, out m_strError);
@@ -357,7 +359,7 @@ namespace Suprema
             }
         }
 
-        private List<Empleado> ObtenerEmpleado()
+        private static List<Empleado> ObtenerEmpleado()
         {
             using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
@@ -398,11 +400,11 @@ namespace Suprema
         }
         private void btnDeleteAll_Click(object sender, EventArgs e)
         {
-            UFD_STATUS uFD_STATUS = this.m_Database.RemoveAllData();
+            UFD_STATUS uFD_STATUS = m_Database.RemoveAllData();
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
-                this.UpdateDatabaseList();
+                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -410,17 +412,17 @@ namespace Suprema
         }
         private void btnSelectionDelete_Click(object sender, EventArgs e)
         {
-            if (this.lvDatabaseList.SelectedIndices.Count == 0)
+            if (lvDatabaseList.SelectedIndices.Count == 0)
             {
                 tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
-            int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
-            UFD_STATUS uFD_STATUS = this.m_Database.RemoveDataBySerial(serial);
+            int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
+            UFD_STATUS uFD_STATUS = m_Database.RemoveDataBySerial(serial);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
-                this.UpdateDatabaseList();
+                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -429,15 +431,15 @@ namespace Suprema
         private void btnSelectionUpdateUserInfo_Click(object sender, EventArgs e)
         {
             UserInfoForms userInfoForm = new UserInfoForms(true);
-            if (this.lvDatabaseList.SelectedIndices.Count == 0)
+            if (lvDatabaseList.SelectedIndices.Count == 0)
             {
                 tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
-            int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
-            userInfoForm.UserID = this.lvDatabaseList.SelectedItems[0].SubItems[1].Text;
-            userInfoForm.FingerIndex = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[2].Text);
-            userInfoForm.Memo = this.lvDatabaseList.SelectedItems[0].SubItems[5].Text;
+            int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
+            userInfoForm.UserID = lvDatabaseList.SelectedItems[0].SubItems[1].Text;
+            userInfoForm.FingerIndex = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[2].Text);
+            userInfoForm.Memo = lvDatabaseList.SelectedItems[0].SubItems[5].Text;
             tbxMessage.AppendText("Datos de usuario actualizado\r\n");
             tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
@@ -445,11 +447,11 @@ namespace Suprema
                 tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
                 return;
             }
-            UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, null, 0, null, 0, userInfoForm.Memo);
+            UFD_STATUS uFD_STATUS = m_Database.UpdateDataBySerial(serial, null, 0, null, 0, userInfoForm.Memo);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
-                this.UpdateDatabaseList();
+                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -457,22 +459,22 @@ namespace Suprema
         }
         private void btnSelectionUpdateTemplate_Click(object sender, EventArgs e)
         {
-            if (this.lvDatabaseList.SelectedIndices.Count == 0)
+            if (lvDatabaseList.SelectedIndices.Count == 0)
             {
                 tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
-            int serial = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
+            int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return;
             }
             DrawCapturedImage(m_Scanner);
-            UFD_STATUS uFD_STATUS = this.m_Database.UpdateDataBySerial(serial, m_Template1, m_Template1Size, null, 0, null);
+            UFD_STATUS uFD_STATUS = m_Database.UpdateDataBySerial(serial, m_Template1, m_Template1Size, null, 0, null);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
-                this.UpdateDatabaseList();
+                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -481,13 +483,13 @@ namespace Suprema
         private void btnSelectionVerify_Click(object sender, EventArgs e)
         {
             byte[] array = new byte[1024];
-            if (this.lvDatabaseList.SelectedIndices.Count == 0)
+            if (lvDatabaseList.SelectedIndices.Count == 0)
             {
                 tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
-            int num = Convert.ToInt32(this.lvDatabaseList.SelectedItems[0].SubItems[0].Text);
-            UFD_STATUS dataBySerial = this.m_Database.GetDataBySerial(num, out this.m_UserID, out this.m_FingerIndex, m_Template1, out m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
+            int num = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
+            UFD_STATUS dataBySerial = m_Database.GetDataBySerial(num, out this.m_UserID, out this.m_FingerIndex, m_Template1, out m_Template1Size, this.m_Template2, out this.m_Template2Size, out this.m_Memo);
             if (dataBySerial != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(dataBySerial, out m_strError);
@@ -567,7 +569,7 @@ namespace Suprema
             this.btnSelectionUpdateUserInfo = new System.Windows.Forms.Button();
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
-            this.lvDatabaseList = new System.Windows.Forms.ListView();
+            lvDatabaseList = new System.Windows.Forms.ListView();
             tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
             pbImageFrame = new System.Windows.Forms.PictureBox();
@@ -708,17 +710,17 @@ namespace Suprema
             // 
             // lvDatabaseList
             // 
-            this.lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvDatabaseList.FullRowSelect = true;
-            this.lvDatabaseList.GridLines = true;
-            this.lvDatabaseList.HideSelection = false;
-            this.lvDatabaseList.Location = new System.Drawing.Point(347, 12);
-            this.lvDatabaseList.MultiSelect = false;
-            this.lvDatabaseList.Name = "lvDatabaseList";
-            this.lvDatabaseList.Size = new System.Drawing.Size(420, 296);
-            this.lvDatabaseList.TabIndex = 6;
-            this.lvDatabaseList.UseCompatibleStateImageBehavior = false;
-            this.lvDatabaseList.View = System.Windows.Forms.View.Details;
+            lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            lvDatabaseList.FullRowSelect = true;
+            lvDatabaseList.GridLines = true;
+            lvDatabaseList.HideSelection = false;
+            lvDatabaseList.Location = new System.Drawing.Point(347, 12);
+            lvDatabaseList.MultiSelect = false;
+            lvDatabaseList.Name = "lvDatabaseList";
+            lvDatabaseList.Size = new System.Drawing.Size(420, 296);
+            lvDatabaseList.TabIndex = 6;
+            lvDatabaseList.UseCompatibleStateImageBehavior = false;
+            lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
             // tbxMessage
             // 
@@ -766,7 +768,7 @@ namespace Suprema
             this.Controls.Add(pbImageFrame);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(tbxMessage);
-            this.Controls.Add(this.lvDatabaseList);
+            this.Controls.Add(lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnIdentify);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

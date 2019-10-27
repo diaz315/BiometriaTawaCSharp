@@ -112,7 +112,7 @@ namespace BiometriaTawaCSharp
                     }
 
                     Huella.RegistrarEmpleado(Resultado);
-
+                    Huella.UpdateDatabaseList();
                     Limpiar();
                 }
                 else {
