@@ -42,6 +42,7 @@
             this.txtCodEmp = new System.Windows.Forms.TextBox();
             pbImageFrame = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -83,7 +84,7 @@
             // btnRegistrar
             // 
             this.btnRegistrar.Enabled = false;
-            this.btnRegistrar.Location = new System.Drawing.Point(293, 373);
+            this.btnRegistrar.Location = new System.Drawing.Point(317, 374);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(75, 23);
             this.btnRegistrar.TabIndex = 4;
@@ -170,11 +171,22 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Huella";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(236, 373);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 24);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "Cerrar";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
             // RegistroEmpleado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 409);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtCodEmp);
@@ -212,6 +224,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCodEmp;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button2;
         public static System.Windows.Forms.PictureBox pbImageFrame;
     }
 }
