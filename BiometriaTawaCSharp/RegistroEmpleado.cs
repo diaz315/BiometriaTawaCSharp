@@ -1,6 +1,9 @@
 ﻿using Suprema;
 using System;
+using System.Collections.Specialized;
 using System.Data.OleDb;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BiometriaTawaCSharp
@@ -29,7 +32,7 @@ namespace BiometriaTawaCSharp
 
         private int ObtenerEmpleado(string codigo)
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Count(Serial) From Fingerprints where CodEmpleado="+"'"+codigo+"'";
@@ -44,6 +47,11 @@ namespace BiometriaTawaCSharp
             }
         }
 
+        private void RegistrarHuellaApi()
+        {
+
+        }
+
         private void ConsultarApi() {
             Resultado = Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/empleado/?codigo=" + txtCodEmpleado.Text);
             if (Resultado != null)
@@ -52,6 +60,17 @@ namespace BiometriaTawaCSharp
                 txtDoc.Text = Resultado.tipoDoc;
                 txtNroDoc.Text = Resultado.nroDoc;
                 txtCodEmp.Text = Resultado.codigo;
+
+                if (Resultado.huella != null)
+                {
+                    var huellaByte = Convert.FromBase64String(Resultado.huella);
+                    Resultado.huellaByte = huellaByte;
+                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/bien.png"); ;
+                }
+                else {
+                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/mal.png"); ;
+                }
+
             }
             else
             {
@@ -76,7 +95,22 @@ namespace BiometriaTawaCSharp
             {
                 if (Resultado.huella!=null || Huella.HuellaTomada == 1)
                 {
+                    try {
+                        if (Huella.HuellaTomada == 1)
+                        {
+                            var huella = Convert.ToBase64String(Resultado.huellaByte);
+                            var coordenada = CLocation.GetLocationProperty();
+                            var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+                            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;
+                            Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+                        }
+                    }
+                    catch (Exception x) {
+                        Console.WriteLine(x.Message);
+                    }
+
                     Huella.RegistrarEmpleado(Resultado);
+
                     Limpiar();
                 }
                 else {

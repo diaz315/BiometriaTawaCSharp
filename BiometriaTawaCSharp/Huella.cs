@@ -171,7 +171,7 @@ namespace Suprema
                 tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
                 this.m_Database = new UFDatabase();
-                string fileName = "C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb";
+                string fileName = "C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb";
 
                 string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
                 UFD_STATUS uFD_STATUS = this.m_Database.Open(connection, null, null);
@@ -253,6 +253,7 @@ namespace Suprema
             }
             UFScanner.GetErrorString(uFS_STATUS, out m_strError);
             tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
+            MessageBox.Show("Por favor intente nuevamente", "Identificación falido", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return false;
         IL_A4:
             tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
@@ -339,7 +340,7 @@ namespace Suprema
         }
 
         private List<string> ObtenerEmpleado(int id) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado From Fingerprints where Serial="+id;
@@ -357,7 +358,7 @@ namespace Suprema
 
         private List<Empleado> ObtenerEmpleado()
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado,Documento,NroDocumento From Fingerprints where Estado=1";
@@ -375,9 +376,9 @@ namespace Suprema
         }
 
         public static void RegistrarEmpleado(Empleado obj) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//Desktop//NagaSkaki_512//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
-                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado) VALUES (?,?,?,?,?,?)", conection);
+                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado) VALUES (?,?,?,?,?,?,?)", conection);
                 OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
                 parImagen.Value = obj.huellaByte;
                 comm.Parameters.Add("@Nombres", OleDbType.VarChar).Value = obj.nombres.Trim();
@@ -386,6 +387,7 @@ namespace Suprema
                 comm.Parameters.Add(parImagen);
                 comm.Parameters.Add("@NroDocumento", OleDbType.VarChar).Value = obj.nroDoc;
                 comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = obj.codigo;
+                comm.Parameters.Add("@Estado", OleDbType.Integer).Value = 1;
                 conection.Open();
                 int iResultado = comm.ExecuteNonQuery();
                 conection.Close();
