@@ -49,7 +49,11 @@ namespace BiometriaTawaCSharp
 
         private void RegistrarHuellaApi()
         {
-
+            var huella = Convert.ToBase64String(Resultado.huellaByte);
+            var coordenada = CLocation.GetLocationProperty();
+            var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;
+            Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
         }
 
         private void ConsultarApi() {
@@ -65,10 +69,12 @@ namespace BiometriaTawaCSharp
                 {
                     var huellaByte = Convert.FromBase64String(Resultado.huella);
                     Resultado.huellaByte = huellaByte;
-                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/bien.png"); ;
+                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/bien.png");
+                    btnRegistrar.Enabled = true;
                 }
                 else {
-                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/mal.png"); ;
+                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/mal.png");
+                    btnRegistrar.Enabled = false;
                 }
 
             }
@@ -98,11 +104,7 @@ namespace BiometriaTawaCSharp
                     try {
                         if (Huella.HuellaTomada == 1)
                         {
-                            var huella = Convert.ToBase64String(Resultado.huellaByte);
-                            var coordenada = CLocation.GetLocationProperty();
-                            var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-                            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;
-                            Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+                            RegistrarHuellaApi();
                         }
                     }
                     catch (Exception x) {
@@ -126,11 +128,14 @@ namespace BiometriaTawaCSharp
 
         private void pbImageFrame_Click(object sender, EventArgs e)
         {
-            if (Resultado != null)
+            if (Resultado != null && Resultado.huella==null)
             {
                 Empleado resul=Huella.IniciarEscaneo();
                 Resultado.huellaByte = resul.huellaByte;
                 Resultado.pesoHuella = resul.pesoHuella;
+                if (resul.pesoHuella>0) {
+                    btnRegistrar.Enabled = true;
+                }
             }
         }
     }

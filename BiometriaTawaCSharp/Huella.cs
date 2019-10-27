@@ -261,6 +261,7 @@ namespace Suprema
         }
 
         public static Empleado IniciarEscaneo() {
+            MessageBox.Show("Coloque su huella", "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return null;
