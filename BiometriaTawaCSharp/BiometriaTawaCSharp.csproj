@@ -114,6 +114,9 @@
   <ItemGroup>
     <Content Include="bien.png" />
     <Content Include="mal.png" />
+    <Content Include="UFDatabase.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
