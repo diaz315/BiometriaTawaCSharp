@@ -67,7 +67,11 @@ namespace BiometriaTawaCSharp
 
                 if (Resultado.huella != null)
                 {
-                    var huellaByte = Convert.FromBase64String(Resultado.huella);
+                    string dummyData = Resultado.huella.Trim().Replace(" ", "+");
+                    if (dummyData.Length % 4 > 0)
+                        dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+                    byte[] huellaByte = Convert.FromBase64String(dummyData);
+
                     Resultado.huellaByte = huellaByte;
                     pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/bien.png");
                     btnRegistrar.Enabled = true;
@@ -113,6 +117,8 @@ namespace BiometriaTawaCSharp
 
                     Huella.RegistrarEmpleado(Resultado);
                     Huella.UpdateDatabaseList();
+                    //new Huella().Desconectar();
+                    //new Huella().InicializarBD();
                     Limpiar();
                 }
                 else {

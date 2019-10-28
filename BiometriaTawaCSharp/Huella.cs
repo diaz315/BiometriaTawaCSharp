@@ -47,8 +47,8 @@ namespace Suprema
         private ComboBox cbScanTemplateType;
         private Button btnSelectionUpdateTemplate;
         public static int form;
-        public static int HuellaTomada=0;
-        public static int BdIniciada=0;
+        public static int HuellaTomada = 0;
+        public static int BdIniciada = 0;
         public Huella()
         {
             this.InitializeComponent();
@@ -76,7 +76,7 @@ namespace Suprema
         {
             tbxMessage.Clear();
         }
-        private static void AddRow(int numero,string Nombres, string TipoDoc, string NroDoc,string CodColaborador)
+        private static void AddRow(int numero, string Nombres, string TipoDoc, string NroDoc, string CodColaborador)
         {
             ListViewItem listViewItem = lvDatabaseList.Items.Add(Convert.ToString(numero));
             listViewItem.SubItems.Add(Nombres);
@@ -101,7 +101,7 @@ namespace Suprema
                 var Empleados = ObtenerEmpleado();
                 int i = 1;
                 foreach (Empleado obj in Empleados) {
-                    AddRow(i,obj.nombres,obj.tipoDoc,obj.nroDoc,obj.codigo);
+                    AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
                     i++;
                 }
                 return;
@@ -150,8 +150,8 @@ namespace Suprema
             btnInit.Visible = false;
         }
 
-        private void InicializarBD() {
-            if (BdIniciada==0) {
+        public void InicializarBD() {
+            if (BdIniciada == 0) {
                 BdIniciada = 1;
                 Cursor.Current = Cursors.WaitCursor;
                 UFS_STATUS uFS_STATUS = m_ScannerManager.Init();
@@ -197,12 +197,10 @@ namespace Suprema
                 UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
                 tbxMessage.AppendText("UFDatabase Open: " + m_strError + "\r\n");
             }
-            
+
         }
 
-        private void btnUninit_Click(object sender, EventArgs e)
-        {
-            btnUninit.Visible = false;
+        public void Desconectar() {
             Cursor.Current = Cursors.WaitCursor;
             UFS_STATUS uFS_STATUS = m_ScannerManager.Uninit();
             Cursor.Current = this.Cursor;
@@ -229,7 +227,11 @@ namespace Suprema
                 }
             }
             lvDatabaseList.Items.Clear();
-            btnInit.Visible = true;
+        }
+
+        private void btnUninit_Click(object sender, EventArgs e)
+        {
+            Desconectar();
         }
         private static bool ExtractTemplate(byte[] Template, out int TemplateSize)
         {
