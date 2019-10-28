@@ -75,6 +75,7 @@ namespace BiometriaTawaCSharp
             }
             catch { enviado = 0; }
             RegistrarAsistenciaLocal(Resultado.id, fecha, enviado, terminal, coordenada);
+
         }
 
         public static void RegistrarAsistenciaLocal(int empleadoId, DateTime fecha, int enviado, string terminal, string coordenadas)
