@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BiometriaTawaCSharp
@@ -54,6 +55,16 @@ namespace BiometriaTawaCSharp
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;
             Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+        }
+
+        private async Task RegistrarAsistenciaApi()
+        {
+            var coordenada = CLocation.GetLocationProperty();
+            var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+            var param = "empleadoId=" + Resultado.id + "&terminal=" + terminal + "&coordenadas=" + coordenada;
+            await Task.Run(() => {
+                Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
+            });
         }
 
         private void ConsultarApi() {
@@ -119,6 +130,15 @@ namespace BiometriaTawaCSharp
                     Huella.UpdateDatabaseList();
                     //new Huella().Desconectar();
                     //new Huella().InicializarBD();
+
+                    try
+                    {
+                        RegistrarAsistenciaApi();
+                    }
+                    catch (Exception y) {
+                        Console.WriteLine(y.Message);
+                    }
+
                     Limpiar();
                 }
                 else {
