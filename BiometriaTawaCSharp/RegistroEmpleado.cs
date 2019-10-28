@@ -1,10 +1,8 @@
 ﻿using Suprema;
 using System;
-using System.Collections.Specialized;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BiometriaTawaCSharp
@@ -12,6 +10,7 @@ namespace BiometriaTawaCSharp
     public partial class RegistroEmpleado : Form
     {
         private static Empleado Resultado;
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -33,7 +32,7 @@ namespace BiometriaTawaCSharp
 
         private int ObtenerEmpleado(string codigo)
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Count(Serial) From Fingerprints where CodEmpleado="+"'"+codigo+"'";
@@ -90,7 +89,7 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
                 {
                     OleDbCommand comm = new OleDbCommand("INSERT INTO Asistencia(EmpleadoId,Fecha,Estado,Enviado,Terminal,Coordenadas) VALUES (?,?,?,?,?,?)", conection);
 
@@ -129,11 +128,11 @@ namespace BiometriaTawaCSharp
                     byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                     Resultado.huellaByte = huellaByte;
-                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/bien.png");
+                    pbImageFrame.Image = Image.FromFile(DirectorioPrincipal+"bien.png");
                     btnRegistrar.Enabled = true;
                 }
                 else {
-                    pbImageFrame.Image = Image.FromFile("C:/Users/JD/source/repos/BiometriaTawaCSharp/BiometriaTawaCSharp/mal.png");
+                    pbImageFrame.Image = Image.FromFile(DirectorioPrincipal+"mal.png");
                     btnRegistrar.Enabled = false;
                 }
 

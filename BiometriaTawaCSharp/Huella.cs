@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,10 +40,10 @@ namespace Suprema
         private Button btnSelectionVerify;
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
-        private static ListView lvDatabaseList;
-        public static TextBox tbxMessage;
+        private ListView lvDatabaseList;
+        public TextBox tbxMessage;
         private Button btnClear;
-        public static PictureBox pbImageFrame;
+        public PictureBox pbImageFrame;
         private Label label1;
         private Button button1;
         private ComboBox cbScanTemplateType;
@@ -52,6 +53,8 @@ namespace Suprema
         private Label label2;
         private GroupBox groupBox2;
         public static int BdIniciada = 0;
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
+
         public Huella()
         {
             this.InitializeComponent();
@@ -176,7 +179,7 @@ namespace Suprema
                 tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
                 m_Database = new UFDatabase();
-                string fileName = "C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb";
+                string fileName = DirectorioPrincipal+"UFDatabase.mdb";
 
                 string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
                 UFD_STATUS uFD_STATUS = m_Database.Open(connection, null, null);
@@ -351,7 +354,7 @@ namespace Suprema
         }
 
         private List<string> ObtenerEmpleado(int id) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado,EmpleadoId From Fingerprints where Serial="+id;
@@ -370,7 +373,7 @@ namespace Suprema
 
         private static List<Empleado> ObtenerEmpleado()
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado,Documento,NroDocumento From Fingerprints where Estado=1";
@@ -388,7 +391,7 @@ namespace Suprema
         }
 
         public static void RegistrarEmpleado(Empleado obj) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
             {
                 OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId) VALUES (?,?,?,?,?,?,?,?)", conection);
                 OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
@@ -580,15 +583,15 @@ namespace Suprema
             this.btnSelectionUpdateUserInfo = new System.Windows.Forms.Button();
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
-            lvDatabaseList = new System.Windows.Forms.ListView();
-            tbxMessage = new System.Windows.Forms.TextBox();
+            this.lvDatabaseList = new System.Windows.Forms.ListView();
+            this.tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
-            pbImageFrame = new System.Windows.Forms.PictureBox();
+            this.pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -724,25 +727,25 @@ namespace Suprema
             // 
             // lvDatabaseList
             // 
-            lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            lvDatabaseList.FullRowSelect = true;
-            lvDatabaseList.GridLines = true;
-            lvDatabaseList.HideSelection = false;
-            lvDatabaseList.Location = new System.Drawing.Point(257, 42);
-            lvDatabaseList.MultiSelect = false;
-            lvDatabaseList.Name = "lvDatabaseList";
-            lvDatabaseList.Size = new System.Drawing.Size(420, 252);
-            lvDatabaseList.TabIndex = 6;
-            lvDatabaseList.UseCompatibleStateImageBehavior = false;
-            lvDatabaseList.View = System.Windows.Forms.View.Details;
+            this.lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.lvDatabaseList.FullRowSelect = true;
+            this.lvDatabaseList.GridLines = true;
+            this.lvDatabaseList.HideSelection = false;
+            this.lvDatabaseList.Location = new System.Drawing.Point(257, 42);
+            this.lvDatabaseList.MultiSelect = false;
+            this.lvDatabaseList.Name = "lvDatabaseList";
+            this.lvDatabaseList.Size = new System.Drawing.Size(420, 252);
+            this.lvDatabaseList.TabIndex = 6;
+            this.lvDatabaseList.UseCompatibleStateImageBehavior = false;
+            this.lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new System.Drawing.Point(12, 350);
-            tbxMessage.Multiline = true;
-            tbxMessage.Name = "tbxMessage";
-            tbxMessage.Size = new System.Drawing.Size(609, 84);
-            tbxMessage.TabIndex = 7;
+            this.tbxMessage.Location = new System.Drawing.Point(12, 350);
+            this.tbxMessage.Multiline = true;
+            this.tbxMessage.Name = "tbxMessage";
+            this.tbxMessage.Size = new System.Drawing.Size(609, 84);
+            this.tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
@@ -757,11 +760,11 @@ namespace Suprema
             // 
             // pbImageFrame
             // 
-            pbImageFrame.Location = new System.Drawing.Point(6, 19);
-            pbImageFrame.Name = "pbImageFrame";
-            pbImageFrame.Size = new System.Drawing.Size(207, 227);
-            pbImageFrame.TabIndex = 9;
-            pbImageFrame.TabStop = false;
+            this.pbImageFrame.Location = new System.Drawing.Point(6, 19);
+            this.pbImageFrame.Name = "pbImageFrame";
+            this.pbImageFrame.Size = new System.Drawing.Size(207, 227);
+            this.pbImageFrame.TabIndex = 9;
+            this.pbImageFrame.TabStop = false;
             // 
             // button1
             // 
@@ -784,7 +787,7 @@ namespace Suprema
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(pbImageFrame);
+            this.groupBox2.Controls.Add(this.pbImageFrame);
             this.groupBox2.Location = new System.Drawing.Point(12, 42);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(219, 252);
@@ -796,13 +799,13 @@ namespace Suprema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(706, 452);
+            this.ClientSize = new System.Drawing.Size(706, 338);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnClear);
-            this.Controls.Add(tbxMessage);
-            this.Controls.Add(lvDatabaseList);
+            this.Controls.Add(this.tbxMessage);
+            this.Controls.Add(this.lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnIdentify);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -813,7 +816,7 @@ namespace Suprema
             this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
