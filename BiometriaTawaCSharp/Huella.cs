@@ -343,7 +343,7 @@ namespace Suprema
                 var Empleado= ObtenerEmpleado(array2[num]);
                 //tbxMessage.AppendText("Identificación exitosa (Empleado = " + Empleado[0]+" "+ Empleado[1]+ ")\r\n");
                 MessageBox.Show(Empleado[0]+" " +Empleado[1], "Marcación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //RegistrarAsistenciaApi
+                RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
                 return;
             }
             //tbxMessage.AppendText("Identificación fallida\r\n");
@@ -361,6 +361,7 @@ namespace Suprema
                 while (reader.Read()) {
                     Empleado.Add(reader[0].ToString());
                     Empleado.Add(reader[1].ToString());
+                    Empleado.Add(reader[2].ToString());
                 }
                 return Empleado;
 
@@ -389,7 +390,7 @@ namespace Suprema
         public static void RegistrarEmpleado(Empleado obj) {
             using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
-                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado) VALUES (?,?,?,?,?,?,?)", conection);
+                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId) VALUES (?,?,?,?,?,?,?,?)", conection);
                 OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
                 parImagen.Value = obj.huellaByte;
                 comm.Parameters.Add("@Nombres", OleDbType.VarChar).Value = obj.nombres.Trim();
@@ -399,6 +400,7 @@ namespace Suprema
                 comm.Parameters.Add("@NroDocumento", OleDbType.VarChar).Value = obj.nroDoc;
                 comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = obj.codigo;
                 comm.Parameters.Add("@Estado", OleDbType.Integer).Value = 1;
+                comm.Parameters.Add("@EmpleadoId", OleDbType.Integer).Value = obj.id;
                 conection.Open();
                 int iResultado = comm.ExecuteNonQuery();
                 conection.Close();

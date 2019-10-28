@@ -56,25 +56,33 @@ namespace BiometriaTawaCSharp
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;             Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
         }
 
-        private static void RegistrarAsistenciaApi(int id=0)
+        public static void RegistrarAsistenciaApi(int id=0)
         {
-            int empId = Resultado.id;
-            if (id>0) {
+            int empId=0;
+
+            if (id > 0)
+            {
                 empId = id;
             }
-            var coordenada = CLocation.GetLocationProperty();
-            var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-            var fecha = DateTime.Now;
-
-            var param = "empleadoId="+empId+"&terminal="+terminal+"&coordenadas="+coordenada+"&fecha="+fecha;
-            int enviado = 0;
-            try
-            {
-                Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
-                enviado = 1;
+            else if (Resultado.id!=0) {
+                empId = Resultado.id;
             }
-            catch { enviado = 0; }
-            RegistrarAsistenciaLocal(Resultado.id, fecha, enviado, terminal, coordenada);
+
+            if (empId>0) {
+                var coordenada = CLocation.GetLocationProperty();
+                var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+                var fecha = DateTime.Now;
+
+                var param = "empleadoId=" + empId + "&terminal=" + terminal + "&coordenadas=" + coordenada + "&fecha=" + fecha;
+                int enviado = 0;
+                try
+                {
+                    Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
+                    enviado = 1;
+                }
+                catch { enviado = 0; }
+                RegistrarAsistenciaLocal(empId, fecha, enviado, terminal, coordenada);
+            }
 
         }
 
