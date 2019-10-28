@@ -346,7 +346,8 @@ namespace Suprema
                 //RegistrarAsistenciaApi
                 return;
             }
-            tbxMessage.AppendText("Identificación fallida\r\n");
+            //tbxMessage.AppendText("Identificación fallida\r\n");
+            MessageBox.Show("Marcación fallida, por favor intente nuevamente", "Marcación fallida", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private List<string> ObtenerEmpleado(int id) {
