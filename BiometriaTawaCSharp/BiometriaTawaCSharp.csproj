@@ -114,6 +114,7 @@
   <ItemGroup>
     <Content Include="bien.png" />
     <Content Include="mal.png" />
+    <Content Include="Rom.ico" />
     <Content Include="UFDatabase.mdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

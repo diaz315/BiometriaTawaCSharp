@@ -24,11 +24,11 @@
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll" Value="Suprema.UFScanner.dll"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_UFDatabase.mdb" Value="UFDatabase.mdb"/>
     <ROW Property="ALLUSERS" Value="1"/>
-    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
-    <ROW Property="Manufacturer" Value="Your Company"/>
+    <ROW Property="ARPPRODUCTICON" Value="Rom.exe" Type="8"/>
+    <ROW Property="Manufacturer" Value="Agile Solutions"/>
     <ROW Property="ProductCode" Value="1033:{A8BB8034-7662-47F8-BE4B-4D2D4683FC75} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
-    <ROW Property="ProductName" Value="Your Application"/>
+    <ROW Property="ProductName" Value="Biometrico"/>
     <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{6F92CB04-723A-424E-980A-98EC523BB355}"/>
@@ -161,6 +161,9 @@
     <ROW Feature_="MainFeature" Component_="BiometriaTawaCSharp_References"/>
     <ROW Feature_="MainFeature" Component_="BiometriaTawaCSharp_ContentOutput"/>
     <ROW Feature_="MainFeature" Component_="BiometriaTawaCSharp_SymbolsOutput"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="Rom.exe" SourcePath="..\BiometriaTawaCSharp\Rom.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
