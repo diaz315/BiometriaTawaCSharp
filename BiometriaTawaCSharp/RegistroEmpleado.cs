@@ -48,23 +48,61 @@ namespace BiometriaTawaCSharp
             }
         }
 
-        private void RegistrarHuellaApi()
+        private async Task RegistrarHuellaApi()
         {
             var huella = Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = CLocation.GetLocationProperty();
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;
-            Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+            await Task.Run(() =>
+            {
+                Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+            });
         }
 
-        private async Task RegistrarAsistenciaApi()
+        private static async Task RegistrarAsistenciaApi(int id=0)
         {
+            int empId = Resultado.id;
+            if (id>0) {
+                empId = id;
+            }
             var coordenada = CLocation.GetLocationProperty();
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-            var param = "empleadoId=" + Resultado.id + "&terminal=" + terminal + "&coordenadas=" + coordenada;
-            await Task.Run(() => {
-                Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
+            var fecha = DateTime.Now;
+
+            var param = "empleadoId="+empId+"&terminal="+terminal+"&coordenadas="+coordenada+"&fecha="+fecha;
+            await Task.Run(async () => {
+                int enviado = 0;
+                try
+                {
+                    Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
+                    enviado = 1;
+                }
+                catch { enviado = 0; }
+                await RegistrarAsistenciaLocal(Resultado.id, fecha, enviado, terminal, coordenada);
             });
+        }
+
+        public static async Task RegistrarAsistenciaLocal(int empleadoId, DateTime fecha, int enviado, string terminal, string coordenadas)
+        {
+            await Task.Run(() =>
+            {
+                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
+                {
+                    OleDbCommand comm = new OleDbCommand("INSERT INTO Asistencia(EmpleadoId,Fecha,Estado,Enviado,Terminal,Coordenadas) VALUES (?,?,?,?,?,?)", conection);
+
+                    comm.Parameters.Add("@EmpleadoId", OleDbType.VarChar).Value = empleadoId;
+                    comm.Parameters.Add("@Fecha", OleDbType.VarChar).Value = fecha;
+                    comm.Parameters.Add("@Estado", OleDbType.Integer).Value = 1;
+                    comm.Parameters.Add("@Enviado", OleDbType.VarChar).Value = enviado;
+                    comm.Parameters.Add("@Terminal", OleDbType.VarChar).Value = terminal;
+                    comm.Parameters.Add("@Coordenada", OleDbType.VarChar).Value = coordenadas;
+                    conection.Open();
+                    int iResultado = comm.ExecuteNonQuery();
+                    conection.Close();
+                }
+            });
+
         }
 
         private void ConsultarApi() {

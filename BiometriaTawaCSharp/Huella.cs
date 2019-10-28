@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 [assembly: Debuggable(DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
 [assembly: CompilationRelaxations(8)]
@@ -48,6 +49,8 @@ namespace Suprema
         private Button btnSelectionUpdateTemplate;
         public static int form;
         public static int HuellaTomada = 0;
+        private Label label2;
+        private GroupBox groupBox2;
         public static int BdIniciada = 0;
         public Huella()
         {
@@ -62,10 +65,10 @@ namespace Suprema
             m_Template1 = new byte[1024];
             this.m_Template2 = new byte[1024];
             lvDatabaseList.Columns.Add("N#", 50, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Código", 80, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Nombres", 170, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Tipo. Doc", 80, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Nro. Doc", 80, HorizontalAlignment.Left);
-            lvDatabaseList.Columns.Add("Codigo", 80, HorizontalAlignment.Left);
         }
         private void Huella_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -79,10 +82,10 @@ namespace Suprema
         private static void AddRow(int numero, string Nombres, string TipoDoc, string NroDoc, string CodColaborador)
         {
             ListViewItem listViewItem = lvDatabaseList.Items.Add(Convert.ToString(numero));
+            listViewItem.SubItems.Add(CodColaborador);
             listViewItem.SubItems.Add(Nombres);
             listViewItem.SubItems.Add(TipoDoc);
             listViewItem.SubItems.Add(NroDoc);
-            listViewItem.SubItems.Add(CodColaborador);
         }
 
         public static void UpdateDatabaseList()
@@ -265,7 +268,7 @@ namespace Suprema
         }
 
         public static Empleado IniciarEscaneo() {
-            MessageBox.Show("Coloque su huella", "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Coloque su huella", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return null;
@@ -319,6 +322,7 @@ namespace Suprema
                 return;
             }
             int template1Size;
+            MessageBox.Show("Por favor ingrese su huella", "Ingresar Huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(array, out template1Size))
             {
                 return;
@@ -338,7 +342,8 @@ namespace Suprema
             {
                 var Empleado= ObtenerEmpleado(array2[num]);
                 //tbxMessage.AppendText("Identificación exitosa (Empleado = " + Empleado[0]+" "+ Empleado[1]+ ")\r\n");
-                MessageBox.Show(Empleado[0]+" " +Empleado[1], "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Empleado[0]+" " +Empleado[1], "Marcación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //RegistrarAsistenciaApi
                 return;
             }
             tbxMessage.AppendText("Identificación fallida\r\n");
@@ -348,7 +353,7 @@ namespace Suprema
             using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=C://Users//JD//source//repos//BiometriaTawaCSharp//BiometriaTawaCSharp//UFDatabase.mdb"))
             {
                 conection.Open();
-                var query = "Select Nombres,CodEmpleado From Fingerprints where Serial="+id;
+                var query = "Select Nombres,CodEmpleado,EmpleadoId From Fingerprints where Serial="+id;
                 var command = new OleDbCommand(query, conection);
                 var reader = command.ExecuteReader();
                 var Empleado = new List<string>();
@@ -400,6 +405,7 @@ namespace Suprema
                 MessageBox.Show("Guardo con exito");
             }
         }
+
         private void btnDeleteAll_Click(object sender, EventArgs e)
         {
             UFD_STATUS uFD_STATUS = m_Database.RemoveAllData();
@@ -576,8 +582,11 @@ namespace Suprema
             this.btnClear = new System.Windows.Forms.Button();
             pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnInit
@@ -605,11 +614,11 @@ namespace Suprema
             // btnIdentify
             // 
             this.btnIdentify.AccessibleDescription = "";
-            this.btnIdentify.Location = new System.Drawing.Point(11, 41);
+            this.btnIdentify.Location = new System.Drawing.Point(12, 12);
             this.btnIdentify.Name = "btnIdentify";
             this.btnIdentify.Size = new System.Drawing.Size(84, 24);
             this.btnIdentify.TabIndex = 3;
-            this.btnIdentify.Text = "Identificar";
+            this.btnIdentify.Text = "Marcar Hora";
             this.btnIdentify.UseVisualStyleBackColor = true;
             this.btnIdentify.Click += new System.EventHandler(this.btnIdentify_Click);
             // 
@@ -624,7 +633,7 @@ namespace Suprema
             this.groupBox1.Controls.Add(this.btnDeleteAll);
             this.groupBox1.Controls.Add(this.btnUninit);
             this.groupBox1.Controls.Add(this.btnInit);
-            this.groupBox1.Location = new System.Drawing.Point(11, 385);
+            this.groupBox1.Location = new System.Drawing.Point(701, 415);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(75, 19);
             this.groupBox1.TabIndex = 4;
@@ -716,17 +725,17 @@ namespace Suprema
             lvDatabaseList.FullRowSelect = true;
             lvDatabaseList.GridLines = true;
             lvDatabaseList.HideSelection = false;
-            lvDatabaseList.Location = new System.Drawing.Point(347, 12);
+            lvDatabaseList.Location = new System.Drawing.Point(257, 42);
             lvDatabaseList.MultiSelect = false;
             lvDatabaseList.Name = "lvDatabaseList";
-            lvDatabaseList.Size = new System.Drawing.Size(420, 296);
+            lvDatabaseList.Size = new System.Drawing.Size(420, 252);
             lvDatabaseList.TabIndex = 6;
             lvDatabaseList.UseCompatibleStateImageBehavior = false;
             lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new System.Drawing.Point(102, 320);
+            tbxMessage.Location = new System.Drawing.Point(12, 350);
             tbxMessage.Multiline = true;
             tbxMessage.Name = "tbxMessage";
             tbxMessage.Size = new System.Drawing.Size(609, 84);
@@ -735,7 +744,7 @@ namespace Suprema
             // btnClear
             // 
             this.btnClear.AccessibleDescription = "";
-            this.btnClear.Location = new System.Drawing.Point(719, 320);
+            this.btnClear.Location = new System.Drawing.Point(629, 350);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(48, 84);
             this.btnClear.TabIndex = 8;
@@ -745,29 +754,49 @@ namespace Suprema
             // 
             // pbImageFrame
             // 
-            pbImageFrame.Location = new System.Drawing.Point(102, 12);
+            pbImageFrame.Location = new System.Drawing.Point(6, 19);
             pbImageFrame.Name = "pbImageFrame";
-            pbImageFrame.Size = new System.Drawing.Size(228, 252);
+            pbImageFrame.Size = new System.Drawing.Size(207, 227);
             pbImageFrame.TabIndex = 9;
             pbImageFrame.TabStop = false;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(11, 12);
+            this.button1.Location = new System.Drawing.Point(563, 300);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(84, 23);
+            this.button1.Size = new System.Drawing.Size(114, 23);
             this.button1.TabIndex = 10;
-            this.button1.Text = "Registrar";
+            this.button1.Text = "Agregar Colaborador";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(400, 18);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(115, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Lista de Colaboradores";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(pbImageFrame);
+            this.groupBox2.Location = new System.Drawing.Point(12, 42);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(219, 252);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Visualización de Huella";
             // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(793, 428);
+            this.ClientSize = new System.Drawing.Size(706, 452);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(pbImageFrame);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(tbxMessage);
             this.Controls.Add(lvDatabaseList);
@@ -776,12 +805,13 @@ namespace Suprema
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Huella";
-            this.Text = "Biometrico Tawa";
+            this.Text = "Sistema de Marcación Biométrica";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Huella_FormClosing);
             this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
