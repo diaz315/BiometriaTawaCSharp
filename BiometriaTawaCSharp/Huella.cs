@@ -43,7 +43,7 @@ namespace Suprema
         private static ListView lvDatabaseList;
         public static TextBox tbxMessage;
         private Button btnClear;
-        public PictureBox pbImageFrame;
+        public static PictureBox pbImageFrame;
         private Label label1;
         private Button button1;
         private ComboBox cbScanTemplateType;
@@ -586,12 +586,12 @@ namespace Suprema
             lvDatabaseList = new System.Windows.Forms.ListView();
             tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
-            this.pbImageFrame = new System.Windows.Forms.PictureBox();
+            pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -760,11 +760,11 @@ namespace Suprema
             // 
             // pbImageFrame
             // 
-            this.pbImageFrame.Location = new System.Drawing.Point(6, 19);
-            this.pbImageFrame.Name = "pbImageFrame";
-            this.pbImageFrame.Size = new System.Drawing.Size(207, 227);
-            this.pbImageFrame.TabIndex = 9;
-            this.pbImageFrame.TabStop = false;
+            pbImageFrame.Location = new System.Drawing.Point(6, 19);
+            pbImageFrame.Name = "pbImageFrame";
+            pbImageFrame.Size = new System.Drawing.Size(207, 227);
+            pbImageFrame.TabIndex = 9;
+            pbImageFrame.TabStop = false;
             // 
             // button1
             // 
@@ -787,7 +787,7 @@ namespace Suprema
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.pbImageFrame);
+            this.groupBox2.Controls.Add(pbImageFrame);
             this.groupBox2.Location = new System.Drawing.Point(12, 42);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(219, 252);
@@ -816,7 +816,7 @@ namespace Suprema
             this.Load += new System.EventHandler(this.Huella_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImageFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
