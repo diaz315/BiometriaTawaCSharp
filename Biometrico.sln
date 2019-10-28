@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biometrico", "Biometrico\Biometrico.csproj", "{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}"
+EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Instalador", "Instalador\Instalador.aiproj", "{C79140C1-0B4B-44E0-A914-5264C25130EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.All|Any CPU.Build.0 = Release|Any CPU
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5EAFD5-634E-4B15-AC70-89E0AEA403FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.All|Any CPU.ActiveCfg = DefaultBuild
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.All|Any CPU.Build.0 = DefaultBuild
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.Debug|Any CPU.ActiveCfg = DefaultBuild
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.Debug|Any CPU.Build.0 = DefaultBuild
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.Release|Any CPU.ActiveCfg = DefaultBuild
+		{C79140C1-0B4B-44E0-A914-5264C25130EA}.Release|Any CPU.Build.0 = DefaultBuild
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA416848-8C84-4A3D-9711-1D8F26D54624}
+	EndGlobalSection
+EndGlobal
