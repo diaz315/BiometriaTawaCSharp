@@ -40,8 +40,8 @@ namespace Suprema
         private Button btnSelectionVerify;
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
-        private ListView lvDatabaseList;
-        public TextBox tbxMessage;
+        private static ListView lvDatabaseList;
+        public static TextBox tbxMessage;
         private Button btnClear;
         public PictureBox pbImageFrame;
         private Label label1;
@@ -583,8 +583,8 @@ namespace Suprema
             this.btnSelectionUpdateUserInfo = new System.Windows.Forms.Button();
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
-            this.lvDatabaseList = new System.Windows.Forms.ListView();
-            this.tbxMessage = new System.Windows.Forms.TextBox();
+            lvDatabaseList = new System.Windows.Forms.ListView();
+            tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.pbImageFrame = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -727,25 +727,25 @@ namespace Suprema
             // 
             // lvDatabaseList
             // 
-            this.lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvDatabaseList.FullRowSelect = true;
-            this.lvDatabaseList.GridLines = true;
-            this.lvDatabaseList.HideSelection = false;
-            this.lvDatabaseList.Location = new System.Drawing.Point(257, 42);
-            this.lvDatabaseList.MultiSelect = false;
-            this.lvDatabaseList.Name = "lvDatabaseList";
-            this.lvDatabaseList.Size = new System.Drawing.Size(420, 252);
-            this.lvDatabaseList.TabIndex = 6;
-            this.lvDatabaseList.UseCompatibleStateImageBehavior = false;
-            this.lvDatabaseList.View = System.Windows.Forms.View.Details;
+            lvDatabaseList.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            lvDatabaseList.FullRowSelect = true;
+            lvDatabaseList.GridLines = true;
+            lvDatabaseList.HideSelection = false;
+            lvDatabaseList.Location = new System.Drawing.Point(257, 42);
+            lvDatabaseList.MultiSelect = false;
+            lvDatabaseList.Name = "lvDatabaseList";
+            lvDatabaseList.Size = new System.Drawing.Size(420, 252);
+            lvDatabaseList.TabIndex = 6;
+            lvDatabaseList.UseCompatibleStateImageBehavior = false;
+            lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
             // tbxMessage
             // 
-            this.tbxMessage.Location = new System.Drawing.Point(12, 350);
-            this.tbxMessage.Multiline = true;
-            this.tbxMessage.Name = "tbxMessage";
-            this.tbxMessage.Size = new System.Drawing.Size(609, 84);
-            this.tbxMessage.TabIndex = 7;
+            tbxMessage.Location = new System.Drawing.Point(12, 350);
+            tbxMessage.Multiline = true;
+            tbxMessage.Name = "tbxMessage";
+            tbxMessage.Size = new System.Drawing.Size(609, 84);
+            tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
@@ -804,8 +804,8 @@ namespace Suprema
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnClear);
-            this.Controls.Add(this.tbxMessage);
-            this.Controls.Add(this.lvDatabaseList);
+            this.Controls.Add(tbxMessage);
+            this.Controls.Add(lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnIdentify);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

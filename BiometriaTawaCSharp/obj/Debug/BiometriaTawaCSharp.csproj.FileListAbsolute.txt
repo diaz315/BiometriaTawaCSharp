@@ -15,3 +15,4 @@ C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\bin\Debug\Newto
 C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.csproj.CopyComplete
 C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.exe
 C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.pdb
+C:\Users\JD\source\repos\BiometriaTawaCSharp\BiometriaTawaCSharp\obj\Debug\BiometriaTawaCSharp.csprojAssemblyReference.cache
