@@ -53,12 +53,15 @@ namespace Suprema
         private Label label2;
         private GroupBox groupBox2;
         public static int BdIniciada = 0;
+        public static TextBox txtCoordenada;
+
         //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
         private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
 
         public Huella()
         {
             this.InitializeComponent();
+            new CLocation().GetLocationProperty();
         }
         private void Huella_Load(object sender, EventArgs e)
         {
@@ -591,6 +594,7 @@ namespace Suprema
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            txtCoordenada = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -796,11 +800,20 @@ namespace Suprema
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Visualización de Huella";
             // 
+            // txtCoordenada
+            // 
+            txtCoordenada.Location = new System.Drawing.Point(18, 306);
+            txtCoordenada.Name = "txtCoordenada";
+            txtCoordenada.ReadOnly = true;
+            txtCoordenada.Size = new System.Drawing.Size(207, 20);
+            txtCoordenada.TabIndex = 13;
+            // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(706, 338);
+            this.Controls.Add(txtCoordenada);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);

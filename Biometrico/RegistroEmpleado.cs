@@ -51,7 +51,7 @@ namespace BiometriaTawaCSharp
         private void RegistrarHuellaApi()
         {
             var huella = Convert.ToBase64String(Resultado.huellaByte);
-            var coordenada = CLocation.GetLocationProperty();
+            var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;             Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
         }
@@ -69,7 +69,7 @@ namespace BiometriaTawaCSharp
             }
 
             if (empId>0) {
-                var coordenada = CLocation.GetLocationProperty();
+                var coordenada = Huella.txtCoordenada.Text;
                 var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
                 var fecha = DateTime.Now;
 
