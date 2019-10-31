@@ -97,6 +97,7 @@
     <EmbeddedResource Include="UserInfoForms.resx">
       <DependentUpon>UserInfoForms.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="DLL\UFLicense.dat" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -113,6 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bien.png" />
+    <Content Include="DLL\UFDatabase.dll" />
+    <Content Include="DLL\UFExtractor.dll" />
+    <Content Include="DLL\UFMatcher.dll" />
+    <Content Include="DLL\UFScanner.dll" />
+    <Content Include="DLL\UFScanner_IZZIX.dll" />
     <Content Include="mal.png" />
     <Content Include="Rom.ico" />
     <Content Include="UFDatabase.mdb">
