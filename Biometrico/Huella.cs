@@ -55,12 +55,13 @@ namespace Suprema
         public static int BdIniciada = 0;
         public static TextBox txtCoordenada;
 
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
+        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
 
         public Huella()
         {
             this.InitializeComponent();
+            txtCoordenada.Visible=false;
             new CLocation().GetLocationProperty();
         }
         private void Huella_Load(object sender, EventArgs e)

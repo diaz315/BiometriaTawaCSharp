@@ -1,5 +1,6 @@
 ﻿using Suprema;
 using System;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
@@ -10,8 +11,8 @@ namespace BiometriaTawaCSharp
     public partial class RegistroEmpleado : Form
     {
         private static Empleado Resultado;
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar;
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
+        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar;
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -48,17 +49,104 @@ namespace BiometriaTawaCSharp
             }
         }
 
+        public static void ActualizarRegistroLocalEnviado(int id)
+        {
+            try
+            {
+                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                {
+                    OleDbCommand comm = new OleDbCommand("UPDATE Asistencia SET Enviado=1 WHERE Id=?", conection);
+                    comm.Parameters.Add("@Id", OleDbType.Integer).Value = id;
+                    conection.Open();
+                    int iResultado = comm.ExecuteNonQuery();
+                    conection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+        }
+
+        private static List<Empleado> ObtenerResgistrosSinEnviar()
+        {
+            var ListEmpleado = new List<Empleado>();
+
+            try
+            {
+                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                {
+                    conection.Open();
+                    var query = "SELECT Id,EmpleadoId,Fecha,Estado,Terminal,Coordenadas FROM Asistencia WHERE Enviado=0";
+                    var command = new OleDbCommand(query, conection);
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Empleado empleado = new Empleado();
+                        empleado.ids = reader[0].ToString();
+                        empleado.idEmpleado = reader[1].ToString();
+                        empleado.fecha = reader[2].ToString();
+                        empleado.estado = reader[3].ToString();
+                        empleado.terminal = reader[4].ToString();
+                        empleado.coordenadas = reader[5].ToString();
+                        ListEmpleado.Add(empleado);
+                    }
+                }
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+
+            return ListEmpleado;
+        }
+
         private void RegistrarHuellaApi()
         {
             var huella = Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada;             Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroHuella/?" + param);
+            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Constante.KeyApi;             
+            Utilidad<Empleado>.GetJson(new Empleado(), Constante.RegistrarHuellaApi + param);
+        }
+
+        private static void ProcesarDatosNoEnviados(List<Empleado> RegSinEnviar) {
+            if (RegSinEnviar.Count > 0)
+            {
+                foreach (Empleado emp in RegSinEnviar)
+                {
+
+
+                    var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Constante.KeyApi;
+                    int enviado = 0;
+                    try
+                    {
+                        string Url = Constante.RegAsistenciaApi + param;
+                        Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
+                        if (empleado.resultado)
+                        {
+                            enviado = 1;
+                        }
+                        else
+                        {
+                            enviado = 0;
+                        }
+                    }
+                    catch { enviado = 0; }
+
+                    if (enviado == 1)
+                    {
+                        ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
+                    }
+                }
+            }
         }
 
         public static void RegistrarAsistenciaApi(int id=0)
         {
-            int empId=0;
+            List<Empleado> RegSinEnviar = ObtenerResgistrosSinEnviar();
+      
+            int empId =0;
 
             if (id > 0)
             {
@@ -73,16 +161,27 @@ namespace BiometriaTawaCSharp
                 var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
                 var fecha = DateTime.Now;
 
-                var param = "empleadoId=" + empId + "&terminal=" + terminal + "&coordenadas=" + coordenada + "&fecha=" + fecha;
+                var param = "empleadoId=" + empId + "&terminal=" + terminal + "&coordenadas=" + coordenada + "&fecha=" + fecha + "&clave=" + Constante.KeyApi;
                 int enviado = 0;
                 try
                 {
-                    Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/registroAsistencia/?" + param);
-                    enviado = 1;
+                    string Url = Constante.RegAsistenciaApi + param;
+                    Empleado empleado=Utilidad<Empleado>.GetJson(new Empleado(), Url);
+                    if (empleado.resultado)
+                    {
+                        enviado = 1;
+                    }
+                    else 
+                    {
+                        enviado = 0;
+                    }
                 }
                 catch { enviado = 0; }
                 RegistrarAsistenciaLocal(empId, fecha, enviado, terminal, coordenada);
             }
+
+            //Enviando registros no enviados
+            ProcesarDatosNoEnviados(RegSinEnviar);
 
         }
 
@@ -109,11 +208,10 @@ namespace BiometriaTawaCSharp
                 Console.WriteLine(e.Message);
             }
             
-
         }
 
         private void ConsultarApi() {
-            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), "https://localhost:44396/api/tawa/empleado/?codigo=" + txtCodEmpleado.Text);
+            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Constante.KeyApi);
             if (Resultado != null)
             {
                 txtNombres.Text = Resultado.nombres;
@@ -173,9 +271,7 @@ namespace BiometriaTawaCSharp
 
                     Huella.RegistrarEmpleado(Resultado);
                     Huella.UpdateDatabaseList();
-                    //new Huella().Desconectar();
-                    //new Huella().InicializarBD();
-
+                   
                     try
                     {
                         RegistrarAsistenciaApi();
