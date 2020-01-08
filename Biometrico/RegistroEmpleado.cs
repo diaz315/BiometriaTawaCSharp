@@ -110,41 +110,29 @@ namespace BiometriaTawaCSharp
             Utilidad<Empleado>.GetJson(new Empleado(), Constante.RegistrarHuellaApi + param);
         }
 
-        private static void ProcesarDatosNoEnviados(List<Empleado> RegSinEnviar) {
-            if (RegSinEnviar.Count > 0)
+        private static void ProcesarDatosNoEnviados() {
+            List<Empleado> RegSinEnviar = ObtenerResgistrosSinEnviar();
+            try
             {
-                foreach (Empleado emp in RegSinEnviar)
+                if (RegSinEnviar.Count > 0)
                 {
-
-
-                    var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Constante.KeyApi;
-                    int enviado = 0;
-                    try
+                    foreach (Empleado emp in RegSinEnviar)
                     {
+                        var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Constante.KeyApi;
                         string Url = Constante.RegAsistenciaApi + param;
                         Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
-                        if (empleado.resultado)
-                        {
-                            enviado = 1;
-                        }
-                        else
-                        {
-                            enviado = 0;
-                        }
-                    }
-                    catch { enviado = 0; }
-
-                    if (enviado == 1)
-                    {
                         ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
                     }
                 }
             }
+            catch(Exception Ex) {
+                MessageBox.Show(Ex.Message, "Registro no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
 
         public static void RegistrarAsistenciaApi(int id=0)
         {
-            List<Empleado> RegSinEnviar = ObtenerResgistrosSinEnviar();
       
             int empId =0;
 
@@ -160,29 +148,11 @@ namespace BiometriaTawaCSharp
                 var coordenada = Huella.txtCoordenada.Text;
                 var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
                 var fecha = DateTime.Now;
-
-                var param = "empleadoId=" + empId + "&terminal=" + terminal + "&coordenadas=" + coordenada + "&fecha=" + fecha + "&clave=" + Constante.KeyApi;
-                int enviado = 0;
-                try
-                {
-                    string Url = Constante.RegAsistenciaApi + param;
-                    Empleado empleado=Utilidad<Empleado>.GetJson(new Empleado(), Url);
-                    if (empleado.resultado)
-                    {
-                        enviado = 1;
-                    }
-                    else 
-                    {
-                        enviado = 0;
-                    }
-                }
-                catch { enviado = 0; }
-                RegistrarAsistenciaLocal(empId, fecha, enviado, terminal, coordenada);
+                
+                RegistrarAsistenciaLocal(empId, fecha, 0, terminal, coordenada);
             }
-
-            //Enviando registros no enviados
-            ProcesarDatosNoEnviados(RegSinEnviar);
-
+            //asistencia sin enviar
+            ProcesarDatosNoEnviados();
         }
 
         public static void RegistrarAsistenciaLocal(int empleadoId, DateTime fecha, int enviado, string terminal, string coordenadas)
