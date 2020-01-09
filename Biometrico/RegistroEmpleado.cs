@@ -21,6 +21,11 @@ namespace BiometriaTawaCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (txtCodEmpleado.Text=="") {
+                MessageBox.Show("Por favor ingrese un codigo", "Validar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
             {
                 MessageBox.Show("Este usuario ya existe", "Registro Existente", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -121,7 +126,9 @@ namespace BiometriaTawaCSharp
                         var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Constante.KeyApi;
                         string Url = Constante.RegAsistenciaApi + param;
                         Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
-                        ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
+                        if (empleado.resultado) {
+                            ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
+                        }
                     }
                 }
             }
