@@ -8,12 +8,12 @@ namespace BiometriaTawaCSharp
 {
     public class Constante
     {
-        public const string Api = "https://localhost:44396";
-        public const string KeyApi = "uv3<VbQ*-z3@d~w";
+        //public const string Api = "https://localhost:44396";
+        //public const string KeyApi = "uv3<VbQ*-z3@d~w";
 
-        public const string RegAsistenciaApi = Api + "/api/tawa/registroAsistencia/?";
-        public const string ConsultarApi = Api + "/api/tawa/empleado/?codigo=";
-        public const string RegistrarHuellaApi = Api + "/api/tawa/registroHuella/?";
+        public const string RegAsistenciaApi = "/api/tawa/registroAsistencia/?";
+        public const string ConsultarApi = "/api/tawa/empleado/?codigo=";
+        public const string RegistrarHuellaApi = "/api/tawa/registroHuella/?";
     }
 
     /*Comandos para limpiar BD Access*/

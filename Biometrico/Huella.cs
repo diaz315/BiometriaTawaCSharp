@@ -54,6 +54,9 @@ namespace Suprema
         private GroupBox groupBox2;
         public static int BdIniciada = 0;
         public static TextBox txtCoordenada;
+        public static string Api;
+        public static string ApiKey;
+
 
         private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
         //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
@@ -63,6 +66,12 @@ namespace Suprema
             this.InitializeComponent();
             txtCoordenada.Visible=false;
             new CLocation().GetLocationProperty();
+            Api = LeerArchivo(@"C:\Api.txt");
+            ApiKey = LeerArchivo(@"C:\ApiKey.txt");
+        }
+        
+        private string LeerArchivo(string ruta) {
+            return File.ReadAllText(ruta);
         }
         private void Huella_Load(object sender, EventArgs e)
         {
@@ -323,12 +332,12 @@ namespace Suprema
             int[] array2 = null;
             int template2Num;
             UFD_STATUS templateListWithSerial = m_Database.GetTemplateListWithSerial(out template2Array, out template2SizeArray, out template2Num, out array2);
-            if (templateListWithSerial != UFD_STATUS.OK)
+            /*if (templateListWithSerial != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(templateListWithSerial, out m_strError);
                 tbxMessage.AppendText("UFD_GetTemplateListWithSerial: " + m_strError + "\r\n");
                 return;
-            }
+            }*/
             int template1Size;
             MessageBox.Show("Por favor ingrese su huella", "Ingresar Huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(array, out template1Size))

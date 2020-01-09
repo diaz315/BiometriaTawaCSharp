@@ -111,8 +111,8 @@ namespace BiometriaTawaCSharp
             var huella = Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Constante.KeyApi;             
-            Utilidad<Empleado>.GetJson(new Empleado(), Constante.RegistrarHuellaApi + param);
+            var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Huella.ApiKey;             
+            Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.RegistrarHuellaApi + param);
         }
 
         private static void ProcesarDatosNoEnviados() {
@@ -123,7 +123,7 @@ namespace BiometriaTawaCSharp
                 {
                     foreach (Empleado emp in RegSinEnviar)
                     {
-                        var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Constante.KeyApi;
+                        var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Huella.ApiKey;
                         string Url = Constante.RegAsistenciaApi + param;
                         Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
                         if (empleado.resultado) {
@@ -188,7 +188,7 @@ namespace BiometriaTawaCSharp
         }
 
         private void ConsultarApi() {
-            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Constante.KeyApi);
+            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Huella.ApiKey);
             if (Resultado != null)
             {
                 txtNombres.Text = Resultado.nombres;
