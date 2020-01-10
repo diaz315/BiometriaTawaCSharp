@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BiometriaTawaCSharp
 {
@@ -21,6 +22,9 @@ namespace BiometriaTawaCSharp
             }
             catch (Exception e) {
                 Console.WriteLine(e);
+                MessageBox.Show(e.Message, "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+
             }
 
             return clase;

@@ -53,4 +53,3 @@ C:\Users\JD\source\repos\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.Ge
 C:\Users\JD\source\repos\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 C:\Users\JD\source\repos\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 C:\Users\JD\source\repos\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
-C:\Users\JD\source\repos\BiometricoRom\Biometrico\obj\Debug\Biometrico.csprojAssemblyReference.cache

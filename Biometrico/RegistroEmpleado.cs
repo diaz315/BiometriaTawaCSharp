@@ -11,8 +11,8 @@ namespace BiometriaTawaCSharp
     public partial class RegistroEmpleado : Form
     {
         private static Empleado Resultado;
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar;
+        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar;
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -124,7 +124,7 @@ namespace BiometriaTawaCSharp
                     foreach (Empleado emp in RegSinEnviar)
                     {
                         var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Huella.ApiKey;
-                        string Url = Constante.RegAsistenciaApi + param;
+                        string Url = Huella.Api+Constante.RegAsistenciaApi + param;
                         Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
                         if (empleado.resultado) {
                             ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
@@ -188,7 +188,7 @@ namespace BiometriaTawaCSharp
         }
 
         private void ConsultarApi() {
-            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Huella.ApiKey);
+            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Huella.ApiKey);
             if (Resultado != null)
             {
                 txtNombres.Text = Resultado.nombres;
