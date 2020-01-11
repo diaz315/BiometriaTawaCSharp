@@ -60,6 +60,8 @@ namespace Suprema
 
         //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
         private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
+        private static string fileName = DirectorioPrincipal + "UFDatabase.mdb";
+        private static string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
 
         public Huella()
         {
@@ -68,6 +70,7 @@ namespace Suprema
             new CLocation().GetLocationProperty();
             Api = LeerArchivo(@"C:\Api.txt");
             ApiKey = LeerArchivo(@"C:\ApiKey.txt");
+
         }
         
         private string LeerArchivo(string ruta) {
@@ -193,9 +196,7 @@ namespace Suprema
                 tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
                 m_Database = new UFDatabase();
-                string fileName = DirectorioPrincipal+"UFDatabase.mdb";
 
-                string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
                 UFD_STATUS uFD_STATUS = m_Database.Open(connection, null, null);
                 if (uFD_STATUS == UFD_STATUS.OK)
                 {
@@ -368,7 +369,7 @@ namespace Suprema
         }
 
         private List<string> ObtenerEmpleado(int id) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
+            using (var conection = new OleDbConnection(connection))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado,EmpleadoId From Fingerprints where Serial="+id;
@@ -387,7 +388,7 @@ namespace Suprema
 
         private static List<Empleado> ObtenerEmpleado()
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
+            using (var conection = new OleDbConnection(connection))
             {
                 conection.Open();
                 var query = "Select Nombres,CodEmpleado,Documento,NroDocumento From Fingerprints where Estado=1";
@@ -405,7 +406,7 @@ namespace Suprema
         }
 
         public static void RegistrarEmpleado(Empleado obj) {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
+            using (var conection = new OleDbConnection(connection))
             {
                 OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId) VALUES (?,?,?,?,?,?,?,?)", conection);
                 OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);

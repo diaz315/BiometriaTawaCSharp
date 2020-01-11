@@ -232,42 +232,51 @@ namespace BiometriaTawaCSharp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (Resultado != null)
-            {
-                if (Resultado.huella!=null || Huella.HuellaTomada == 1)
+            try {
+                if (Resultado != null)
                 {
-                    try {
-                        if (Huella.HuellaTomada == 1)
-                        {
-                            RegistrarHuellaApi();
-                        }
-                    }
-                    catch (Exception x) {
-                        Console.WriteLine(x.Message);
-                    }
-
-                    Huella.RegistrarEmpleado(Resultado);
-                    Huella.UpdateDatabaseList();
-                   
-                    try
+                    if (Resultado.huella != null || Huella.HuellaTomada == 1)
                     {
-                        RegistrarAsistenciaApi();
+                        try
+                        {
+                            if (Huella.HuellaTomada == 1)
+                            {
+                                RegistrarHuellaApi();
+                            }
+                        }
+                        catch (Exception x)
+                        {
+                            MessageBox.Show(x.Message, "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+
+                        Huella.RegistrarEmpleado(Resultado);
+                        Huella.UpdateDatabaseList();
+
+                        try
+                        {
+                            RegistrarAsistenciaApi();
+                        }
+                        catch (Exception y)
+                        {
+                            MessageBox.Show(y.Message, "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+
+                        Limpiar();
                     }
-                    catch (Exception y) {
-                        Console.WriteLine(y.Message);
+                    else
+                    {
+                        MessageBox.Show("Por favor ingrese la huella", "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-                    Limpiar();
                 }
-                else {
-                    MessageBox.Show("Por favor ingrese la huella", "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                {
+                    MessageBox.Show("No se ha seleccionado ningun registro", "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
             }
-            else {
-                MessageBox.Show("No se ha seleccionado ningun registro", "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (Exception ec) {
+                MessageBox.Show(ec.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
         }
 
         private void pbImageFrame_Click(object sender, EventArgs e)
