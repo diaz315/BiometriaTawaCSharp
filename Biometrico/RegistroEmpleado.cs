@@ -275,7 +275,7 @@ namespace BiometriaTawaCSharp
                 }
             }
             catch (Exception ec) {
-                MessageBox.Show(ec.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ec.Message+". Por favor ejecute la aplicación con permisos de administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
