@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,7 +35,6 @@ namespace Suprema
         private IContainer components;
         private Button btnInit;
         private Button btnUninit;
-        private Button btnIdentify;
         private GroupBox groupBox1;
         private Button btnSelectionDelete;
         private Button btnSelectionVerify;
@@ -45,7 +45,6 @@ namespace Suprema
         private Button btnClear;
         public static PictureBox pbImageFrame;
         private Label label1;
-        private Button button1;
         private ComboBox cbScanTemplateType;
         private Button btnSelectionUpdateTemplate;
         public static int form;
@@ -61,6 +60,13 @@ namespace Suprema
         //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
         private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
         private static string fileName = DirectorioPrincipal + "UFDatabase.mdb";
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem menuToolStripMenuItem;
+        private ToolStripMenuItem marcarHuellaToolStripMenuItem;
+        private ToolStripMenuItem agregarColaboradorToolStripMenuItem;
+        private ToolStripMenuItem sincronizarToolStripMenuItem;
+        private ToolStripMenuItem asistenciaToolStripMenuItem;
+        private ToolStripMenuItem huellasToolStripMenuItem;
         private static string connection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";";
 
         public Huella()
@@ -286,7 +292,7 @@ namespace Suprema
         }
 
         public static Empleado IniciarEscaneo() {
-            MessageBox.Show("Coloque su huella", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Colocar dedo índice derecho en el scanner", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return null;
@@ -323,7 +329,7 @@ namespace Suprema
             }
             UpdateDatabaseList();
         }
-        private void btnIdentify_Click(object sender, EventArgs e)
+        private void MarcarHuella()
         {
             InicializarBD();
             form = 1;
@@ -340,7 +346,7 @@ namespace Suprema
                 return;
             }*/
             int template1Size;
-            MessageBox.Show("Por favor ingrese su huella", "Ingresar Huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Colocar dedo índice derecho en el scanner", "Ingresar Huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(array, out template1Size))
             {
                 return;
@@ -405,10 +411,59 @@ namespace Suprema
             }
         }
 
-        public static void RegistrarEmpleado(Empleado obj) {
+        private static int ContadorEmpleadoPorCodigo() {
+           
             using (var conection = new OleDbConnection(connection))
             {
-                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId) VALUES (?,?,?,?,?,?,?,?)", conection);
+                conection.Open();
+                var query = "Select count(CodEmpleado) From Fingerprints where CodEmpleado='"+RegistroEmpleado.Resultado.codigo+"'";
+                var command = new OleDbCommand(query, conection);
+                var reader = command.ExecuteReader();
+                reader.Read();
+                var count = Convert.ToInt32(reader[0].ToString());
+                conection.Close();
+                return count;
+            }
+          
+        }
+
+        public static void RegistrarEmpleado(Empleado obj) {
+
+            int count = ContadorEmpleadoPorCodigo();
+
+            if (count == 0)
+            {
+                RegistrarEmpleadoLocal(obj);
+            }
+            else {
+                ActualizarEmpleadoLocal(obj);
+            }
+        }
+
+        private static void ActualizarEmpleadoLocal(Empleado obj, bool mensaje=true)
+        {
+            using (var conection = new OleDbConnection(connection))
+            {
+                OleDbCommand comm = new OleDbCommand("UPDATE Fingerprints set Template1=?,Gui_Huella=? where CodEmpleado=?", conection);
+                OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
+                parImagen.Value = obj.huellaByte;
+                comm.Parameters.Add(parImagen);
+                comm.Parameters.Add("@Gui_Huella", OleDbType.VarChar).Value = obj.guiHuella;
+                comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = obj.codigo;
+                conection.Open();
+                int iResultado = comm.ExecuteNonQuery();
+                conection.Close();
+                HuellaTomada = 0;
+                if (mensaje) {
+                    MessageBox.Show("Guardo con exito");
+                }
+            }
+        }
+
+        private static void RegistrarEmpleadoLocal(Empleado obj) {
+            using (var conection = new OleDbConnection(connection))
+            {
+                OleDbCommand comm = new OleDbCommand("INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId,Gui_Huella) VALUES (?,?,?,?,?,?,?,?,?)", conection);
                 OleDbParameter parImagen = new OleDbParameter("@imagen", OleDbType.VarBinary, obj.huellaByte.Length);
                 parImagen.Value = obj.huellaByte;
                 comm.Parameters.Add("@Nombres", OleDbType.VarChar).Value = obj.nombres.Trim();
@@ -419,6 +474,7 @@ namespace Suprema
                 comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = obj.codigo;
                 comm.Parameters.Add("@Estado", OleDbType.Integer).Value = 1;
                 comm.Parameters.Add("@EmpleadoId", OleDbType.Integer).Value = obj.id;
+                comm.Parameters.Add("@Gui_Huella", OleDbType.VarChar).Value = obj.guiHuella;
                 conection.Open();
                 int iResultado = comm.ExecuteNonQuery();
                 conection.Close();
@@ -589,7 +645,6 @@ namespace Suprema
         {
             this.btnInit = new System.Windows.Forms.Button();
             this.btnUninit = new System.Windows.Forms.Button();
-            this.btnIdentify = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbScanTemplateType = new System.Windows.Forms.ComboBox();
             this.btnSelectionUpdateTemplate = new System.Windows.Forms.Button();
@@ -602,13 +657,20 @@ namespace Suprema
             tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
             pbImageFrame = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             txtCoordenada = new System.Windows.Forms.TextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.marcarHuellaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.agregarColaboradorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sincronizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnInit
@@ -632,17 +694,6 @@ namespace Suprema
             this.btnUninit.Text = "Desconectar";
             this.btnUninit.UseVisualStyleBackColor = true;
             this.btnUninit.Click += new System.EventHandler(this.btnUninit_Click);
-            // 
-            // btnIdentify
-            // 
-            this.btnIdentify.AccessibleDescription = "";
-            this.btnIdentify.Location = new System.Drawing.Point(12, 12);
-            this.btnIdentify.Name = "btnIdentify";
-            this.btnIdentify.Size = new System.Drawing.Size(84, 24);
-            this.btnIdentify.TabIndex = 3;
-            this.btnIdentify.Text = "Marcar Hora";
-            this.btnIdentify.UseVisualStyleBackColor = true;
-            this.btnIdentify.Click += new System.EventHandler(this.btnIdentify_Click);
             // 
             // groupBox1
             // 
@@ -782,16 +833,6 @@ namespace Suprema
             pbImageFrame.TabIndex = 9;
             pbImageFrame.TabStop = false;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(563, 300);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Agregar Colaborador";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -819,6 +860,63 @@ namespace Suprema
             txtCoordenada.Size = new System.Drawing.Size(207, 20);
             txtCoordenada.TabIndex = 13;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(706, 24);
+            this.menuStrip1.TabIndex = 16;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuToolStripMenuItem
+            // 
+            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.marcarHuellaToolStripMenuItem,
+            this.agregarColaboradorToolStripMenuItem,
+            this.sincronizarToolStripMenuItem});
+            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.menuToolStripMenuItem.Text = "Menu";
+            // 
+            // marcarHuellaToolStripMenuItem
+            // 
+            this.marcarHuellaToolStripMenuItem.Name = "marcarHuellaToolStripMenuItem";
+            this.marcarHuellaToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.marcarHuellaToolStripMenuItem.Text = "Marcar Huella";
+            this.marcarHuellaToolStripMenuItem.Click += new System.EventHandler(this.marcarHuellaToolStripMenuItem_Click);
+            // 
+            // agregarColaboradorToolStripMenuItem
+            // 
+            this.agregarColaboradorToolStripMenuItem.Name = "agregarColaboradorToolStripMenuItem";
+            this.agregarColaboradorToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.agregarColaboradorToolStripMenuItem.Text = "Agregar Colaborador";
+            this.agregarColaboradorToolStripMenuItem.Click += new System.EventHandler(this.agregarColaboradorToolStripMenuItem_Click);
+            // 
+            // sincronizarToolStripMenuItem
+            // 
+            this.sincronizarToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.asistenciaToolStripMenuItem,
+            this.huellasToolStripMenuItem});
+            this.sincronizarToolStripMenuItem.Name = "sincronizarToolStripMenuItem";
+            this.sincronizarToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.sincronizarToolStripMenuItem.Text = "Sincronizar";
+            // 
+            // asistenciaToolStripMenuItem
+            // 
+            this.asistenciaToolStripMenuItem.Name = "asistenciaToolStripMenuItem";
+            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asistenciaToolStripMenuItem.Text = "Asistencia";
+            this.asistenciaToolStripMenuItem.Click += new System.EventHandler(this.asistenciaToolStripMenuItem_Click);
+            // 
+            // huellasToolStripMenuItem
+            // 
+            this.huellasToolStripMenuItem.Name = "huellasToolStripMenuItem";
+            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.huellasToolStripMenuItem.Text = "Huellas";
+            this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
+            // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -827,13 +925,13 @@ namespace Suprema
             this.Controls.Add(txtCoordenada);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(tbxMessage);
             this.Controls.Add(lvDatabaseList);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnIdentify);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Huella";
             this.Text = "Sistema de Marcación Biométrica";
@@ -843,17 +941,135 @@ namespace Suprema
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void AgregarColaborador()
         {
             InicializarBD();
             form = 2;
             new RegistroEmpleado().Show();
-            //MessageBox.Show(CLocation.GetLocationProperty(), "Identificación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SincronizarAsistencia()
+        {
+
+            var registrosSinActualizar = RegistroEmpleado.ObtenerResgistrosSinEnviar().Count();
+
+            if (registrosSinActualizar == 0)
+            {
+                MessageBox.Show("Todos las marcaciones de registros se encuentran actualizados!");
+                return;
+            }
+            else {
+                var confirmResult = MessageBox.Show("Actualmente hay "+registrosSinActualizar+" registros de marcaciones sin enviar, se procedera a actualizar",
+                             "Confirmando Actualización!!",
+                             MessageBoxButtons.OK);
+                if (confirmResult == DialogResult.OK)
+                {
+                    try
+                    {
+                        RegistroEmpleado.ProcesarDatosNoEnviadosAux();
+                        MessageBox.Show("Se han procesado todos los registros de marcaciones al servidor!");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+
+            }
+
+        }
+
+
+        private List<Empleado> ObtenerEmpleadosActivos()
+        {
+            using (var conection = new OleDbConnection(connection))
+            {
+                conection.Open();
+                var query = "Select CodEmpleado,Gui_Huella From Fingerprints where Estado=1";
+                var command = new OleDbCommand(query, conection);
+                var reader = command.ExecuteReader();
+                var Empleado = new List<Empleado>();
+                if (reader.HasRows) {
+                    while (reader.Read())
+                    {
+                        Empleado.Add(new Empleado() { codigo = reader[0].ToString(), guiHuella = reader[1].ToString() });
+                    }
+                }
+
+                return Empleado;
+
+            }
+        }
+
+        private void SincronizarHuellas()
+        {
+
+            try {
+                var empleadosActivos = ObtenerEmpleadosActivos();
+
+                if (empleadosActivos.Count() > 0)
+                {
+                    int count = 0;
+                    foreach (Empleado empleado in empleadosActivos)
+                    {
+                        var Emp = Utilidad<Empleado>.GetJson(new Empleado(), Api + Constante.ConsultarApi + empleado.codigo + "&clave=" + ApiKey);
+                        if (Emp.guiHuella != empleado.guiHuella)
+                        {
+                            string dummyData = Emp.huella.Trim().Replace(" ", "+");
+                            if (dummyData.Length % 4 > 0)
+                                dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+                            byte[] huellaByte = Convert.FromBase64String(dummyData);
+
+                            Emp.huellaByte = huellaByte;
+
+                            ActualizarEmpleadoLocal(Emp,false);
+                            count++;
+                        }
+                    }
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Se han actualizado con exito las huellas con un total de  " + count + " registros.");
+                    }
+                    else {
+                        MessageBox.Show("No hay registro de huellas por actualizar.");
+                    }
+                }
+                else {
+                    MessageBox.Show("No hay registro de huellas por actualizar.");
+                }
+
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+
+        private void marcarHuellaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MarcarHuella();
+        }
+
+        private void asistenciaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SincronizarAsistencia();
+        }
+
+        private void huellasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SincronizarHuellas();
+        }
+
+        private void agregarColaboradorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AgregarColaborador();
         }
     }
  

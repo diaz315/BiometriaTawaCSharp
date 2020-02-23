@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="16.2" version="16.8" Modules="simple" RootPath="." Language="en" Id="{107BE6E1-FC5D-40C0-89FF-9E64C153F069}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="16.2" version="16.6.1" Modules="simple" RootPath="." Language="en" Id="{107BE6E1-FC5D-40C0-89FF-9E64C153F069}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="HiddenItems" Value="AppXProductDetailsComponent;AppXDependenciesComponent;AppXAppDetailsComponent;AppXVisualAssetsComponent;AppXCapabilitiesComponent;AppXAppDeclarationsComponent;AppXUriRulesComponent;FixupComponent"/>
+  </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe.config" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.pdb" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_Newtonsoft.Json.dll" Value="..\packages\Newtonsoft.Json.12.0.2\lib\net45"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll" Value="..\Biometrico\bin\Debug"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll" Value="..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll" Value="..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll" Value="..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll" Value="..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_UFDatabase.mdb" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe" Value="BiometriaTawaCSharp.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe.config" Value="BiometriaTawaCSharp.exe.config"/>
@@ -67,6 +70,10 @@
     <ROW File="BiometriaTawaCSharp.exe" Component_="Biometrico_PrimaryOutput" FileName="BIOMET~2.EXE|[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_BiometriaTawaCSharp.exe&gt;" SelfReg="false" DigSign="true"/>
     <ROW File="BiometriaTawaCSharp.exe.config" Component_="Biometrico_PrimaryOutput" FileName="BIOMET~2.CON|[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe.config]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_BiometriaTawaCSharp.exe.config&gt;" SelfReg="false"/>
     <ROW File="Newtonsoft.Json.dll" Component_="Biometrico_References" FileName="NEWTON~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Newtonsoft.Json.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Newtonsoft.Json.dll&gt;" SelfReg="false"/>
+    <ROW File="Suprema.UFDatabase.dll" Component_="Biometrico_References" FileName="SUPREM~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFDatabase.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFDatabase.dll&gt;" SelfReg="false"/>
+    <ROW File="Suprema.UFExtractor.dll" Component_="Biometrico_References" FileName="SUPREM~3.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFExtractor.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFExtractor.dll&gt;" SelfReg="false"/>
+    <ROW File="Suprema.UFMatcher.dll" Component_="Biometrico_References" FileName="SUPREM~4.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFMatcher.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFMatcher.dll&gt;" SelfReg="false"/>
+    <ROW File="Suprema.UFScanner.dll" Component_="Biometrico_References" FileName="SUPREM~5.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFScanner.dll&gt;" SelfReg="false"/>
     <ROW File="UFDatabase.mdb" Component_="Biometrico_ContentOutput" FileName="UFDATA~2.MDB|[|AI_PROPPATH_FILENAME_PERBUILD_UFDatabase.mdb]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_UFDatabase.mdb&gt;" SelfReg="false"/>
     <ROW File="BiometriaTawaCSharp.pdb" Component_="Biometrico_SymbolsOutput" FileName="BIOMET~2.PDB|[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.pdb]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_BiometriaTawaCSharp.pdb&gt;" SelfReg="false"/>
     <ROW File="bien.png" Component_="Biometrico_ContentOutput" FileName="bien.png" Attributes="0" SourcePath="..\Biometrico\bien.png" SelfReg="false"/>
@@ -77,10 +84,6 @@
     <ROW File="UFMatcher.dll" Component_="UFMatcher.dll" FileName="UFMATC~1.DLL|UFMatcher.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFMatcher.dll" SelfReg="false"/>
     <ROW File="UFScanner.dll" Component_="UFScanner.dll" FileName="UFSCAN~1.DLL|UFScanner.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFScanner.dll" SelfReg="false"/>
     <ROW File="UFScanner_IZZIX.dll" Component_="UFScanner_IZZIX.dll" FileName="UFSCAN~2.DLL|UFScanner_IZZIX.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFScanner_IZZIX.dll" SelfReg="false"/>
-    <ROW File="Suprema.UFDatabase.dll" Component_="Biometrico_References" FileName="SUPREM~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFDatabase.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFDatabase.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFExtractor.dll" Component_="Biometrico_References" FileName="SUPREM~3.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFExtractor.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFExtractor.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFMatcher.dll" Component_="Biometrico_References" FileName="SUPREM~4.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFMatcher.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFMatcher.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFScanner.dll" Component_="Biometrico_References" FileName="SUPREM~5.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFScanner.dll&gt;" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AppPathsComponent">
     <ROW Name="AI_APPPATH_PERBUILD_BiometriaTawaCSharp.exe" Path="[|AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe]\[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe]" Type="2" Content="0"/>
@@ -218,11 +221,11 @@
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="PrimaryOutput" OutputFile="BiometriaTawaCSharp.exe" OutputFileShortcut="BiometriaTawaCSharp"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="PrimaryOutput" OutputFile="BiometriaTawaCSharp.exe.config"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Newtonsoft.Json.dll"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="ContentOutput" OutputFile="UFDatabase.mdb"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="SymbolsOutput" OutputFile="BiometriaTawaCSharp.pdb"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFDatabase.dll"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFExtractor.dll"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFMatcher.dll"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFScanner.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="ContentOutput" OutputFile="UFDatabase.mdb"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="SymbolsOutput" OutputFile="BiometriaTawaCSharp.pdb"/>
   </COMPONENT>
 </DOCUMENT>

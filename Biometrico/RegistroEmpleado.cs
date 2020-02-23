@@ -10,9 +10,9 @@ namespace BiometriaTawaCSharp
 {
     public partial class RegistroEmpleado : Form
     {
-        private static Empleado Resultado;
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar;
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar;
+        public static Empleado Resultado;
+        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
+        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -21,17 +21,25 @@ namespace BiometriaTawaCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (txtCodEmpleado.Text=="") {
-                MessageBox.Show("Por favor ingrese un codigo", "Validar", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+            try {
+                if (txtCodEmpleado.Text == "")
+                {
+                    throw new Exception("Por favor ingrese un codigo");
+                }
 
-            if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
-            {
-                MessageBox.Show("Este usuario ya existe", "Registro Existente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else {
+                if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
+                {
+                    btnRegistrar.Enabled = false;
+                }
+
                 ConsultarApi();
+                if (ObtenerEmpleado(txtCodEmpleado.Text) > 0) 
+                {
+                    btnRegistrar.Enabled = false;
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
             }
 
         }
@@ -67,14 +75,35 @@ namespace BiometriaTawaCSharp
                     conection.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                MessageBox.Show(ex.Message);
             }
 
         }
 
-        private static List<Empleado> ObtenerResgistrosSinEnviar()
+
+        public static void EliminarHuellaLocal(string codEmpleado)
+        {
+            try
+            {
+                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                {
+                    OleDbCommand comm = new OleDbCommand("UPDATE FingerPrints SET Template1='',Gui_Huella='' WHERE CodEmpleado=?", conection);
+                    comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = codEmpleado;
+                    conection.Open();
+                    int iResultado = comm.ExecuteNonQuery();
+                    conection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        public static List<Empleado> ObtenerResgistrosSinEnviar()
         {
             var ListEmpleado = new List<Empleado>();
 
@@ -106,16 +135,40 @@ namespace BiometriaTawaCSharp
             return ListEmpleado;
         }
 
-        private void RegistrarHuellaApi()
+        private string RegistrarHuellaApi()
         {
             var huella = Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Huella.ApiKey;             
-            Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.RegistrarHuellaApi + param);
+            var empleado=Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.RegistrarHuellaApi + param);
+            if (empleado.error == true)
+            {
+                throw new Exception(empleado.mensaje);
+            }
+            return empleado.guiHuella;
         }
 
-        private static void ProcesarDatosNoEnviados() {
+        private string ActualizarHuellaApi(string codEmpleado,string huella)
+        {
+            try
+            {
+                var coordenada = Huella.txtCoordenada.Text;
+                var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+                var param = "codEmpleado=" + codEmpleado + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada + "&clave=" + Huella.ApiKey;
+                var empleado=Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api + Constante.ActualizarHuellaApi + param);
+                if (empleado.error==true) {
+                    throw new Exception(empleado.mensaje);
+                }
+                return empleado.guiHuella;
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+        }
+
+
+        public static void ProcesarDatosNoEnviados() {
             List<Empleado> RegSinEnviar = ObtenerResgistrosSinEnviar();
             try
             {
@@ -132,34 +185,65 @@ namespace BiometriaTawaCSharp
                     }
                 }
             }
-            catch(Exception Ex) {
-                MessageBox.Show(Ex.Message, "Registro no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            catch {}
+        }
 
+
+
+        public static void ProcesarDatosNoEnviadosAux()
+        {
+            List<Empleado> RegSinEnviar = ObtenerResgistrosSinEnviar();
+            try
+            {
+                if (RegSinEnviar.Count > 0)
+                {
+                    foreach (Empleado emp in RegSinEnviar)
+                    {
+                        var param = "empleadoId=" + emp.idEmpleado + "&terminal=" + emp.terminal + "&coordenadas=" + emp.coordenadas + "&fecha=" + emp.fecha + "&clave=" + Huella.ApiKey;
+                        string Url = Huella.Api + Constante.RegAsistenciaApi + param;
+                        Empleado empleado = Utilidad<Empleado>.GetJson(new Empleado(), Url);
+                        if (empleado.resultado)
+                        {
+                            ActualizarRegistroLocalEnviado(int.Parse(emp.ids));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex){
+                throw ex;
+            }
         }
 
         public static void RegistrarAsistenciaApi(int id=0)
         {
-      
-            int empId =0;
-
-            if (id > 0)
+            try
             {
-                empId = id;
+                int empId = 0;
+
+                if (id > 0)
+                {
+                    empId = id;
+                }
+                else if (Resultado.id != 0)
+                {
+                    empId = Resultado.id;
+                }
+
+                if (empId > 0)
+                {
+                    var coordenada = Huella.txtCoordenada.Text;
+                    var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
+                    var fecha = DateTime.Now;
+
+                    RegistrarAsistenciaLocal(empId, fecha, 0, terminal, coordenada);
+                }
+                //asistencia sin enviar
+                ProcesarDatosNoEnviados();
             }
-            else if (Resultado.id!=0) {
-                empId = Resultado.id;
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (empId>0) {
-                var coordenada = Huella.txtCoordenada.Text;
-                var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
-                var fecha = DateTime.Now;
-                
-                RegistrarAsistenciaLocal(empId, fecha, 0, terminal, coordenada);
-            }
-            //asistencia sin enviar
-            ProcesarDatosNoEnviados();
         }
 
         public static void RegistrarAsistenciaLocal(int empleadoId, DateTime fecha, int enviado, string terminal, string coordenadas)
@@ -181,42 +265,48 @@ namespace BiometriaTawaCSharp
                     conection.Close();
                 }
             }
-            catch (Exception e){
-                Console.WriteLine(e.Message);
+            catch (Exception ex){
+                throw ex;
             }
             
         }
 
         private void ConsultarApi() {
-            Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.ConsultarApi + txtCodEmpleado.Text+"&clave=" + Huella.ApiKey);
-            if (Resultado != null)
-            {
-                txtNombres.Text = Resultado.nombres;
-                txtDoc.Text = Resultado.tipoDoc;
-                txtNroDoc.Text = Resultado.nroDoc;
-                txtCodEmp.Text = Resultado.codigo;
-
-                if (Resultado.huella != null)
+            try {
+                Resultado = Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api + Constante.ConsultarApi + txtCodEmpleado.Text + "&clave=" + Huella.ApiKey);
+                if (Resultado != null)
                 {
-                    string dummyData = Resultado.huella.Trim().Replace(" ", "+");
-                    if (dummyData.Length % 4 > 0)
-                        dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
-                    byte[] huellaByte = Convert.FromBase64String(dummyData);
+                    txtNombres.Text = Resultado.nombres;
+                    txtDoc.Text = Resultado.tipoDoc;
+                    txtNroDoc.Text = Resultado.nroDoc;
+                    txtCodEmp.Text = Resultado.codigo;
 
-                    Resultado.huellaByte = huellaByte;
-                    pbImageFrame.Image = Image.FromFile(DirectorioPrincipal+"bien.png");
-                    btnRegistrar.Enabled = true;
-                }
-                else {
-                    pbImageFrame.Image = Image.FromFile(DirectorioPrincipal+"mal.png");
-                    btnRegistrar.Enabled = false;
-                }
+                    if (Resultado.huella != null)
+                    {
+                        string dummyData = Resultado.huella.Trim().Replace(" ", "+");
+                        if (dummyData.Length % 4 > 0)
+                            dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+                        byte[] huellaByte = Convert.FromBase64String(dummyData);
 
-            }
-            else
-            {
-                Resultado = null;
-                MessageBox.Show("No se ha encontrado el codigo de empleado", "Registro no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Resultado.huellaByte = huellaByte;
+                        //pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "bien.png");
+                        btnRegistrar.Enabled = true;
+                        btnEliminarHuella.Visible = true;
+                    }
+                    else
+                    {
+                        //pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
+                        btnRegistrar.Enabled = false;
+                        btnEliminarHuella.Visible = false;
+                    }
+                }
+                else
+                {
+                    Resultado = null;
+                    MessageBox.Show("No se ha encontrado el codigo de empleado", "Registro no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }catch(Exception ex){
+                throw ex;
             }
         }
 
@@ -232,7 +322,8 @@ namespace BiometriaTawaCSharp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try {
+            try
+            {
                 if (Resultado != null)
                 {
                     if (Resultado.huella != null || Huella.HuellaTomada == 1)
@@ -241,60 +332,76 @@ namespace BiometriaTawaCSharp
                         {
                             if (Huella.HuellaTomada == 1)
                             {
-                                RegistrarHuellaApi();
+                                Resultado.guiHuella=RegistrarHuellaApi();
                             }
                         }
                         catch (Exception x)
                         {
-                            MessageBox.Show(x.Message, "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            throw new Exception(x.Message + " Registro no seleccionado");
                         }
 
                         Huella.RegistrarEmpleado(Resultado);
                         Huella.UpdateDatabaseList();
 
-                        try
-                        {
-                            RegistrarAsistenciaApi();
-                        }
-                        catch (Exception y)
-                        {
-                            MessageBox.Show(y.Message, "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-
                         Limpiar();
                     }
                     else
                     {
-                        MessageBox.Show("Por favor ingrese la huella", "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        throw new Exception("Por favor colocar dedo índice derecho en el scanner");
                     }
-
                 }
                 else
                 {
-                    MessageBox.Show("No se ha seleccionado ningun registro", "Registro no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    throw new Exception("No se ha seleccionado ningun registro");
                 }
             }
-            catch (Exception ec) {
-                MessageBox.Show(ec.Message+". Por favor ejecute la aplicación con permisos de administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (Exception ec)
+            {
+                MessageBox.Show(ec.Message + ". Por favor ejecute la aplicación con permisos de administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            finally {
+                Resultado = null;
+                btnRegistrar.Enabled = false;
+                btnEliminarHuella.Visible = false;
             }
         }
 
         private void pbImageFrame_Click(object sender, EventArgs e)
         {
-            if (Resultado != null && Resultado.huella==null)
+            try
             {
-                Empleado resul=Huella.IniciarEscaneo();
-                Resultado.huellaByte = resul.huellaByte;
-                Resultado.pesoHuella = resul.pesoHuella;
-                if (resul.pesoHuella>0) {
-                    btnRegistrar.Enabled = true;
+                if (Resultado != null && Resultado.huella == null)
+                {
+                    Empleado resul = Huella.IniciarEscaneo();
+                    Resultado.huellaByte = resul.huellaByte;
+                    Resultado.pesoHuella = resul.pesoHuella;
+                    if (resul.pesoHuella > 0)
+                    {
+                        btnRegistrar.Enabled = true;
+                    }
                 }
             }
+            catch {}
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void btnEliminarHuella_Click(object sender, EventArgs e)
+        {
+            try {
+                ActualizarHuellaApi(txtCodEmpleado.Text,"");
+                EliminarHuellaLocal(txtCodEmpleado.Text);
+                Resultado.huella=null;
+                btnEliminarHuella.Visible = false;
+                MessageBox.Show("Se ha eliminado la huella con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
     }
 }

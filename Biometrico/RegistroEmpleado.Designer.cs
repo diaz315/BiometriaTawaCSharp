@@ -43,6 +43,7 @@
             pbImageFrame = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.btnEliminarHuella = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +66,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(262, 42);
+            this.button1.Location = new System.Drawing.Point(293, 42);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -181,11 +182,23 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
+            // btnEliminarHuella
+            // 
+            this.btnEliminarHuella.Location = new System.Drawing.Point(12, 329);
+            this.btnEliminarHuella.Name = "btnEliminarHuella";
+            this.btnEliminarHuella.Size = new System.Drawing.Size(96, 23);
+            this.btnEliminarHuella.TabIndex = 17;
+            this.btnEliminarHuella.Text = "Eliminar Huella";
+            this.btnEliminarHuella.UseVisualStyleBackColor = true;
+            this.btnEliminarHuella.Visible = false;
+            this.btnEliminarHuella.Click += new System.EventHandler(this.btnEliminarHuella_Click);
+            // 
             // RegistroEmpleado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 409);
+            this.Controls.Add(this.btnEliminarHuella);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label5);
@@ -225,6 +238,7 @@
         private System.Windows.Forms.TextBox txtCodEmp;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnEliminarHuella;
         public static System.Windows.Forms.PictureBox pbImageFrame;
     }
 }

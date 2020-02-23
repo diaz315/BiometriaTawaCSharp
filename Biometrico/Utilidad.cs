@@ -20,11 +20,8 @@ namespace BiometriaTawaCSharp
                 var info = new WebClient().DownloadString(url);
                 clase = JsonConvert.DeserializeObject<T>(info);
             }
-            catch (Exception e) {
-                Console.WriteLine(e);
-                MessageBox.Show(e.Message, "Ingrese huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return null;
-
+            catch (Exception ex) {
+                throw ex;
             }
 
             return clase;
@@ -120,8 +117,7 @@ namespace BiometriaTawaCSharp
             foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
             {
                 // Only consider Ethernet network interfaces
-                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
-                    nic.OperationalStatus == OperationalStatus.Up)
+                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet || nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
                 {
                     return nic.GetPhysicalAddress();
                 }

@@ -27,6 +27,16 @@ namespace BiometriaTawaCSharp
 
         [JsonProperty("resultado")]
         public bool resultado { get; set; }
+
+        [JsonProperty("error")]
+        public bool error { get; set; }
+
+        [JsonProperty("mensaje")]
+        public string mensaje { get; set; }
+
+        [JsonProperty("guiHuella")]
+        public string guiHuella { get; set; }
+
         public int pesoHuella { get; set; }
         public byte[] huellaByte { get; set; }
 
