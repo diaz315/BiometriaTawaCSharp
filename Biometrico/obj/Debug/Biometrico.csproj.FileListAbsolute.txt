@@ -13,3 +13,17 @@ D:\Nunez\Asistencia Tawa\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometric
 D:\Nunez\Asistencia Tawa\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 D:\Nunez\Asistencia Tawa\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 D:\Nunez\Asistencia Tawa\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\UFDatabase.mdb
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\BiometriaTawaCSharp.exe.config
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\BiometriaTawaCSharp.exe
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\BiometriaTawaCSharp.pdb
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\Newtonsoft.Json.dll
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\bin\Debug\Newtonsoft.Json.xml
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.Properties.Resources.resources
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Suprema.Huella.resources
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.RegistroEmpleado.resources
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\UserInfoForms.resources
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.GenerateResource.cache
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
+C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
