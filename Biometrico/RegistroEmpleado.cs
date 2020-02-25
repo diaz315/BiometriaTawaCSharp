@@ -396,6 +396,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella=null;
                 btnEliminarHuella.Visible = false;
+                pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
                 MessageBox.Show("Se ha eliminado la huella con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex) {
