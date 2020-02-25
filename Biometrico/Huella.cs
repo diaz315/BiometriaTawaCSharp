@@ -284,7 +284,7 @@ namespace Suprema
             }
             UFScanner.GetErrorString(uFS_STATUS, out m_strError);
             tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
-            MessageBox.Show("Por favor intente nuevamente", "Identificación falido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Mensajes.IntentarNuevamente, Mensajes.IdentificaionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
             return false;
         IL_A4:
             tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
@@ -292,7 +292,7 @@ namespace Suprema
         }
 
         public static Empleado IniciarEscaneo() {
-            MessageBox.Show("Colocar dedo índice derecho en el scanner", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Mensajes.ColocarIndiceScan, Mensajes.Error, MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(m_Template1, out m_Template1Size))
             {
                 return null;
@@ -346,7 +346,7 @@ namespace Suprema
                 return;
             }*/
             int template1Size;
-            MessageBox.Show("Colocar dedo índice derecho en el scanner", "Ingresar Huella", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Mensajes.ColocarIndiceScan, Mensajes.IngresarHuella, MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!ExtractTemplate(array, out template1Size))
             {
                 return;
@@ -366,12 +366,12 @@ namespace Suprema
             {
                 var Empleado= ObtenerEmpleado(array2[num]);
                 //tbxMessage.AppendText("Identificación exitosa (Empleado = " + Empleado[0]+" "+ Empleado[1]+ ")\r\n");
-                MessageBox.Show(Empleado[0]+" " +Empleado[1], "Marcación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Empleado[0]+" " +Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
                 return;
             }
             //tbxMessage.AppendText("Identificación fallida\r\n");
-            MessageBox.Show("Marcación fallida, por favor intente nuevamente", "Marcación fallida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Mensajes.MarcacionFallidaOtra, Mensajes.MarcacionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private List<string> ObtenerEmpleado(int id) {
@@ -455,7 +455,7 @@ namespace Suprema
                 conection.Close();
                 HuellaTomada = 0;
                 if (mensaje) {
-                    MessageBox.Show("Guardo con exito");
+                    MessageBox.Show(Mensajes.RegistroExitoso);
                 }
             }
         }
@@ -479,7 +479,7 @@ namespace Suprema
                 int iResultado = comm.ExecuteNonQuery();
                 conection.Close();
                 HuellaTomada = 0;
-                MessageBox.Show("Guardo con exito");
+                MessageBox.Show(Mensajes.RegistroExitoso);
             }
         }
 
@@ -962,19 +962,19 @@ namespace Suprema
 
             if (registrosSinActualizar == 0)
             {
-                MessageBox.Show("Todos las marcaciones de registros se encuentran actualizados!");
+                MessageBox.Show(Mensajes.MarcacionesDeRegistrosActualizadas);
                 return;
             }
             else {
-                var confirmResult = MessageBox.Show("Actualmente hay "+registrosSinActualizar+" registros de marcaciones sin enviar, se procedera a actualizar",
-                             "Confirmando Actualización!!",
+                var confirmResult = MessageBox.Show(Mensajes.ConteoRegistrosSinActualizar(registrosSinActualizar),
+                             Mensajes.ConfirmandoActualizacion,
                              MessageBoxButtons.OK);
                 if (confirmResult == DialogResult.OK)
                 {
                     try
                     {
                         RegistroEmpleado.ProcesarDatosNoEnviadosAux();
-                        MessageBox.Show("Se han procesado todos los registros de marcaciones al servidor!");
+                        MessageBox.Show(Mensajes.RegistrosMarcacionesProcesadas);
                     }
                     catch (Exception ex)
                     {
@@ -1020,7 +1020,7 @@ namespace Suprema
                     foreach (Empleado empleado in empleadosActivos)
                     {
                         var Emp = Utilidad<Empleado>.GetJson(new Empleado(), Api + Constante.ConsultarApi + empleado.codigo + "&clave=" + ApiKey);
-                        if (Emp.guiHuella != empleado.guiHuella)
+                        if (Emp.guiHuella != empleado.guiHuella && Emp.huella!=null && Emp.huella.Length>0)
                         {
                             string dummyData = Emp.huella.Trim().Replace(" ", "+");
                             if (dummyData.Length % 4 > 0)
@@ -1035,14 +1035,14 @@ namespace Suprema
                     }
                     if (count > 0)
                     {
-                        MessageBox.Show("Se han actualizado con exito las huellas con un total de  " + count + " registros.");
+                        MessageBox.Show(Mensajes.ConteoActualizacionHuellas(count));
                     }
                     else {
-                        MessageBox.Show("No hay registro de huellas por actualizar.");
+                        MessageBox.Show(Mensajes.SinRegistrosDeHuellasPorActualizar);
                     }
                 }
                 else {
-                    MessageBox.Show("No hay registro de huellas por actualizar.");
+                    MessageBox.Show(Mensajes.SinRegistrosDeHuellas);
                 }
 
             }

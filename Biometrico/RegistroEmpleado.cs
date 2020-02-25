@@ -241,7 +241,7 @@ namespace BiometriaTawaCSharp
                 ProcesarDatosNoEnviados();
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ex.Message, Mensajes.Error, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
         }
@@ -303,7 +303,7 @@ namespace BiometriaTawaCSharp
                 else
                 {
                     Resultado = null;
-                    MessageBox.Show("No se ha encontrado el codigo de empleado", "Registro no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Mensajes.CodigoEmpleadoNoEncontrado, Mensajes.RegistroNoEncontrado, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }catch(Exception ex){
                 throw ex;
@@ -337,7 +337,7 @@ namespace BiometriaTawaCSharp
                         }
                         catch (Exception x)
                         {
-                            throw new Exception(x.Message + " Registro no seleccionado");
+                            throw new Exception(x.Message + " "+Mensajes.RegistrosSinSeleccionar);
                         }
 
                         Huella.RegistrarEmpleado(Resultado);
@@ -347,17 +347,17 @@ namespace BiometriaTawaCSharp
                     }
                     else
                     {
-                        throw new Exception("Por favor colocar dedo índice derecho en el scanner");
+                        throw new Exception(Mensajes.ColocarIndiceScan);
                     }
                 }
                 else
                 {
-                    throw new Exception("No se ha seleccionado ningun registro");
+                    throw new Exception(Mensajes.RegistrosSinSeleccionar);
                 }
             }
             catch (Exception ec)
             {
-                MessageBox.Show(ec.Message + ". Por favor ejecute la aplicación con permisos de administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ec.Message + Mensajes.PermisoAdmin, Mensajes.Error, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             finally {
                 Resultado = null;
@@ -397,7 +397,7 @@ namespace BiometriaTawaCSharp
                 Resultado.huella=null;
                 btnEliminarHuella.Visible = false;
                 pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
-                MessageBox.Show("Se ha eliminado la huella con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
