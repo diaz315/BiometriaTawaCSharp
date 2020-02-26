@@ -24,7 +24,7 @@ namespace BiometriaTawaCSharp
             try {
                 if (txtCodEmpleado.Text == "")
                 {
-                    throw new Exception("Por favor ingrese un codigo");
+                    throw new Exception(Mensajes.IngresarCodigo);
                 }
 
                 if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
@@ -341,9 +341,6 @@ namespace BiometriaTawaCSharp
                         }
 
                         Huella.RegistrarEmpleado(Resultado);
-                        Huella.UpdateDatabaseList();
-
-                        Limpiar();
                     }
                     else
                     {
@@ -363,6 +360,7 @@ namespace BiometriaTawaCSharp
                 Resultado = null;
                 btnRegistrar.Enabled = false;
                 btnEliminarHuella.Visible = false;
+                Limpiar();
             }
         }
 
@@ -391,18 +389,22 @@ namespace BiometriaTawaCSharp
 
         private void btnEliminarHuella_Click(object sender, EventArgs e)
         {
-            try {
-                ActualizarHuellaApi(txtCodEmpleado.Text,"");
+            try
+            {
+                ActualizarHuellaApi(txtCodEmpleado.Text, "");
                 EliminarHuellaLocal(txtCodEmpleado.Text);
-                Resultado.huella=null;
+                Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
                 pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message);
             }
-            
+            finally {
+                Limpiar();
+            }
         }
     }
 }

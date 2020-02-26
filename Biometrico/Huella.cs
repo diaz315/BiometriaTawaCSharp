@@ -40,7 +40,7 @@ namespace Suprema
         private Button btnSelectionVerify;
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
-        private static ListView lvDatabaseList;
+        public static ListView lvDatabaseList;
         public static TextBox tbxMessage;
         private Button btnClear;
         public static PictureBox pbImageFrame;
@@ -254,6 +254,7 @@ namespace Suprema
                 }
             }
             lvDatabaseList.Items.Clear();
+            BdIniciada = 0;
         }
 
         private void btnUninit_Click(object sender, EventArgs e)

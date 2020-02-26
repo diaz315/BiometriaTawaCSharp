@@ -49,6 +49,8 @@ namespace BiometriaTawaCSharp
 
         public static string RegistroExitoso = "Se ha registrado con éxito la información, para proceder con la marcación reiniciar el aplicativo.";
 
+        public static string IngresarCodigo = "Por favor ingrese un código";
+
         public static string ConteoActualizacionHuellas(int cantidad) {
             return "Se han actualizado con éxito las huellas con un total de  " + cantidad + " registros.";
         }

@@ -27,4 +27,3 @@ C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
-C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csprojAssemblyReference.cache
