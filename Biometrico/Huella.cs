@@ -71,12 +71,18 @@ namespace Suprema
 
         public Huella()
         {
-            this.InitializeComponent();
-            txtCoordenada.Visible=false;
-            new CLocation().GetLocationProperty();
-            Api = LeerArchivo(@"C:\Api.txt");
-            ApiKey = LeerArchivo(@"C:\ApiKey.txt");
-
+            try
+            {
+                this.InitializeComponent();
+                txtCoordenada.Visible = false;
+                new CLocation().GetLocationProperty();
+                Api = LeerArchivo(@"C:\Api.txt");
+                ApiKey = LeerArchivo(@"C:\ApiKey.txt");
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+            
         }
         
         private string LeerArchivo(string ruta) {
