@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -13,6 +14,8 @@ namespace BiometriaTawaCSharp
         public static Empleado Resultado;
         //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
         private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
+        private static string BdSqlite = DirectorioPrincipal + "UFDatabase.db";
+
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -47,11 +50,10 @@ namespace BiometriaTawaCSharp
 
         private int ObtenerEmpleado(string codigo)
         {
-            using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
+            using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
-                conection.Open();
                 var query = "Select Count(Serial) From Fingerprints where CodEmpleado="+"'"+codigo+"'";
-                var command = new OleDbCommand(query, conection);
+                SQLiteCommand command = new SQLiteCommand(query, conection);
                 var reader = command.ExecuteReader();
                 var Empleado = 0;
                 while (reader.Read())
@@ -66,11 +68,10 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
                 {
-                    OleDbCommand comm = new OleDbCommand("UPDATE Asistencia SET Enviado=1 WHERE Id=?", conection);
-                    comm.Parameters.Add("@Id", OleDbType.Integer).Value = id;
-                    conection.Open();
+                    SQLiteCommand comm = new SQLiteCommand("UPDATE Asistencia SET Enviado=1 WHERE Id=?", conection);
+                    comm.Parameters.AddWithValue("@Id", id);
                     int iResultado = comm.ExecuteNonQuery();
                     conection.Close();
                 }
@@ -87,11 +88,10 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
                 {
-                    OleDbCommand comm = new OleDbCommand("UPDATE FingerPrints SET Template1='',Gui_Huella='' WHERE CodEmpleado=?", conection);
-                    comm.Parameters.Add("@CodEmpleado", OleDbType.VarChar).Value = codEmpleado;
-                    conection.Open();
+                    SQLiteCommand comm = new SQLiteCommand("UPDATE FingerPrints SET Template1='',Gui_Huella='' WHERE CodEmpleado=?", conection);
+                    comm.Parameters.AddWithValue("@CodEmpleado", codEmpleado);
                     int iResultado = comm.ExecuteNonQuery();
                     conection.Close();
                 }
@@ -109,11 +109,10 @@ namespace BiometriaTawaCSharp
 
             try
             {
-                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source=" + DirectorioPrincipal + "UFDatabase.mdb"))
+                using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
                 {
-                    conection.Open();
                     var query = "SELECT Id,EmpleadoId,Fecha,Estado,Terminal,Coordenadas FROM Asistencia WHERE Enviado=0";
-                    var command = new OleDbCommand(query, conection);
+                    SQLiteCommand command = new SQLiteCommand(query, conection);
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -137,7 +136,7 @@ namespace BiometriaTawaCSharp
 
         private string RegistrarHuellaApi()
         {
-            var huella = Convert.ToBase64String(Resultado.huellaByte);
+            var huella = Convert.ToBase64String(Utilidad<Empleado>.ExtraerTemplate(Huella.huellaBase64).Template);//Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Huella.ApiKey;             
@@ -250,17 +249,16 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                using (var conection = new OleDbConnection("Provider=Microsoft.JET.OLEDB.4.0;" + "data source="+DirectorioPrincipal+"UFDatabase.mdb"))
+                using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
                 {
-                    OleDbCommand comm = new OleDbCommand("INSERT INTO Asistencia(EmpleadoId,Fecha,Estado,Enviado,Terminal,Coordenadas) VALUES (?,?,?,?,?,?)", conection);
+                    SQLiteCommand comm = new SQLiteCommand("INSERT INTO Asistencia(EmpleadoId,Fecha,Estado,Enviado,Terminal,Coordenadas) VALUES (?,?,?,?,?,?)", conection);
 
-                    comm.Parameters.Add("@EmpleadoId", OleDbType.VarChar).Value = empleadoId;
-                    comm.Parameters.Add("@Fecha", OleDbType.VarChar).Value = fecha;
-                    comm.Parameters.Add("@Estado", OleDbType.Integer).Value = 1;
-                    comm.Parameters.Add("@Enviado", OleDbType.VarChar).Value = enviado;
-                    comm.Parameters.Add("@Terminal", OleDbType.VarChar).Value = terminal;
-                    comm.Parameters.Add("@Coordenada", OleDbType.VarChar).Value = coordenadas;
-                    conection.Open();
+                    comm.Parameters.AddWithValue("@EmpleadoId",  empleadoId);
+                    comm.Parameters.AddWithValue("@Fecha", fecha);
+                    comm.Parameters.AddWithValue("@Estado", 1);
+                    comm.Parameters.AddWithValue("@Enviado", enviado);
+                    comm.Parameters.AddWithValue("@Terminal", terminal);
+                    comm.Parameters.AddWithValue("@Coordenada", coordenadas);
                     int iResultado = comm.ExecuteNonQuery();
                     conection.Close();
                 }

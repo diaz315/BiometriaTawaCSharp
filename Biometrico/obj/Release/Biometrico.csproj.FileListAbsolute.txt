@@ -1,0 +1,6 @@
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\BiometriaTawaCSharp.Properties.Resources.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\Suprema.Huella.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\BiometriaTawaCSharp.RegistroEmpleado.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\UserInfoForms.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\Biometrico.csproj.GenerateResource.cache
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Release\Biometrico.csproj.CoreCompileInputs.cache

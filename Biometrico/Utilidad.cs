@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
+using SourceAFIS.Simple;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace BiometriaTawaCSharp
 {
@@ -27,7 +27,28 @@ namespace BiometriaTawaCSharp
             return clase;
         }
 
-        public static Bitmap ByteToImage(byte[] blob)
+        public static Fingerprint ExtraerTemplate(string huellaBase64) {
+            AfisEngine Afis = new AfisEngine();
+            Fingerprint Huella = new Fingerprint();
+            Huella.AsBitmap = new Bitmap(Base64StringToBitmap(huellaBase64));
+            Person person = new Person();
+            person.Fingerprints.Add(Huella);
+            Afis.Extract(person);
+            return new Fingerprint { Template = person.Fingerprints[0].Template };
+        }
+
+        public static SQLiteConnection ConnSqlite(string BdSqlite)
+        {
+            var db = new SQLiteConnection(
+                string.Format("Data Source={0};Version=3;", BdSqlite)
+            );
+
+            db.Open();
+
+            return db;
+        }
+
+        public static Bitmap ByteToBitmap(byte[] blob)
         {
             MemoryStream mStream = new MemoryStream();
             byte[] pData = blob;
@@ -35,6 +56,133 @@ namespace BiometriaTawaCSharp
             Bitmap bm = new Bitmap(mStream, false);
             mStream.Dispose();
             return bm;
+        }
+
+        public static byte[] ReduceBytes(byte[] inputBytes, int jpegQuality = 50)
+        {
+            Image image;
+            byte[] outputBytes;
+            using (var inputStream = new MemoryStream(inputBytes))
+            {
+                image = Image.FromStream(inputStream);
+                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                  .First(c => c.FormatID == ImageFormat.Jpeg.Guid);
+                var encoderParameters = new EncoderParameters(1);
+                encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, jpegQuality);
+                using (var outputStream = new MemoryStream())
+                {
+                    image.Save(outputStream, jpegEncoder, encoderParameters);
+                    outputBytes = outputStream.ToArray();
+                }
+            }
+
+            return outputBytes;
+        }
+
+        public static string convertByteToString(byte[] dato)
+        {
+            try
+            {
+                return Convert.ToBase64String(dato);
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        public static string ConverFisicImageToBase64(string Path) {
+            using (Image image = Image.FromFile(Path))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+
+                    // Convert byte[] to Base64 String
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+        }
+
+        public static byte[] GetByteArrayFromFisicImage(string Path)
+        {
+            using (Image image = Image.FromFile(Path))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    return m.ToArray();
+                }
+            }
+        }
+
+        public static byte[] convertStringToByte(string b64Str)
+        {
+            try
+            {
+                return Convert.FromBase64String(b64Str);
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        public static byte[] imgToByteConverter(Image inImg)
+        {
+            ImageConverter imgCon = new ImageConverter();
+            return (byte[])imgCon.ConvertTo(inImg, typeof(byte[]));
+        }
+
+        public static string ConvertBiteToBase64(Byte[] bytes) {
+            return Convert.ToBase64String(bytes, 0, bytes.Length);
+        }
+
+        public static Image byteArrayToImage(byte[] byteArrayIn)
+        {
+            using (MemoryStream mStream = new MemoryStream(byteArrayIn))
+            {
+                return Image.FromStream(mStream);
+            }
+        }
+
+
+        public static string ImageToBase64(Image image) {
+
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+
+                    // Convert byte[] to Base64 String
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+        }
+
+        public static Bitmap Base64StringToBitmap(string base64String)
+        {
+            Bitmap bmpReturn = null;
+            //Convert Base64 string to byte[]
+
+            string dummyData = base64String.Trim().Replace(" ", "+");
+            if (dummyData.Length % 4 > 0)
+                dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+
+            byte[] byteBuffer = Convert.FromBase64String(dummyData);
+            MemoryStream memoryStream = new MemoryStream(byteBuffer);
+
+            memoryStream.Position = 0;
+
+            bmpReturn = (Bitmap)Bitmap.FromStream(memoryStream);
+
+            memoryStream.Close();
+            memoryStream = null;
+            byteBuffer = null;
+
+            return bmpReturn;
         }
 
         //public static void SendJson(int id, byte[] huella) {

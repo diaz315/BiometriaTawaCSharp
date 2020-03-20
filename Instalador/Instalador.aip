@@ -5,20 +5,22 @@
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe.config" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.pdb" Value="..\Biometrico\bin\Debug"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_EntityFramework.SqlServer.dll" Value="..\packages\EntityFramework.6.3.0\lib\net45"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_EntityFramework.dll" Value="..\packages\EntityFramework.6.3.0\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_Newtonsoft.Json.dll" Value="..\packages\Newtonsoft.Json.12.0.2\lib\net45"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll" Value="..\Biometrico\bin\Debug"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.EF6.dll" Value="..\packages\System.Data.SQLite.EF6.1.0.112.0\lib\net45"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.Linq.dll" Value="..\packages\System.Data.SQLite.Linq.1.0.112.0\lib\net45"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.dll" Value="..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_UFDatabase.mdb" Value="..\Biometrico\bin\Debug"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe" Value="BiometriaTawaCSharp.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe.config" Value="BiometriaTawaCSharp.exe.config"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.pdb" Value="BiometriaTawaCSharp.pdb"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.SqlServer.dll" Value="EntityFramework.SqlServer.dll"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.dll" Value="EntityFramework.dll"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Newtonsoft.Json.dll" Value="Newtonsoft.Json.dll"/>
-    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFDatabase.dll" Value="Suprema.UFDatabase.dll"/>
-    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFExtractor.dll" Value="Suprema.UFExtractor.dll"/>
-    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFMatcher.dll" Value="Suprema.UFMatcher.dll"/>
-    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll" Value="Suprema.UFScanner.dll"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.EF6.dll" Value="System.Data.SQLite.EF6.dll"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.Linq.dll" Value="System.Data.SQLite.Linq.dll"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.dll" Value="System.Data.SQLite.dll"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_UFDatabase.mdb" Value="UFDatabase.mdb"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPPRODUCTICON" Value="Rom.exe" Type="8"/>
@@ -49,7 +51,7 @@
     <ROW Component="APPDIR" ComponentId="{0EE546BE-C645-4973-B2A4-8CE0A24412E1}" Directory_="APPDIR" Attributes="0"/>
     <ROW Component="Biometrico_ContentOutput" ComponentId="{92D1D668-FCBF-492B-BAB9-17B9328CEC17}" Directory_="Biometrico_Dir" Attributes="0" KeyPath="UFDatabase.mdb" Type="0"/>
     <ROW Component="Biometrico_PrimaryOutput" ComponentId="{92D55BCF-E41E-4FF3-98A4-B2537BBC7689}" Directory_="Biometrico_Dir" Attributes="0" KeyPath="BiometriaTawaCSharp.exe"/>
-    <ROW Component="Biometrico_References" ComponentId="{FD11A715-E28C-4937-B88F-34C199887AE5}" Directory_="Biometrico_Dir" Attributes="0" KeyPath="Suprema.UFScanner.dll"/>
+    <ROW Component="Biometrico_References" ComponentId="{FD11A715-E28C-4937-B88F-34C199887AE5}" Directory_="Biometrico_Dir" Attributes="0" KeyPath="System.Data.SQLite.Linq.dll"/>
     <ROW Component="Biometrico_SymbolsOutput" ComponentId="{C57F4573-346C-4D21-AB63-E50875A6D03A}" Directory_="Biometrico_Dir" Attributes="0" KeyPath="BiometriaTawaCSharp.pdb"/>
     <ROW Component="ProductInformation" ComponentId="{65A03EDC-7541-49EA-8061-ABFCC6E30AF2}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{C422B16A-70CC-40D4-8C99-3E6A7444B9ED}" Directory_="SHORTCUTDIR" Attributes="0"/>
@@ -77,20 +79,22 @@
     <ROW File="UFMatcher.dll" Component_="UFMatcher.dll" FileName="UFMATC~1.DLL|UFMatcher.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFMatcher.dll" SelfReg="false"/>
     <ROW File="UFScanner.dll" Component_="UFScanner.dll" FileName="UFSCAN~1.DLL|UFScanner.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFScanner.dll" SelfReg="false"/>
     <ROW File="UFScanner_IZZIX.dll" Component_="UFScanner_IZZIX.dll" FileName="UFSCAN~2.DLL|UFScanner_IZZIX.dll" Attributes="0" SourcePath="..\Biometrico\DLL\UFScanner_IZZIX.dll" SelfReg="false"/>
-    <ROW File="Suprema.UFDatabase.dll" Component_="Biometrico_References" FileName="SUPREM~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFDatabase.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFDatabase.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFExtractor.dll" Component_="Biometrico_References" FileName="SUPREM~3.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFExtractor.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFExtractor.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFMatcher.dll" Component_="Biometrico_References" FileName="SUPREM~4.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFMatcher.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFMatcher.dll&gt;" SelfReg="false"/>
-    <ROW File="Suprema.UFScanner.dll" Component_="Biometrico_References" FileName="SUPREM~5.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_Suprema.UFScanner.dll&gt;" SelfReg="false"/>
+    <ROW File="EntityFramework.dll" Component_="Biometrico_References" FileName="ENTITY~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_EntityFramework.dll&gt;" SelfReg="false"/>
+    <ROW File="EntityFramework.SqlServer.dll" Component_="Biometrico_References" FileName="ENTITY~3.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.SqlServer.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_EntityFramework.SqlServer.dll&gt;" SelfReg="false"/>
+    <ROW File="System.Data.SQLite.dll" Component_="Biometrico_References" FileName="SYSTEM~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_System.Data.SQLite.dll&gt;" SelfReg="false"/>
+    <ROW File="System.Data.SQLite.EF6.dll" Component_="Biometrico_References" FileName="SYSTEM~3.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.EF6.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_System.Data.SQLite.EF6.dll&gt;" SelfReg="false"/>
+    <ROW File="System.Data.SQLite.Linq.dll" Component_="Biometrico_References" FileName="SYSTEM~4.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.Linq.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_System.Data.SQLite.Linq.dll&gt;" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AppPathsComponent">
     <ROW Name="AI_APPPATH_PERBUILD_BiometriaTawaCSharp.exe" Path="[|AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe]\[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_BiometriaTawaCSharp.exe.config" Path="[|AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.exe.config]\[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.exe.config]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_BiometriaTawaCSharp.pdb" Path="[|AI_PROPPATH_DIR_PERBUILD_BiometriaTawaCSharp.pdb]\[|AI_PROPPATH_FILENAME_PERBUILD_BiometriaTawaCSharp.pdb]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_EntityFramework.SqlServer.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_EntityFramework.SqlServer.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.SqlServer.dll]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_EntityFramework.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_EntityFramework.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_EntityFramework.dll]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_Newtonsoft.Json.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_Newtonsoft.Json.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_Newtonsoft.Json.dll]" Type="2" Content="0"/>
-    <ROW Name="AI_APPPATH_PERBUILD_Suprema.UFDatabase.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFDatabase.dll]" Type="2" Content="0"/>
-    <ROW Name="AI_APPPATH_PERBUILD_Suprema.UFExtractor.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFExtractor.dll]" Type="2" Content="0"/>
-    <ROW Name="AI_APPPATH_PERBUILD_Suprema.UFMatcher.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFMatcher.dll]" Type="2" Content="0"/>
-    <ROW Name="AI_APPPATH_PERBUILD_Suprema.UFScanner.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_Suprema.UFScanner.dll]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_System.Data.SQLite.EF6.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.EF6.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.EF6.dll]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_System.Data.SQLite.Linq.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.Linq.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.Linq.dll]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_System.Data.SQLite.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_System.Data.SQLite.dll]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_UFDatabase.mdb" Path="[|AI_PROPPATH_DIR_PERBUILD_UFDatabase.mdb]\[|AI_PROPPATH_FILENAME_PERBUILD_UFDatabase.mdb]" Type="2" Content="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
@@ -220,9 +224,10 @@
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Newtonsoft.Json.dll"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="ContentOutput" OutputFile="UFDatabase.mdb"/>
     <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="SymbolsOutput" OutputFile="BiometriaTawaCSharp.pdb"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFDatabase.dll"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFExtractor.dll"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFMatcher.dll"/>
-    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="Suprema.UFScanner.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="EntityFramework.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="EntityFramework.SqlServer.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="System.Data.SQLite.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="System.Data.SQLite.EF6.dll"/>
+    <ROW ProjectId="{6c5eafd5-634e-4b15-ac70-89e0aea403fc}" ProjectName="Biometrico" OutputGroup="References" OutputFile="System.Data.SQLite.Linq.dll"/>
   </COMPONENT>
 </DOCUMENT>

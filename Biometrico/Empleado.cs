@@ -38,6 +38,7 @@ namespace BiometriaTawaCSharp
         public string guiHuella { get; set; }
 
         public int pesoHuella { get; set; }
+        public float coincidencia { get; set; }
         public byte[] huellaByte { get; set; }
 
         public string ids { get; set; }
