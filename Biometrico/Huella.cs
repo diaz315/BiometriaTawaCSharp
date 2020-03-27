@@ -45,7 +45,7 @@ namespace Suprema
         public static ListView lvDatabaseList;
         public static TextBox tbxMessage;
         private Button btnClear;
-        public  static PictureBox pbImageFrame;
+        public static PictureBox pbImageFrame;
         private Label label1;
         private ComboBox cbScanTemplateType;
         private Button btnSelectionUpdateTemplate;
@@ -64,13 +64,14 @@ namespace Suprema
         private static string BdSqlite = DirectorioPrincipal + "UFDatabase.db";
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menuToolStripMenuItem;
-        private ToolStripMenuItem marcarHuellaToolStripMenuItem;
         private ToolStripMenuItem agregarColaboradorToolStripMenuItem;
         private ToolStripMenuItem sincronizarToolStripMenuItem;
         private ToolStripMenuItem asistenciaToolStripMenuItem;
         private ToolStripMenuItem huellasToolStripMenuItem;
         private AfisEngine Afis = new AfisEngine();
-        private ToolStripMenuItem huelleroEikonToolStripMenuItem;
+        private ToolStripMenuItem huelleroToolStripMenuItem;
+        private ToolStripMenuItem eikonToolStripMenuItem;
+        private ToolStripMenuItem supremaToolStripMenuItem;
         public static string huellaBase64;
 
         public Huella()
@@ -755,12 +756,13 @@ namespace Suprema
             txtCoordenada = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.marcarHuellaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.huelleroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eikonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.supremaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.agregarColaboradorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sincronizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.huelleroEikonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -967,20 +969,35 @@ namespace Suprema
             // menuToolStripMenuItem
             // 
             this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.marcarHuellaToolStripMenuItem,
-            this.huelleroEikonToolStripMenuItem,
+            this.huelleroToolStripMenuItem,
             this.agregarColaboradorToolStripMenuItem,
             this.sincronizarToolStripMenuItem});
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.menuToolStripMenuItem.Text = "Menu";
             // 
-            // marcarHuellaToolStripMenuItem
+            // huelleroToolStripMenuItem
             // 
-            this.marcarHuellaToolStripMenuItem.Name = "marcarHuellaToolStripMenuItem";
-            this.marcarHuellaToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.marcarHuellaToolStripMenuItem.Text = "Huellero Suprema";
-            this.marcarHuellaToolStripMenuItem.Click += new System.EventHandler(this.marcarHuellaToolStripMenuItem_Click);
+            this.huelleroToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.eikonToolStripMenuItem,
+            this.supremaToolStripMenuItem});
+            this.huelleroToolStripMenuItem.Name = "huelleroToolStripMenuItem";
+            this.huelleroToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.huelleroToolStripMenuItem.Text = "Huellero";
+            // 
+            // eikonToolStripMenuItem
+            // 
+            this.eikonToolStripMenuItem.Name = "eikonToolStripMenuItem";
+            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eikonToolStripMenuItem.Text = "Eikon";
+            this.eikonToolStripMenuItem.Click += new System.EventHandler(this.eikonToolStripMenuItem_Click);
+            // 
+            // supremaToolStripMenuItem
+            // 
+            this.supremaToolStripMenuItem.Name = "supremaToolStripMenuItem";
+            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.supremaToolStripMenuItem.Text = "Suprema";
+            this.supremaToolStripMenuItem.Click += new System.EventHandler(this.supremaToolStripMenuItem_Click);
             // 
             // agregarColaboradorToolStripMenuItem
             // 
@@ -1011,13 +1028,6 @@ namespace Suprema
             this.huellasToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
-            // 
-            // huelleroEikonToolStripMenuItem
-            // 
-            this.huelleroEikonToolStripMenuItem.Name = "huelleroEikonToolStripMenuItem";
-            this.huelleroEikonToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.huelleroEikonToolStripMenuItem.Text = "Huellero Eikon";
-            this.huelleroEikonToolStripMenuItem.Click += new System.EventHandler(this.huelleroEikonToolStripMenuItem_Click);
             // 
             // Huella
             // 
@@ -1161,7 +1171,7 @@ namespace Suprema
 
         private void marcarHuellaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MarcarHuella();
+            
         }
 
         private void asistenciaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1181,7 +1191,17 @@ namespace Suprema
 
         private void huelleroEikonToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void eikonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             new Form_Main(1).Show();
+        }
+
+        private void supremaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MarcarHuella();
         }
     }
 
