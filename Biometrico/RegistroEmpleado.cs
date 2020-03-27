@@ -293,13 +293,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "bien.png");
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "mal.png");
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }
@@ -399,7 +399,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
-                pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "mal.png");
+                pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "mal.png");
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
