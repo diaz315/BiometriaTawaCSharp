@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using UareUSampleCSharp;
 
 namespace BiometriaTawaCSharp
 {
@@ -403,6 +404,11 @@ namespace BiometriaTawaCSharp
             finally {
                 Limpiar();
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            new Form_Main(2).Show();
         }
     }
 }

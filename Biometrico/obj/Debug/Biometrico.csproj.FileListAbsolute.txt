@@ -52,4 +52,9 @@ D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.xml
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.dll.config
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csprojAssemblyReference.cache
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\SourceAFIS.dll
-D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\SourceAFIS.xml
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UareUSampleCSharp.Capabilities.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UareUSampleCSharp.Capture.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UareUSampleCSharp.Form_Main.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UareUSampleCSharp.ReaderSelection.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\Biometric.dll
+D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\DPUruNet.dll

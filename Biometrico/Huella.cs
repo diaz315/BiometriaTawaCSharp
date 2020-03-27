@@ -15,6 +15,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UareUSampleCSharp;
+
 [assembly: Debuggable(DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
 [assembly: CompilationRelaxations(8)]
 [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
@@ -47,7 +49,7 @@ namespace Suprema
         public static ListView lvDatabaseList;
         public static TextBox tbxMessage;
         private Button btnClear;
-        public static PictureBox pbImageFrame;
+        public  static PictureBox pbImageFrame;
         private Label label1;
         private ComboBox cbScanTemplateType;
         private Button btnSelectionUpdateTemplate;
@@ -72,6 +74,7 @@ namespace Suprema
         private ToolStripMenuItem asistenciaToolStripMenuItem;
         private ToolStripMenuItem huellasToolStripMenuItem;
         private AfisEngine Afis = new AfisEngine();
+        private ToolStripMenuItem huelleroEikonToolStripMenuItem;
         public static string huellaBase64;
 
         public Huella()
@@ -314,12 +317,19 @@ namespace Suprema
 
         }
 
-        public Empleado CompararHuellas(List<Empleado> empleados)
+        public static Empleado CompararHuellas(List<Empleado> empleados)
         {
             Empleado resultado = new Empleado();
 
             try
             {
+                if (huellaBase64 == null) {
+                    pbImageFrame.Image.Save("testing.png", ImageFormat.Png);
+                    var x = File.ReadAllBytes("testing.png");
+                    huellaBase64= Convert.ToBase64String(x);
+                }
+
+
                 var huellaOriginal = Utilidad<Empleado>.ExtraerTemplate(huellaBase64);
 
                 Fingerprint fingers = new Fingerprint();
@@ -384,6 +394,23 @@ namespace Suprema
             }
             UpdateDatabaseList();
         }
+
+        public static void MarcarHuellaDos() {
+            var listaHuellaBd = ObtenerEmpleadoHuella();
+            var coincidencia = CompararHuellas(listaHuellaBd);
+
+            if (coincidencia.coincidencia >= 0.50)
+            {
+                var Empleado = ObtenerEmpleado(int.Parse(coincidencia.idEmpleado));
+                MessageBox.Show(Empleado[0] + " " + Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
+            }
+            else
+            {
+                MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void MarcarHuella()
         {
             InicializarBD();
@@ -413,7 +440,7 @@ namespace Suprema
             }
         }
 
-        private List<string> ObtenerEmpleado(int id)
+        private static List<string> ObtenerEmpleado(int id)
         {
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
@@ -432,7 +459,7 @@ namespace Suprema
             }
         }
 
-        private List<Empleado> ObtenerEmpleadoHuella()
+        private static List<Empleado> ObtenerEmpleadoHuella()
         {
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
@@ -758,6 +785,7 @@ namespace Suprema
             this.sincronizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.huelleroEikonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -965,6 +993,7 @@ namespace Suprema
             // 
             this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.marcarHuellaToolStripMenuItem,
+            this.huelleroEikonToolStripMenuItem,
             this.agregarColaboradorToolStripMenuItem,
             this.sincronizarToolStripMenuItem});
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
@@ -975,7 +1004,7 @@ namespace Suprema
             // 
             this.marcarHuellaToolStripMenuItem.Name = "marcarHuellaToolStripMenuItem";
             this.marcarHuellaToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.marcarHuellaToolStripMenuItem.Text = "Marcar Huella";
+            this.marcarHuellaToolStripMenuItem.Text = "Huellero Suprema";
             this.marcarHuellaToolStripMenuItem.Click += new System.EventHandler(this.marcarHuellaToolStripMenuItem_Click);
             // 
             // agregarColaboradorToolStripMenuItem
@@ -997,16 +1026,23 @@ namespace Suprema
             // asistenciaToolStripMenuItem
             // 
             this.asistenciaToolStripMenuItem.Name = "asistenciaToolStripMenuItem";
-            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.asistenciaToolStripMenuItem.Text = "Asistencia";
             this.asistenciaToolStripMenuItem.Click += new System.EventHandler(this.asistenciaToolStripMenuItem_Click);
             // 
             // huellasToolStripMenuItem
             // 
             this.huellasToolStripMenuItem.Name = "huellasToolStripMenuItem";
-            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
+            // 
+            // huelleroEikonToolStripMenuItem
+            // 
+            this.huelleroEikonToolStripMenuItem.Name = "huelleroEikonToolStripMenuItem";
+            this.huelleroEikonToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.huelleroEikonToolStripMenuItem.Text = "Huellero Eikon";
+            this.huelleroEikonToolStripMenuItem.Click += new System.EventHandler(this.huelleroEikonToolStripMenuItem_Click);
             // 
             // Huella
             // 
@@ -1166,6 +1202,11 @@ namespace Suprema
         private void agregarColaboradorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AgregarColaborador();
+        }
+
+        private void huelleroEikonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Form_Main(1).Show();
         }
     }
 
