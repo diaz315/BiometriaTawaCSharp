@@ -3,8 +3,6 @@ using SourceAFIS.Simple;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Data.OleDb;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,8 +10,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using UareUSampleCSharp;
 
@@ -324,9 +320,9 @@ namespace Suprema
             try
             {
                 if (huellaBase64 == null) {
-                    pbImageFrame.Image.Save("testing.png", ImageFormat.Png);
-                    var x = File.ReadAllBytes("testing.png");
-                    huellaBase64= Convert.ToBase64String(x);
+                    pbImageFrame.Image.Save("TempHu.png", ImageFormat.Png);
+                    var bytes = File.ReadAllBytes("TempHu.png");
+                    huellaBase64= Convert.ToBase64String(bytes);
                 }
 
 

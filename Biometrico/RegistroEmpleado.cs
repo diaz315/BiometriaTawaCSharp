@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using UareUSampleCSharp;
@@ -13,9 +14,9 @@ namespace BiometriaTawaCSharp
     public partial class RegistroEmpleado : Form
     {
         public static Empleado Resultado;
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
-        private static string BdSqlite = DirectorioPrincipal + "UFDatabase.db";
+        private static string DirectorioPrincipalDev = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
+        private static string DirectorioPrincipalProd = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
+        private static string BdSqlite = DirectorioPrincipalProd + "UFDatabase.db";
 
         public RegistroEmpleado()
         {
@@ -137,6 +138,10 @@ namespace BiometriaTawaCSharp
 
         private string RegistrarHuellaApi()
         {
+            pbImageFrame.Image.Save("TempRE.png", ImageFormat.Png);
+            var bytes = File.ReadAllBytes("TempRE.png");
+            Huella.huellaBase64 = Convert.ToBase64String(bytes);
+
             var huella = Convert.ToBase64String(Utilidad<Empleado>.ExtraerTemplate(Huella.huellaBase64).Template);//Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
@@ -288,13 +293,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "bien.png");
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "mal.png");
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }
@@ -394,7 +399,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
-                pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
+                pbImageFrame.Image = Image.FromFile(DirectorioPrincipalDev + "mal.png");
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -408,7 +413,16 @@ namespace BiometriaTawaCSharp
 
         private void button3_Click(object sender, EventArgs e)
         {
-            new Form_Main(2).Show();
+            try
+            {
+                new Form_Main(2).Show();
+                Huella.HuellaTomada = 1;
+                btnRegistrar.Enabled = true;
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
