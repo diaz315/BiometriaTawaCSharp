@@ -3,6 +3,8 @@ using SourceAFIS.Simple;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Drawing;
@@ -72,6 +74,7 @@ namespace Suprema
         private ToolStripMenuItem huelleroToolStripMenuItem;
         private ToolStripMenuItem eikonToolStripMenuItem;
         private ToolStripMenuItem supremaToolStripMenuItem;
+        private static DataGridView dataGridViewEmpleado;
         public static string huellaBase64;
 
         public Huella()
@@ -80,6 +83,9 @@ namespace Suprema
             {
                 this.InitializeComponent();
                 txtCoordenada.Visible = false;
+
+                LlenarGridEmpleado();
+
                 new CLocation().GetLocationProperty();
                 Api = LeerArchivo(@"C:\Api.txt");
                 ApiKey = LeerArchivo(@"C:\ApiKey.txt");
@@ -153,6 +159,30 @@ namespace Suprema
                 AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
                 i++;
             }
+        }
+
+        public static void LlenarGridEmpleado()
+        {
+            dataGridViewEmpleado.DataSource = null;
+            var Empleados = ObtenerEmpleado();
+
+            DataTable dt = new DataTable();
+                   
+            dt.Columns.Add("N#");
+            dt.Columns.Add("Código");
+            dt.Columns.Add("Nombres");
+            dt.Columns.Add("Tipo. Doc");
+            dt.Columns.Add("Nro. Doc");
+
+            int i = 1;
+            foreach (Empleado obj in Empleados)
+            {
+                AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
+                dt.Rows.Add(new object[] { i, obj.codigo,obj.nombres, obj.tipoDoc, obj.nroDoc});
+                i++;
+            }
+
+            dataGridViewEmpleado.DataSource = dt;
         }
 
         private static void GetDrawCapturedImage(UFScanner Scanner)
@@ -321,8 +351,15 @@ namespace Suprema
             try
             {
                 if (huellaBase64 == null) {
-                    pbImageFrame.Image.Save("TempHu.png", ImageFormat.Png);
-                    var bytes = File.ReadAllBytes("TempHu.png");
+
+                    var auxImg = "TempHu.png";
+                    if (File.Exists(auxImg))
+                    {
+                        File.Delete(auxImg);
+                    }
+
+                    pbImageFrame.Image.Save(auxImg, ImageFormat.Png);
+                    var bytes = File.ReadAllBytes(auxImg);
                     huellaBase64= Convert.ToBase64String(bytes);
                 }
 
@@ -441,7 +478,7 @@ namespace Suprema
         {
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
-                var query = "Select Nombres,CodEmpleado,EmpleadoId From Fingerprints where Serial=" + id;
+                var query = "Select Nombres,CodEmpleado,EmpleadoId From Fingerprints where EmpleadoId=" + id;
                 SQLiteCommand command = new SQLiteCommand(query, conection);
                 var reader = command.ExecuteReader();
                 var Empleado = new List<string>();
@@ -451,6 +488,10 @@ namespace Suprema
                     Empleado.Add(reader[1].ToString());
                     Empleado.Add(reader[2].ToString());
                 }
+                
+                reader.Close();
+                conection.Close();
+
                 return Empleado;
 
             }
@@ -468,9 +509,11 @@ namespace Suprema
                 {
                     Empleado.Add(new Empleado { nombres = reader[0].ToString(), codigo = reader[1].ToString(), idEmpleado = reader[2].ToString(), huella = reader[3].ToString() });
                 }
-                conection.Close();
-                return Empleado;
 
+                reader.Close();
+                conection.Close();
+
+                return Empleado;
             }
         }
 
@@ -487,6 +530,10 @@ namespace Suprema
                 {
                     Empleado.Add(new Empleado() { nombres = reader[0].ToString(), codigo = reader[1].ToString(), tipoDoc = reader[2].ToString(), nroDoc = reader[3].ToString() });
                 }
+                
+                reader.Close();
+                conection.Close();
+                
                 return Empleado;
 
             }
@@ -502,7 +549,10 @@ namespace Suprema
                 var reader = command.ExecuteReader();
                 reader.Read();
                 var count = Convert.ToInt32(reader[0].ToString());
+                
+                reader.Close();
                 conection.Close();
+
                 return count;
             }
 
@@ -521,6 +571,8 @@ namespace Suprema
             {
                 ActualizarEmpleadoLocal(obj);
             }
+
+            LlenarGridEmpleado();
         }
 
         private static void ActualizarEmpleadoLocal(Empleado obj, bool mensaje = true)
@@ -528,9 +580,18 @@ namespace Suprema
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
                 SQLiteCommand comm = new SQLiteCommand("UPDATE Fingerprints set Template1=?,Gui_Huella=? where CodEmpleado=?", conection);
-                SQLiteParameter parImagen = new SQLiteParameter("@imagen", Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template));
-                parImagen.Value = obj.huellaByte;
-                comm.Parameters.Add(parImagen);
+
+                string parImagen;
+                if (huellaBase64 == null)
+                {
+                    parImagen = obj.huella;
+                }
+                else
+                {
+                    parImagen = Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template);
+                }
+
+                comm.Parameters.AddWithValue("@Template1", parImagen);
                 comm.Parameters.AddWithValue("@Gui_Huella", obj.guiHuella);
                 comm.Parameters.AddWithValue("@CodEmpleado", obj.codigo);
                 int iResultado = comm.ExecuteNonQuery();
@@ -546,33 +607,45 @@ namespace Suprema
 
         private static void RegistrarEmpleadoLocal(Empleado obj)
         {
-
-            string query = "INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId,Gui_Huella) VALUES (?,?,?,?,?,?,?,?,?)";
-
-            using (var connection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
+            try
             {
+                string query = "INSERT INTO Fingerprints(Nombres,Documento,FingerIndex,Template1,NroDocumento,CodEmpleado,Estado,EmpleadoId,Gui_Huella) VALUES (?,?,?,?,?,?,?,?,?)";
 
-                SQLiteCommand comm = new SQLiteCommand(query, connection);
+                using (var connection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
+                {
+                    SQLiteCommand comm = new SQLiteCommand(query, connection);
 
-                SQLiteParameter parImagen = new SQLiteParameter("@imagen", Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template));
+                    string parImagen;
+                    if (huellaBase64 == null)
+                    {
+                        parImagen = obj.huella;
+                    }
+                    else
+                    {
+                        parImagen = Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template);
+                    }
 
-                comm.Parameters.AddWithValue("@Nombres", obj.nombres.Trim());
-                comm.Parameters.AddWithValue("@TipoDoc", obj.tipoDoc.Trim());
-                comm.Parameters.AddWithValue("@FingerIndex", obj.dedo);
-                comm.Parameters.Add(parImagen);
-                comm.Parameters.AddWithValue("@NroDocumento", obj.nroDoc);
-                comm.Parameters.AddWithValue("@CodEmpleado", obj.codigo);
-                comm.Parameters.AddWithValue("@Estado", 1);
-                comm.Parameters.AddWithValue("@EmpleadoId", obj.id);
-                comm.Parameters.AddWithValue("@Gui_Huella", obj.guiHuella);
+                    comm.Parameters.AddWithValue("@Nombres", obj.nombres.Trim());
+                    comm.Parameters.AddWithValue("@TipoDoc", obj.tipoDoc.Trim());
+                    comm.Parameters.AddWithValue("@FingerIndex", obj.dedo);
+                    comm.Parameters.AddWithValue("@Template1", parImagen);
+                    comm.Parameters.AddWithValue("@NroDocumento", obj.nroDoc);
+                    comm.Parameters.AddWithValue("@CodEmpleado", obj.codigo);
+                    comm.Parameters.AddWithValue("@Estado", 1);
+                    comm.Parameters.AddWithValue("@EmpleadoId", obj.id);
+                    comm.Parameters.AddWithValue("@Gui_Huella", obj.guiHuella);
 
-                int iResultado = comm.ExecuteNonQuery();
-                connection.Close();
+                    int iResultado = comm.ExecuteNonQuery();
+                    connection.Close();
 
-                HuellaTomada = 0;
-                huellaBase64 = null;
-                MessageBox.Show(Mensajes.RegistroExitoso);
+                    HuellaTomada = 0;
+                    huellaBase64 = null;
+                    MessageBox.Show(Mensajes.RegistroExitoso);
+                }
 
+            }
+            catch (SqlException ex) {
+                throw ex;
             }
 
         }
@@ -763,10 +836,12 @@ namespace Suprema
             this.sincronizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            dataGridViewEmpleado = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(dataGridViewEmpleado)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
@@ -894,7 +969,7 @@ namespace Suprema
             lvDatabaseList.FullRowSelect = true;
             lvDatabaseList.GridLines = true;
             lvDatabaseList.HideSelection = false;
-            lvDatabaseList.Location = new System.Drawing.Point(257, 42);
+            lvDatabaseList.Location = new System.Drawing.Point(263, 370);
             lvDatabaseList.MultiSelect = false;
             lvDatabaseList.Name = "lvDatabaseList";
             lvDatabaseList.Size = new System.Drawing.Size(420, 252);
@@ -904,7 +979,7 @@ namespace Suprema
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new System.Drawing.Point(12, 350);
+            tbxMessage.Location = new System.Drawing.Point(18, 628);
             tbxMessage.Multiline = true;
             tbxMessage.Name = "tbxMessage";
             tbxMessage.Size = new System.Drawing.Size(609, 84);
@@ -913,7 +988,7 @@ namespace Suprema
             // btnClear
             // 
             this.btnClear.AccessibleDescription = "";
-            this.btnClear.Location = new System.Drawing.Point(629, 350);
+            this.btnClear.Location = new System.Drawing.Point(635, 628);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(48, 84);
             this.btnClear.TabIndex = 8;
@@ -932,7 +1007,7 @@ namespace Suprema
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(400, 18);
+            this.label2.Location = new System.Drawing.Point(521, 11);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(115, 13);
             this.label2.TabIndex = 11;
@@ -962,7 +1037,7 @@ namespace Suprema
             this.menuToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(706, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(867, 24);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -988,14 +1063,14 @@ namespace Suprema
             // eikonToolStripMenuItem
             // 
             this.eikonToolStripMenuItem.Name = "eikonToolStripMenuItem";
-            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.eikonToolStripMenuItem.Text = "Eikon";
             this.eikonToolStripMenuItem.Click += new System.EventHandler(this.eikonToolStripMenuItem_Click);
             // 
             // supremaToolStripMenuItem
             // 
             this.supremaToolStripMenuItem.Name = "supremaToolStripMenuItem";
-            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.supremaToolStripMenuItem.Text = "Suprema";
             this.supremaToolStripMenuItem.Click += new System.EventHandler(this.supremaToolStripMenuItem_Click);
             // 
@@ -1029,11 +1104,20 @@ namespace Suprema
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
             // 
+            // dataGridViewEmpleado
+            // 
+            dataGridViewEmpleado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewEmpleado.Location = new System.Drawing.Point(274, 42);
+            dataGridViewEmpleado.Name = "dataGridViewEmpleado";
+            dataGridViewEmpleado.Size = new System.Drawing.Size(554, 254);
+            dataGridViewEmpleado.TabIndex = 17;
+            // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(706, 338);
+            this.ClientSize = new System.Drawing.Size(867, 346);
+            this.Controls.Add(dataGridViewEmpleado);
             this.Controls.Add(txtCoordenada);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label2);
@@ -1055,6 +1139,7 @@ namespace Suprema
             this.groupBox2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(dataGridViewEmpleado)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1115,6 +1200,9 @@ namespace Suprema
                         Empleado.Add(new Empleado() { codigo = reader[0].ToString(), guiHuella = reader[1].ToString() });
                     }
                 }
+                
+                reader.Close();
+                conection.Close();
 
                 return Empleado;
 

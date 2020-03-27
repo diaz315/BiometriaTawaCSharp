@@ -16,6 +16,9 @@ namespace BiometriaTawaCSharp
         public static Empleado Resultado;
         private static string DirectorioPrincipalDev = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
         private static string DirectorioPrincipalProd = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
+
+        private static string DirectorioPrincipal = DirectorioPrincipalDev;
+
         private static string BdSqlite = DirectorioPrincipalProd + "UFDatabase.db";
 
         public RegistroEmpleado()
@@ -56,12 +59,17 @@ namespace BiometriaTawaCSharp
             {
                 var query = "Select Count(Serial) From Fingerprints where CodEmpleado="+"'"+codigo+"'";
                 SQLiteCommand command = new SQLiteCommand(query, conection);
+
                 var reader = command.ExecuteReader();
                 var Empleado = 0;
                 while (reader.Read())
                 {
                     Empleado=(int.Parse(reader[0].ToString()));
                 }
+               
+                reader.Close();
+                conection.Close();
+
                 return Empleado;
             }
         }
@@ -127,6 +135,10 @@ namespace BiometriaTawaCSharp
                         empleado.coordenadas = reader[5].ToString();
                         ListEmpleado.Add(empleado);
                     }
+                    
+                    reader.Close();
+                    conection.Close();
+
                 }
             }
             catch (Exception e) {
@@ -138,9 +150,17 @@ namespace BiometriaTawaCSharp
 
         private string RegistrarHuellaApi()
         {
-            pbImageFrame.Image.Save("TempRE.png", ImageFormat.Png);
-            var bytes = File.ReadAllBytes("TempRE.png");
-            Huella.huellaBase64 = Convert.ToBase64String(bytes);
+            if(Huella.huellaBase64==null)
+            {   
+                var auxImg = "TempRE.png";
+                if (File.Exists(auxImg)) {
+                    File.Delete(auxImg);
+                }
+
+                pbImageFrame.Image.Save(auxImg, ImageFormat.Png);
+                var bytes = File.ReadAllBytes(auxImg);
+                Huella.huellaBase64 = Convert.ToBase64String(bytes);
+            }
 
             var huella = Convert.ToBase64String(Utilidad<Empleado>.ExtraerTemplate(Huella.huellaBase64).Template);//Convert.ToBase64String(Resultado.huellaByte);
             var coordenada = Huella.txtCoordenada.Text;
@@ -293,13 +313,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "bien.png");
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }
@@ -399,7 +419,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
-                pbImageFrame.Image = Image.FromFile(DirectorioPrincipalProd + "mal.png");
+                pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

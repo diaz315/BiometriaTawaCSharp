@@ -38,7 +38,7 @@
             // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(12, 81);
+            this.btnBack.Location = new System.Drawing.Point(15, 81);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(115, 23);
             this.btnBack.TabIndex = 18;
@@ -48,7 +48,7 @@
             // btnSelect
             // 
             this.btnSelect.Enabled = false;
-            this.btnSelect.Location = new System.Drawing.Point(133, 52);
+            this.btnSelect.Location = new System.Drawing.Point(15, 52);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(115, 23);
             this.btnSelect.TabIndex = 17;
@@ -58,7 +58,7 @@
             // btnCaps
             // 
             this.btnCaps.Enabled = false;
-            this.btnCaps.Location = new System.Drawing.Point(133, 81);
+            this.btnCaps.Location = new System.Drawing.Point(136, 81);
             this.btnCaps.Name = "btnCaps";
             this.btnCaps.Size = new System.Drawing.Size(115, 23);
             this.btnCaps.TabIndex = 16;
@@ -68,7 +68,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(12, 52);
+            this.btnRefresh.Location = new System.Drawing.Point(136, 52);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(115, 23);
             this.btnRefresh.TabIndex = 15;
