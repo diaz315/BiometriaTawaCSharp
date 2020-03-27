@@ -31,6 +31,7 @@
             this.lblPlaceFinger = new System.Windows.Forms.Label();
             this.btnBack = new System.Windows.Forms.Button();
             this.pbFingerprint = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFingerprint)).BeginInit();
             this.SuspendLayout();
             // 
             // lblPlaceFinger
@@ -38,7 +39,8 @@
             this.lblPlaceFinger.Location = new System.Drawing.Point(2, 380);
             this.lblPlaceFinger.Name = "lblPlaceFinger";
             this.lblPlaceFinger.Size = new System.Drawing.Size(187, 19);
-            this.lblPlaceFinger.Text = "Place a finger on the reader";
+            this.lblPlaceFinger.TabIndex = 5;
+            this.lblPlaceFinger.Text = "Coloque su dedo indice en el lector.";
             // 
             // btnBack
             // 
@@ -46,7 +48,7 @@
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(56, 23);
             this.btnBack.TabIndex = 4;
-            this.btnBack.Text = "Back";
+            this.btnBack.Text = "Volver";
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // pbFingerprint
@@ -55,26 +57,26 @@
             this.pbFingerprint.Name = "pbFingerprint";
             this.pbFingerprint.Size = new System.Drawing.Size(256, 360);
             this.pbFingerprint.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbFingerprint.TabIndex = 6;
+            this.pbFingerprint.TabStop = false;
             // 
             // Capture
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(256, 360);
+            this.ClientSize = new System.Drawing.Size(259, 401);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.lblPlaceFinger);
             this.Controls.Add(this.pbFingerprint);
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
-#if !WindowsCE
             this.MaximumSize = new System.Drawing.Size(275, 440);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(275, 440);
-            this.ClientSize = new System.Drawing.Size(275, 440);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-#endif
             this.Name = "Capture";
-            this.Text = "Capture";
-            this.Load += new System.EventHandler(this.Capture_Load);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Capturar";
             this.Closed += new System.EventHandler(this.Capture_Closed);
+            this.Load += new System.EventHandler(this.Capture_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pbFingerprint)).EndInit();
             this.ResumeLayout(false);
 
         }

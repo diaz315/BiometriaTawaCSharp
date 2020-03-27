@@ -522,27 +522,6 @@ namespace Suprema
             }
         }
 
-        private void test()
-        {
-
-            using (var ctx = Utilidad<Empleado>.ConnSqlite(BdSqlite))
-            {
-                string query = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'sqlite_sequence';";
-
-                using (var command = new SQLiteCommand(query, ctx))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        reader.Read();
-                        MessageBox.Show(reader[0].ToString());
-
-                    }
-                }
-
-            }
-
-        }
-
         private static void ActualizarEmpleadoLocal(Empleado obj, bool mensaje = true)
         {
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))

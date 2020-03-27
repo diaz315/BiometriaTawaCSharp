@@ -49,7 +49,7 @@
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(236, 15);
             this.Label1.TabIndex = 18;
-            this.Label1.Text = "Selected Reader:";
+            this.Label1.Text = "Huelleros disponible:";
             // 
             // btnCapture
             // 
@@ -58,7 +58,7 @@
             this.btnCapture.Name = "btnCapture";
             this.btnCapture.Size = new System.Drawing.Size(115, 23);
             this.btnCapture.TabIndex = 9;
-            this.btnCapture.Text = "Capture";
+            this.btnCapture.Text = "Capturar";
             this.btnCapture.Click += new System.EventHandler(this.btnCapture_Click);
             // 
             // btnReaderSelect
@@ -67,13 +67,13 @@
             this.btnReaderSelect.Name = "btnReaderSelect";
             this.btnReaderSelect.Size = new System.Drawing.Size(115, 23);
             this.btnReaderSelect.TabIndex = 8;
-            this.btnReaderSelect.Text = "Reader Selection";
+            this.btnReaderSelect.Text = "Seleccionar";
             this.btnReaderSelect.Click += new System.EventHandler(this.btnReaderSelect_Click);
             // 
             // Form_Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(261, 89);
+            this.ClientSize = new System.Drawing.Size(261, 88);
             this.Controls.Add(this.txtReaderSelected);
             this.Controls.Add(this.Label1);
             this.Controls.Add(this.btnCapture);
@@ -84,7 +84,7 @@
             this.MinimumSize = new System.Drawing.Size(277, 127);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "U.are.U Sample C#";
+            this.Text = "Seleccionar huellero";
             this.ResumeLayout(false);
             this.PerformLayout();
 
