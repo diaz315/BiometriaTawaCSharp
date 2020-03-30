@@ -435,7 +435,7 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                new Form_Main(2).Show();
+                new Form_Main(2);
                 Huella.HuellaTomada = 1;
                 btnRegistrar.Enabled = true;
             }

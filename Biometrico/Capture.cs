@@ -91,6 +91,7 @@ namespace UareUSampleCSharp
         {
             try
             {
+                Huella.huellaBase64 = null;
                 if (this.pbFingerprint.InvokeRequired)
                 {
                     SendMessageCallback d = new SendMessageCallback(SendMessage);

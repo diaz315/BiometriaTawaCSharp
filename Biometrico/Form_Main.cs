@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
 using DPUruNet;
+using Suprema;
 
 namespace UareUSampleCSharp
 {
@@ -34,8 +35,11 @@ namespace UareUSampleCSharp
 
         public Form_Main(int form)
         {
+            Visible = false;
             InitializeComponent();
             OptFormulario= form;
+            InitEikon();
+            CaptureImgEikon();
         }
 
         // When set by child forms, shows s/n and enables buttons.
@@ -48,11 +52,29 @@ namespace UareUSampleCSharp
                 SendMessage(Action.UpdateReaderState, value);
             }
         }
-        private Reader currentReader;
+
+        private ReaderCollection _readers;
+
+        public Reader currentReader;
 
         #region Click Event Handlers
         private ReaderSelection _readerSelection;
         private void btnReaderSelect_Click(System.Object sender, System.EventArgs e)
+        {
+
+            if (_readerSelection == null)
+            {
+                _readerSelection = new ReaderSelection();
+                _readerSelection.Sender = this;
+            }
+
+            _readerSelection.SetEikon();
+
+            _readerSelection.Dispose();
+            _readerSelection = null;
+        }
+
+        private void InitEikon()
         {
             if (_readerSelection == null)
             {
@@ -60,11 +82,26 @@ namespace UareUSampleCSharp
                 _readerSelection.Sender = this;
             }
 
-            _readerSelection.ShowDialog();
+            _readerSelection.SetEikon();
 
             _readerSelection.Dispose();
             _readerSelection = null;
         }
+
+        private void CaptureImgEikon()
+        {
+            if (_capture == null)
+            {
+                _capture = new Capture();
+                _capture._sender = this;
+            }
+
+            _capture.ShowDialog();
+
+            _capture.Dispose();
+            _capture = null;
+        }
+
 
         private Capture _capture;
         private void btnCapture_Click(System.Object sender, System.EventArgs e)

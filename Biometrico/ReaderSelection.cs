@@ -29,6 +29,40 @@ namespace UareUSampleCSharp
             InitializeComponent();
         }
 
+        private void RefreshEikon()
+        {
+
+            try
+            {
+                _readers = ReaderCollection.GetReaders();
+            }
+            catch (Exception ex)
+            {
+                //message box:
+                String text = ex.Message;
+                text += "\r\n\r\nPlease check if DigitalPersona service has been started";
+                String caption = "Cannot access readers";
+                MessageBox.Show(text, caption);
+            }
+        }
+
+        public void SetEikon()
+        {
+            try {
+                RefreshEikon();
+                if (_sender.CurrentReader != null)
+                {
+                    _sender.CurrentReader.Dispose();
+                    _sender.CurrentReader = null;
+                }
+                _sender.CurrentReader = _readers[0];
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+            
+        }
+
         /// <summary>
         /// Clear the control of readers, get readers and display.
         /// </summary>

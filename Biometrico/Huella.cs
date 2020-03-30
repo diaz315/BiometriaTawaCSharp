@@ -1284,7 +1284,7 @@ namespace Suprema
 
         private void eikonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Form_Main(1).Show();
+            new Form_Main(1);
         }
 
         private void supremaToolStripMenuItem_Click(object sender, EventArgs e)
