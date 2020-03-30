@@ -51,23 +51,23 @@
             // 
             // txtCodEmpleado
             // 
-            this.txtCodEmpleado.Location = new System.Drawing.Point(131, 16);
+            this.txtCodEmpleado.Location = new System.Drawing.Point(124, 12);
             this.txtCodEmpleado.Name = "txtCodEmpleado";
-            this.txtCodEmpleado.Size = new System.Drawing.Size(237, 20);
+            this.txtCodEmpleado.Size = new System.Drawing.Size(250, 20);
             this.txtCodEmpleado.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 19);
+            this.label1.Location = new System.Drawing.Point(10, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 13);
+            this.label1.Size = new System.Drawing.Size(103, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Codigo colaborador:";
+            this.label1.Text = "Código Colaborador:";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(293, 42);
+            this.button1.Location = new System.Drawing.Point(293, 38);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -77,7 +77,7 @@
             // 
             // txtNombres
             // 
-            this.txtNombres.Location = new System.Drawing.Point(118, 118);
+            this.txtNombres.Location = new System.Drawing.Point(124, 118);
             this.txtNombres.Name = "txtNombres";
             this.txtNombres.ReadOnly = true;
             this.txtNombres.Size = new System.Drawing.Size(250, 20);
@@ -86,7 +86,7 @@
             // btnRegistrar
             // 
             this.btnRegistrar.Enabled = false;
-            this.btnRegistrar.Location = new System.Drawing.Point(317, 374);
+            this.btnRegistrar.Location = new System.Drawing.Point(209, 374);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(75, 23);
             this.btnRegistrar.TabIndex = 4;
@@ -97,24 +97,24 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 121);
+            this.label2.Location = new System.Drawing.Point(3, 125);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(52, 13);
+            this.label2.Size = new System.Drawing.Size(105, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Nombres:";
+            this.label2.Text = "Nombres y Apellidos:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 147);
+            this.label3.Location = new System.Drawing.Point(4, 151);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
+            this.label3.Size = new System.Drawing.Size(104, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Documento";
+            this.label3.Text = "Tipo de Documento:";
             // 
             // txtDoc
             // 
-            this.txtDoc.Location = new System.Drawing.Point(118, 144);
+            this.txtDoc.Location = new System.Drawing.Point(124, 144);
             this.txtDoc.Name = "txtDoc";
             this.txtDoc.ReadOnly = true;
             this.txtDoc.Size = new System.Drawing.Size(250, 20);
@@ -123,15 +123,15 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 173);
+            this.label4.Location = new System.Drawing.Point(20, 177);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 13);
+            this.label4.Size = new System.Drawing.Size(88, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "Nro. Documento";
+            this.label4.Text = "Nro. Documento:";
             // 
             // txtNroDoc
             // 
-            this.txtNroDoc.Location = new System.Drawing.Point(118, 170);
+            this.txtNroDoc.Location = new System.Drawing.Point(124, 170);
             this.txtNroDoc.Name = "txtNroDoc";
             this.txtNroDoc.ReadOnly = true;
             this.txtNroDoc.Size = new System.Drawing.Size(250, 20);
@@ -140,15 +140,15 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 199);
+            this.label5.Location = new System.Drawing.Point(5, 203);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
+            this.label5.Size = new System.Drawing.Size(103, 13);
             this.label5.TabIndex = 11;
-            this.label5.Text = "Cod. colaborador";
+            this.label5.Text = "Código Colaborador:";
             // 
             // txtCodEmp
             // 
-            this.txtCodEmp.Location = new System.Drawing.Point(118, 196);
+            this.txtCodEmp.Location = new System.Drawing.Point(124, 196);
             this.txtCodEmp.Name = "txtCodEmp";
             this.txtCodEmp.ReadOnly = true;
             this.txtCodEmp.Size = new System.Drawing.Size(250, 20);
@@ -175,7 +175,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(236, 373);
+            this.button2.Location = new System.Drawing.Point(293, 373);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 24);
             this.button2.TabIndex = 16;
@@ -226,7 +226,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtCodEmpleado);
             this.Name = "RegistroEmpleado";
-            this.Text = "RegistroEmpleado";
+            this.Text = "Registrar Colaborador";
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);

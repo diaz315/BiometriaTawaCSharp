@@ -73,7 +73,7 @@
             this.MinimumSize = new System.Drawing.Size(275, 440);
             this.Name = "Capture";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Capturar";
+            this.Text = "Vista Previa";
             this.Closed += new System.EventHandler(this.Capture_Closed);
             this.Load += new System.EventHandler(this.Capture_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbFingerprint)).EndInit();

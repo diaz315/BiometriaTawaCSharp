@@ -75,6 +75,9 @@ namespace Suprema
         private ToolStripMenuItem eikonToolStripMenuItem;
         private ToolStripMenuItem supremaToolStripMenuItem;
         private static DataGridView dataGridViewEmpleado;
+        private Label label3;
+        private TextBox textBox1;
+        private Button button1;
         public static string huellaBase64;
 
         public Huella()
@@ -837,6 +840,9 @@ namespace Suprema
             this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             dataGridViewEmpleado = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -1049,7 +1055,7 @@ namespace Suprema
             this.sincronizarToolStripMenuItem});
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.menuToolStripMenuItem.Text = "Menu";
+            this.menuToolStripMenuItem.Text = "Menú";
             // 
             // huelleroToolStripMenuItem
             // 
@@ -1058,19 +1064,19 @@ namespace Suprema
             this.supremaToolStripMenuItem});
             this.huelleroToolStripMenuItem.Name = "huelleroToolStripMenuItem";
             this.huelleroToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.huelleroToolStripMenuItem.Text = "Huellero";
+            this.huelleroToolStripMenuItem.Text = "Marcar";
             // 
             // eikonToolStripMenuItem
             // 
             this.eikonToolStripMenuItem.Name = "eikonToolStripMenuItem";
-            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eikonToolStripMenuItem.Text = "Eikon";
             this.eikonToolStripMenuItem.Click += new System.EventHandler(this.eikonToolStripMenuItem_Click);
             // 
             // supremaToolStripMenuItem
             // 
             this.supremaToolStripMenuItem.Name = "supremaToolStripMenuItem";
-            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.supremaToolStripMenuItem.Text = "Suprema";
             this.supremaToolStripMenuItem.Click += new System.EventHandler(this.supremaToolStripMenuItem_Click);
             // 
@@ -1093,30 +1099,58 @@ namespace Suprema
             // asistenciaToolStripMenuItem
             // 
             this.asistenciaToolStripMenuItem.Name = "asistenciaToolStripMenuItem";
-            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.asistenciaToolStripMenuItem.Text = "Asistencia";
             this.asistenciaToolStripMenuItem.Click += new System.EventHandler(this.asistenciaToolStripMenuItem_Click);
             // 
             // huellasToolStripMenuItem
             // 
             this.huellasToolStripMenuItem.Name = "huellasToolStripMenuItem";
-            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
             // 
             // dataGridViewEmpleado
             // 
             dataGridViewEmpleado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewEmpleado.Location = new System.Drawing.Point(274, 42);
+            dataGridViewEmpleado.Location = new System.Drawing.Point(264, 72);
             dataGridViewEmpleado.Name = "dataGridViewEmpleado";
             dataGridViewEmpleado.Size = new System.Drawing.Size(554, 254);
             dataGridViewEmpleado.TabIndex = 17;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(283, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Filtro:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(321, 39);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(418, 20);
+            this.textBox1.TabIndex = 19;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(743, 39);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Buscar";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(867, 346);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label3);
             this.Controls.Add(dataGridViewEmpleado);
             this.Controls.Add(txtCoordenada);
             this.Controls.Add(this.groupBox2);
