@@ -76,8 +76,7 @@ namespace Suprema
         private ToolStripMenuItem supremaToolStripMenuItem;
         private static DataGridView dataGridViewEmpleado;
         private Label label3;
-        private TextBox textBox1;
-        private Button button1;
+        private TextBox FiltroColaborador;
         public static string huellaBase64;
 
         public Huella()
@@ -87,7 +86,8 @@ namespace Suprema
                 this.InitializeComponent();
                 txtCoordenada.Visible = false;
 
-                LlenarGridEmpleado();
+                InitGridEmpleado();
+                LlenarGridEmpleado(ObtenerEmpleado());
 
                 new CLocation().GetLocationProperty();
                 Api = LeerArchivo(@"C:\Api.txt");
@@ -164,28 +164,29 @@ namespace Suprema
             }
         }
 
-        public static void LlenarGridEmpleado()
+        private static DataTable dataColaborador = new DataTable();
+        public static void InitGridEmpleado()
+        {
+            dataColaborador.Columns.Add("N#");
+            dataColaborador.Columns.Add("Código");
+            dataColaborador.Columns.Add("Nombres");
+            dataColaborador.Columns.Add("Tipo_Documento");
+            dataColaborador.Columns.Add("Nro_Documento");
+        }
+
+        public static void LlenarGridEmpleado(List<Empleado> Empleados)
         {
             dataGridViewEmpleado.DataSource = null;
-            var Empleados = ObtenerEmpleado();
-
-            DataTable dt = new DataTable();
-                   
-            dt.Columns.Add("N#");
-            dt.Columns.Add("Código");
-            dt.Columns.Add("Nombres");
-            dt.Columns.Add("Tipo. Doc");
-            dt.Columns.Add("Nro. Doc");
 
             int i = 1;
             foreach (Empleado obj in Empleados)
             {
-                AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
-                dt.Rows.Add(new object[] { i, obj.codigo,obj.nombres, obj.tipoDoc, obj.nroDoc});
+                //AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
+                dataColaborador.Rows.Add(new object[] { i, obj.codigo,obj.nombres, obj.tipoDoc, obj.nroDoc});
                 i++;
             }
 
-            dataGridViewEmpleado.DataSource = dt;
+            dataGridViewEmpleado.DataSource = dataColaborador;
         }
 
         private static void GetDrawCapturedImage(UFScanner Scanner)
@@ -575,7 +576,7 @@ namespace Suprema
                 ActualizarEmpleadoLocal(obj);
             }
 
-            LlenarGridEmpleado();
+            LlenarGridEmpleado(ObtenerEmpleado());
         }
 
         private static void ActualizarEmpleadoLocal(Empleado obj, bool mensaje = true)
@@ -841,8 +842,7 @@ namespace Suprema
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             dataGridViewEmpleado = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.FiltroColaborador = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -1069,14 +1069,14 @@ namespace Suprema
             // eikonToolStripMenuItem
             // 
             this.eikonToolStripMenuItem.Name = "eikonToolStripMenuItem";
-            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.eikonToolStripMenuItem.Text = "Eikon";
             this.eikonToolStripMenuItem.Click += new System.EventHandler(this.eikonToolStripMenuItem_Click);
             // 
             // supremaToolStripMenuItem
             // 
             this.supremaToolStripMenuItem.Name = "supremaToolStripMenuItem";
-            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.supremaToolStripMenuItem.Text = "Suprema";
             this.supremaToolStripMenuItem.Click += new System.EventHandler(this.supremaToolStripMenuItem_Click);
             // 
@@ -1099,14 +1099,14 @@ namespace Suprema
             // asistenciaToolStripMenuItem
             // 
             this.asistenciaToolStripMenuItem.Name = "asistenciaToolStripMenuItem";
-            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asistenciaToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.asistenciaToolStripMenuItem.Text = "Asistencia";
             this.asistenciaToolStripMenuItem.Click += new System.EventHandler(this.asistenciaToolStripMenuItem_Click);
             // 
             // huellasToolStripMenuItem
             // 
             this.huellasToolStripMenuItem.Name = "huellasToolStripMenuItem";
-            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.huellasToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
             // 
@@ -1121,35 +1121,26 @@ namespace Suprema
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(283, 42);
+            this.label3.Location = new System.Drawing.Point(261, 42);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(32, 13);
             this.label3.TabIndex = 18;
             this.label3.Text = "Filtro:";
             // 
-            // textBox1
+            // FiltroColaborador
             // 
-            this.textBox1.Location = new System.Drawing.Point(321, 39);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(418, 20);
-            this.textBox1.TabIndex = 19;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(743, 39);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Buscar";
-            this.button1.UseVisualStyleBackColor = true;
+            this.FiltroColaborador.Location = new System.Drawing.Point(299, 39);
+            this.FiltroColaborador.Name = "FiltroColaborador";
+            this.FiltroColaborador.Size = new System.Drawing.Size(519, 20);
+            this.FiltroColaborador.TabIndex = 19;
+            this.FiltroColaborador.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Huella
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(867, 346);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.FiltroColaborador);
             this.Controls.Add(this.label3);
             this.Controls.Add(dataGridViewEmpleado);
             this.Controls.Add(txtCoordenada);
@@ -1324,6 +1315,12 @@ namespace Suprema
         private void supremaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MarcarHuella();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            dataColaborador.DefaultView.RowFilter = $"código = '{FiltroColaborador.Text}'  OR nombres LIKE '{FiltroColaborador.Text}%' OR Tipo_Documento LIKE '{FiltroColaborador.Text}%' OR Nro_Documento='{FiltroColaborador.Text}'";
+            dataGridViewEmpleado.DataSource = dataColaborador;
         }
     }
 
