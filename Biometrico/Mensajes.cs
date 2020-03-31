@@ -47,7 +47,7 @@ namespace BiometriaTawaCSharp
 
         public static string MarcacionExitosa = "Marcación éxitosa";
 
-        public static string RegistroExitoso = "Se ha registrado con éxito la información, para proceder con la marcación reiniciar el aplicativo.";
+        public static string RegistroExitoso = "Se ha registrado con éxito la información.";
 
         public static string IngresarCodigo = "Por favor ingrese un código";
 
