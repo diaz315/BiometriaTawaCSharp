@@ -174,6 +174,7 @@ namespace Suprema
         public static void LlenarGridEmpleado(List<Empleado> Empleados)
         {
             dataGridViewEmpleado.DataSource = null;
+            dataColaborador.Clear();
 
             int i = 1;
             foreach (Empleado obj in Empleados)
