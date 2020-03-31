@@ -227,8 +227,11 @@
     <Content Include="DLL\UFMatcher.dll" />
     <Content Include="DLL\UFScanner.dll" />
     <Content Include="DLL\UFScanner_IZZIX.dll" />
+    <Content Include="EikonImg.png" />
     <Content Include="mal.png" />
     <Content Include="Rom.ico" />
+    <Content Include="RomImg.png" />
+    <Content Include="SupremaImg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

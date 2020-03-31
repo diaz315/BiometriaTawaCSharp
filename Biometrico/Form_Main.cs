@@ -35,11 +35,17 @@ namespace UareUSampleCSharp
 
         public Form_Main(int form)
         {
-            Visible = false;
-            InitializeComponent();
-            OptFormulario= form;
-            InitEikon();
-            CaptureImgEikon();
+            try {
+                Visible = false;
+                InitializeComponent();
+                OptFormulario = form;
+                InitEikon();
+                CaptureImgEikon();
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+
         }
 
         // When set by child forms, shows s/n and enables buttons.
@@ -76,30 +82,43 @@ namespace UareUSampleCSharp
 
         private void InitEikon()
         {
-            if (_readerSelection == null)
+            try
             {
-                _readerSelection = new ReaderSelection();
-                _readerSelection.Sender = this;
+                if (_readerSelection == null)
+                {
+                    _readerSelection = new ReaderSelection();
+                    _readerSelection.Sender = this;
+                }
+
+                _readerSelection.SetEikon();
+
+                _readerSelection.Dispose();
+                _readerSelection = null;
             }
-
-            _readerSelection.SetEikon();
-
-            _readerSelection.Dispose();
-            _readerSelection = null;
+            catch (Exception ex) {
+                throw ex;
+            }
         }
 
         private void CaptureImgEikon()
         {
-            if (_capture == null)
+            try
             {
-                _capture = new Capture();
-                _capture._sender = this;
+                if (_capture == null)
+                {
+                    _capture = new Capture();
+                    _capture._sender = this;
+                }
+
+                _capture.ShowDialog();
+
+                _capture.Dispose();
+                _capture = null;
             }
-
-            _capture.ShowDialog();
-
-            _capture.Dispose();
-            _capture = null;
+            catch (Exception ex) {
+                throw ex;
+            }
+            
         }
 
 
@@ -125,20 +144,27 @@ namespace UareUSampleCSharp
         /// <returns>Returns true if successful; false if unsuccessful</returns>
         public bool OpenReader()
         {
-            reset = false;
-            Constants.ResultCode result = Constants.ResultCode.DP_DEVICE_FAILURE;
-
-            // Open reader
-            result = currentReader.Open(Constants.CapturePriority.DP_PRIORITY_COOPERATIVE);
-
-            if (result != Constants.ResultCode.DP_SUCCESS)
+            try
             {
-                MessageBox.Show("Error:  " + result);
-                reset = true;
-                return false;
-            }
+                reset = false;
+                Constants.ResultCode result = Constants.ResultCode.DP_DEVICE_FAILURE;
 
-            return true;
+                // Open reader
+                result = currentReader.Open(Constants.CapturePriority.DP_PRIORITY_COOPERATIVE);
+
+                if (result != Constants.ResultCode.DP_SUCCESS)
+                {
+                    MessageBox.Show("Error:  " + result);
+                    reset = true;
+                    return false;
+                }
+
+                return true;
+
+            }
+            catch (Exception ex) {
+                throw new Exception("El dispositivo Eikon no se encuentra conectado.");
+            }
         }
 
         /// <summary>

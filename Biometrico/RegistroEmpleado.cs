@@ -14,12 +14,8 @@ namespace BiometriaTawaCSharp
     public partial class RegistroEmpleado : Form
     {
         public static Empleado Resultado;
-        private static string DirectorioPrincipalDev = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
-        private static string DirectorioPrincipalProd = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
 
-        private static string DirectorioPrincipal = DirectorioPrincipalDev;
-
-        private static string BdSqlite = DirectorioPrincipalProd + "UFDatabase.db";
+        private static string BdSqlite = Program.DirectorioPrincipalProd + "UFDatabase.db";
 
         public RegistroEmpleado()
         {
@@ -313,13 +309,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "bien.png");
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "mal.png");
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }
@@ -413,7 +409,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
-                pbImageFrame.Image = Image.FromFile(DirectorioPrincipal + "mal.png");
+                pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "mal.png");
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -421,7 +417,7 @@ namespace BiometriaTawaCSharp
                 MessageBox.Show(ex.Message);
             }
             finally {
-                Limpiar();
+                //Limpiar();
             }
         }
 

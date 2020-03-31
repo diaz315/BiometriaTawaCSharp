@@ -59,10 +59,7 @@ namespace Suprema
         public static string Api;
         public static string ApiKey;
 
-
-        //private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar+".."+ Path.DirectorySeparatorChar;
-        private static string DirectorioPrincipal = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
-        private static string BdSqlite = DirectorioPrincipal + "UFDatabase.db";
+        private static string BdSqlite = Program.DirectorioPrincipalProd + "UFDatabase.db";
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menuToolStripMenuItem;
         private ToolStripMenuItem agregarColaboradorToolStripMenuItem;
@@ -84,6 +81,7 @@ namespace Suprema
                 this.InitializeComponent();
                 txtCoordenada.Visible = false;
                 configToolStripMenuItem.Visible = false;
+                dataGridViewEmpleado.ReadOnly = true;
 
                 InitGridEmpleado();
                 LlenarGridEmpleado(ObtenerEmpleado());
@@ -168,7 +166,7 @@ namespace Suprema
         {
             dataColaborador.Columns.Add("N#");
             dataColaborador.Columns.Add("Código");
-            dataColaborador.Columns.Add("Nombres");
+            dataColaborador.Columns.Add("Colaborador");
             dataColaborador.Columns.Add("Tipo_Documento");
             dataColaborador.Columns.Add("Nro_Documento");
         }
@@ -299,33 +297,40 @@ namespace Suprema
         }
         private static bool ExtractTemplate(byte[] Template, out int TemplateSize)
         {
-            m_Scanner.ClearCaptureImageBuffer();
-            //tbxMessage.AppendText("Colocar dedo\r\n");
-            TemplateSize = 0;
-            UFS_STATUS uFS_STATUS;
-            while (true)
+            try
             {
-                uFS_STATUS = m_Scanner.CaptureSingleImage();
-                if (uFS_STATUS != UFS_STATUS.OK)
+                m_Scanner.ClearCaptureImageBuffer();
+                //tbxMessage.AppendText("Colocar dedo\r\n");
+                TemplateSize = 0;
+                UFS_STATUS uFS_STATUS;
+                while (true)
                 {
-                    break;
-                }
-                int num;
-                uFS_STATUS = m_Scanner.ExtractEx(1024, Template, out TemplateSize, out num);
-                if (uFS_STATUS == UFS_STATUS.OK)
-                {
-                    goto IL_A4;
+                    uFS_STATUS = m_Scanner.CaptureSingleImage();
+                    if (uFS_STATUS != UFS_STATUS.OK)
+                    {
+                        break;
+                    }
+                    int num;
+                    uFS_STATUS = m_Scanner.ExtractEx(1024, Template, out TemplateSize, out num);
+                    if (uFS_STATUS == UFS_STATUS.OK)
+                    {
+                        goto IL_A4;
+                    }
+                    UFScanner.GetErrorString(uFS_STATUS, out m_strError);
+                    //tbxMessage.AppendText("UFScanner Extracto: " + m_strError + "\r\n");
                 }
                 UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-                //tbxMessage.AppendText("UFScanner Extracto: " + m_strError + "\r\n");
+                //tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
+                MessageBox.Show(Mensajes.IntentarNuevamente, Mensajes.IdentificaionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            IL_A4:
+                //tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
+                return true;
             }
-            UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-            //tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
-            MessageBox.Show(Mensajes.IntentarNuevamente, Mensajes.IdentificaionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return false;
-        IL_A4:
-            //tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
-            return true;
+            catch {
+                throw new Exception("El dispositivo suprema no se encuentra conectado");
+            }
+            
         }
 
         public static Empleado IniciarEscaneo()
@@ -980,9 +985,6 @@ namespace Suprema
             lvDatabaseList.UseCompatibleStateImageBehavior = false;
             lvDatabaseList.View = System.Windows.Forms.View.Details;
             // 
-            // tbxMessage
-            // 
-            // 
             // btnClear
             // 
             this.btnClear.AccessibleDescription = "";
@@ -1098,6 +1100,7 @@ namespace Suprema
             // 
             // dataGridViewEmpleado
             // 
+            dataGridViewEmpleado.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(236)))), ((int)(((byte)(244)))));
             dataGridViewEmpleado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewEmpleado.Location = new System.Drawing.Point(262, 107);
             dataGridViewEmpleado.Name = "dataGridViewEmpleado";
@@ -1295,7 +1298,13 @@ namespace Suprema
 
         private void eikonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Form_Main(1);
+            try {
+                new Form_Main(1);
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+            
         }
 
         private void supremaToolStripMenuItem_Click(object sender, EventArgs e)

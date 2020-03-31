@@ -26,18 +26,26 @@ namespace UareUSampleCSharp
         /// <param name="e"></param>
         private void Capture_Load(object sender, EventArgs e)
         {
-            // Reset variables
-            pbFingerprint.Image = null;
-
-            if (!_sender.OpenReader())
+            try
             {
+                // Reset variables
+                pbFingerprint.Image = null;
+
+                if (!_sender.OpenReader())
+                {
+                    this.Close();
+                }
+
+                if (!_sender.StartCaptureAsync(this.OnCaptured))
+                {
+                    this.Close();
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message); 
                 this.Close();
             }
-
-            if (!_sender.StartCaptureAsync(this.OnCaptured))
-            {
-                this.Close();
-            }
+            
         }
 
         /// <summary>

@@ -28,61 +28,62 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmbBiometrico = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pbxEikon = new System.Windows.Forms.PictureBox();
+            this.pbxSuprema = new System.Windows.Forms.PictureBox();
+            this.pbxEmpresa = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxEikon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxSuprema)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxEmpresa)).BeginInit();
             this.SuspendLayout();
             // 
-            // cmbBiometrico
+            // pbxEikon
             // 
-            this.cmbBiometrico.FormattingEnabled = true;
-            this.cmbBiometrico.Location = new System.Drawing.Point(25, 36);
-            this.cmbBiometrico.Name = "cmbBiometrico";
-            this.cmbBiometrico.Size = new System.Drawing.Size(121, 21);
-            this.cmbBiometrico.TabIndex = 0;
+            this.pbxEikon.Location = new System.Drawing.Point(25, 65);
+            this.pbxEikon.Name = "pbxEikon";
+            this.pbxEikon.Size = new System.Drawing.Size(281, 232);
+            this.pbxEikon.TabIndex = 3;
+            this.pbxEikon.TabStop = false;
+            this.pbxEikon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxEikon_MouseClick);
             // 
-            // label1
+            // pbxSuprema
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Biometrico:";
+            this.pbxSuprema.Location = new System.Drawing.Point(366, 65);
+            this.pbxSuprema.Name = "pbxSuprema";
+            this.pbxSuprema.Size = new System.Drawing.Size(281, 232);
+            this.pbxSuprema.TabIndex = 4;
+            this.pbxSuprema.TabStop = false;
+            this.pbxSuprema.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxSuprema_MouseClick);
             // 
-            // button1
+            // pbxEmpresa
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(152, 36);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Seleccionar";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.pbxEmpresa.Location = new System.Drawing.Point(507, 317);
+            this.pbxEmpresa.Name = "pbxEmpresa";
+            this.pbxEmpresa.Size = new System.Drawing.Size(207, 148);
+            this.pbxEmpresa.TabIndex = 5;
+            this.pbxEmpresa.TabStop = false;
             // 
             // SeleccionBiometrico
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(236)))), ((int)(((byte)(244)))));
-            this.ClientSize = new System.Drawing.Size(258, 118);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.cmbBiometrico);
+            this.ClientSize = new System.Drawing.Size(726, 477);
+            this.Controls.Add(this.pbxEmpresa);
+            this.Controls.Add(this.pbxSuprema);
+            this.Controls.Add(this.pbxEikon);
             this.ForeColor = System.Drawing.Color.Black;
             this.Name = "SeleccionBiometrico";
             this.Text = "Seleccionar Biometrico";
+            ((System.ComponentModel.ISupportInitialize)(this.pbxEikon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxSuprema)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxEmpresa)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox cmbBiometrico;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pbxEikon;
+        private System.Windows.Forms.PictureBox pbxSuprema;
+        private System.Windows.Forms.PictureBox pbxEmpresa;
     }
 }
