@@ -51,6 +51,8 @@ namespace BiometriaTawaCSharp
 
         public static string IngresarCodigo = "Por favor ingrese un código";
 
+        public static string ColaboradorExistente = "Actualmente el colaborador se encuentra registrado en el sistema.";
+
         public static string ConteoActualizacionHuellas(int cantidad) {
             return "Se han actualizado con éxito las huellas con un total de  " + cantidad + " registros.";
         }

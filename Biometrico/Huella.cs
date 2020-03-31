@@ -439,48 +439,74 @@ namespace Suprema
         }
 
         public static void MarcarHuellaDos() {
-            var listaHuellaBd = ObtenerEmpleadoHuella();
-            var coincidencia = CompararHuellas(listaHuellaBd);
+            try
+            {
+                var coincidencia = ObtenerCoincidenciaEmpleado();
 
-            if (coincidencia.coincidencia >= 0.50)
-            {
-                var Empleado = ObtenerEmpleado(int.Parse(coincidencia.idEmpleado));
-                MessageBox.Show(Empleado[0] + " " + Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
+                if (coincidencia.coincidencia >= 0.50)
+                {
+                    var Empleado = ObtenerEmpleado(int.Parse(coincidencia.idEmpleado));
+                    MessageBox.Show(Empleado[0] + " " + Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
+                }
+                else
+                {
+                    MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
-            else
+            catch (Exception Ex)
             {
-                MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                throw Ex;
             }
+            finally {
+                pbImageFrame.Image = null;
+            }
+        }
+
+        public static Empleado ObtenerCoincidenciaEmpleado() {
+            var listaHuellaBd = ObtenerEmpleadoHuella();
+            return CompararHuellas(listaHuellaBd);
         }
 
         private void MarcarHuella()
         {
-            InicializarBD();
-            form = 1;
-            byte[] array = new byte[1024];
-
-            int template1Size;
-            MessageBox.Show(Mensajes.ColocarIndiceScan, Mensajes.IngresarHuella, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            if (!ExtractTemplate(array, out template1Size))
+            try
             {
-                return;
+                InicializarBD();
+                form = 1;
+                byte[] array = new byte[1024];
+
+                int template1Size;
+                MessageBox.Show(Mensajes.ColocarIndiceScan, Mensajes.IngresarHuella, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (!ExtractTemplate(array, out template1Size))
+                {
+                    return;
+                }
+
+                DrawCapturedImage(m_Scanner);
+                Cursor.Current = Cursors.WaitCursor;
+
+                var coincidencia = ObtenerCoincidenciaEmpleado();
+
+                if (coincidencia.coincidencia >= 0.50)
+                {
+                    var Empleado = ObtenerEmpleado(int.Parse(coincidencia.idEmpleado));
+                    MessageBox.Show(Empleado[0] + " " + Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
+                }
+                else
+                {
+                    MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
-            DrawCapturedImage(m_Scanner);
-            Cursor.Current = Cursors.WaitCursor;
-
-            var listaHuellaBd = ObtenerEmpleadoHuella();
-            var coincidencia = CompararHuellas(listaHuellaBd);
-
-            if (coincidencia.coincidencia >= 0.50)
+            catch (Exception Ex)
             {
-                var Empleado = ObtenerEmpleado(int.Parse(coincidencia.idEmpleado));
-                MessageBox.Show(Empleado[0] + " " + Empleado[1], Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RegistroEmpleado.RegistrarAsistenciaApi(int.Parse(Empleado[2]));
+                throw Ex;
             }
-            else {
-                MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            finally {
+                pbImageFrame.Image = null;
             }
+            
         }
 
         private static List<string> ObtenerEmpleado(int id)
@@ -1315,7 +1341,7 @@ namespace Suprema
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            dataColaborador.DefaultView.RowFilter = $"código = '{FiltroColaborador.Text}'  OR colaborador LIKE '{FiltroColaborador.Text}%' OR Tipo_Documento LIKE '{FiltroColaborador.Text}%' OR Nro_Documento='{FiltroColaborador.Text}'";
+            dataColaborador.DefaultView.RowFilter = $"código LIKE '{FiltroColaborador.Text}%'  OR colaborador LIKE '{FiltroColaborador.Text}%' OR Tipo_Documento LIKE '{FiltroColaborador.Text}%' OR Nro_Documento LIKE '{FiltroColaborador.Text}%'";
             dataGridViewEmpleado.DataSource = dataColaborador;
         }
 

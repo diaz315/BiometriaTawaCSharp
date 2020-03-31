@@ -31,15 +31,16 @@ namespace BiometriaTawaCSharp
                     throw new Exception(Mensajes.IngresarCodigo);
                 }
 
-                if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
+                /*if (ObtenerEmpleado(txtCodEmpleado.Text) > 0)
                 {
                     btnRegistrar.Enabled = false;
-                }
+                }*/
 
                 ConsultarApi();
                 if (ObtenerEmpleado(txtCodEmpleado.Text) > 0) 
                 {
                     btnRegistrar.Enabled = false;
+                    MessageBox.Show(Mensajes.ColaboradorExistente);
                 }
             }
             catch (Exception ex) {

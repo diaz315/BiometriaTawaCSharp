@@ -12,7 +12,8 @@ namespace BiometriaTawaCSharp
     {
         public static string DirectorioPrincipalDev = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar; //Desarrollo
         public static string DirectorioPrincipalProd = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + Path.DirectorySeparatorChar; //Produccion
-        
+        public static double coindicendiaHuella = 0.50;
+
         //Setear el ambiente correspondiente
         public static string DirectorioPrincipal = DirectorioPrincipalDev;
 
