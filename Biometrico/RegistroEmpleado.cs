@@ -390,20 +390,14 @@ namespace BiometriaTawaCSharp
 
         private void pbImageFrame_Click(object sender, EventArgs e)
         {
-            try
+            if (SeleccionBiometrico.Biometrico == 0)
             {
-                if (Resultado != null && Resultado.huella == null)
-                {
-                    Empleado resul = Huella.IniciarEscaneo();
-                    Resultado.huellaByte = resul.huellaByte;
-                    Resultado.pesoHuella = resul.pesoHuella;
-                    if (resul.pesoHuella > 0)
-                    {
-                        btnRegistrar.Enabled = true;
-                    }
-                }
+                BiometricoEikon();
             }
-            catch {}
+            else
+            {
+                BiometricoSuprema();
+            }
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -431,7 +425,7 @@ namespace BiometriaTawaCSharp
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void BiometricoEikon()
         {
             try
             {
@@ -443,6 +437,25 @@ namespace BiometriaTawaCSharp
             {
                 MessageBox.Show(ex.Message);
             }
+        }     
+        
+        private void BiometricoSuprema()
+        {
+            try
+            {
+                if (Resultado != null && Resultado.huella == null)
+                {
+                    Empleado resul = Huella.IniciarEscaneo();
+                    Resultado.huellaByte = resul.huellaByte;
+                    Resultado.pesoHuella = resul.pesoHuella;
+                    if (resul.pesoHuella > 0)
+                    {
+                        btnRegistrar.Enabled = true;
+                    }
+                }
+            }
+            catch { }
         }
+
     }
 }

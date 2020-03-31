@@ -44,7 +44,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.btnEliminarHuella = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(pbImageFrame)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -67,12 +66,14 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
+            this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Location = new System.Drawing.Point(293, 38);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Buscar";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtNombres
@@ -85,23 +86,25 @@
             // 
             // btnRegistrar
             // 
+            this.btnRegistrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
             this.btnRegistrar.Enabled = false;
+            this.btnRegistrar.ForeColor = System.Drawing.Color.White;
             this.btnRegistrar.Location = new System.Drawing.Point(209, 374);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(75, 23);
             this.btnRegistrar.TabIndex = 4;
             this.btnRegistrar.Text = "Registrar";
-            this.btnRegistrar.UseVisualStyleBackColor = true;
+            this.btnRegistrar.UseVisualStyleBackColor = false;
             this.btnRegistrar.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 125);
+            this.label2.Location = new System.Drawing.Point(41, 125);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 13);
+            this.label2.Size = new System.Drawing.Size(67, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Nombres y Apellidos:";
+            this.label2.Text = "Colaborador:";
             // 
             // label3
             // 
@@ -161,7 +164,7 @@
             pbImageFrame.Size = new System.Drawing.Size(94, 101);
             pbImageFrame.TabIndex = 14;
             pbImageFrame.TabStop = false;
-            pbImageFrame.Click += new System.EventHandler(this.pbImageFrame_Click);
+            pbImageFrame.Click += new System.EventHandler(pbImageFrame_Click);
             // 
             // groupBox1
             // 
@@ -175,41 +178,35 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
+            this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Location = new System.Drawing.Point(293, 373);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 24);
             this.button2.TabIndex = 16;
             this.button2.Text = "Cerrar";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // btnEliminarHuella
             // 
+            this.btnEliminarHuella.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
+            this.btnEliminarHuella.ForeColor = System.Drawing.Color.White;
             this.btnEliminarHuella.Location = new System.Drawing.Point(12, 329);
             this.btnEliminarHuella.Name = "btnEliminarHuella";
             this.btnEliminarHuella.Size = new System.Drawing.Size(96, 23);
             this.btnEliminarHuella.TabIndex = 17;
             this.btnEliminarHuella.Text = "Eliminar Huella";
-            this.btnEliminarHuella.UseVisualStyleBackColor = true;
+            this.btnEliminarHuella.UseVisualStyleBackColor = false;
             this.btnEliminarHuella.Visible = false;
             this.btnEliminarHuella.Click += new System.EventHandler(this.btnEliminarHuella_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(293, 251);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 18;
-            this.button3.Text = "Eikon";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // RegistroEmpleado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(236)))), ((int)(((byte)(244)))));
             this.ClientSize = new System.Drawing.Size(416, 409);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.btnEliminarHuella);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
@@ -251,7 +248,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btnEliminarHuella;
-        private System.Windows.Forms.Button button3;
         public static System.Windows.Forms.PictureBox pbImageFrame;
     }
 }

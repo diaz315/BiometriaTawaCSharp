@@ -58,3 +58,4 @@ D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csprojAssemblyReference.cache
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.SeleccionBiometrico.resources

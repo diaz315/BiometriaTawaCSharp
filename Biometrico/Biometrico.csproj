@@ -154,6 +154,12 @@
       <DependentUpon>RegistroEmpleado.cs</DependentUpon>
     </Compile>
     <Compile Include="Empleado.cs" />
+    <Compile Include="SeleccionBiometrico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SeleccionBiometrico.Designer.cs">
+      <DependentUpon>SeleccionBiometrico.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInfoForms.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RegistroEmpleado.resx">
       <DependentUpon>RegistroEmpleado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SeleccionBiometrico.resx">
+      <DependentUpon>SeleccionBiometrico.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserInfoForms.resx">
       <DependentUpon>UserInfoForms.cs</DependentUpon>

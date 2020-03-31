@@ -19,7 +19,8 @@ namespace BiometriaTawaCSharp
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Huella());
+                //Application.Run(new Huella());
+                Application.Run(new SeleccionBiometrico());
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);

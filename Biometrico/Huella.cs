@@ -45,7 +45,6 @@ namespace Suprema
         private Button btnSelectionUpdateUserInfo;
         private Button btnDeleteAll;
         public static ListView lvDatabaseList;
-        public static TextBox tbxMessage;
         private Button btnClear;
         public static PictureBox pbImageFrame;
         private Label label1;
@@ -71,12 +70,11 @@ namespace Suprema
         private ToolStripMenuItem asistenciaToolStripMenuItem;
         private ToolStripMenuItem huellasToolStripMenuItem;
         private AfisEngine Afis = new AfisEngine();
-        private ToolStripMenuItem huelleroToolStripMenuItem;
-        private ToolStripMenuItem eikonToolStripMenuItem;
-        private ToolStripMenuItem supremaToolStripMenuItem;
         private static DataGridView dataGridViewEmpleado;
         private Label label3;
         private TextBox FiltroColaborador;
+        private ToolStripMenuItem marcarToolStripMenuItem;
+        private ToolStripMenuItem configToolStripMenuItem;
         public static string huellaBase64;
 
         public Huella()
@@ -85,6 +83,7 @@ namespace Suprema
             {
                 this.InitializeComponent();
                 txtCoordenada.Visible = false;
+                configToolStripMenuItem.Visible = false;
 
                 InitGridEmpleado();
                 LlenarGridEmpleado(ObtenerEmpleado());
@@ -131,7 +130,7 @@ namespace Suprema
             this.m_Template2 = new byte[1024];
             lvDatabaseList.Columns.Add("N#", 50, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Código", 80, HorizontalAlignment.Left);
-            lvDatabaseList.Columns.Add("Nombres", 170, HorizontalAlignment.Left);
+            lvDatabaseList.Columns.Add("Colaborador", 170, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Tipo. Doc", 80, HorizontalAlignment.Left);
             lvDatabaseList.Columns.Add("Nro. Doc", 80, HorizontalAlignment.Left);
         }
@@ -142,7 +141,7 @@ namespace Suprema
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            tbxMessage.Clear();
+            //tbxMessage.Clear();
         }
         private static void AddRow(int numero, string Nombres, string TipoDoc, string NroDoc, string CodColaborador)
         {
@@ -257,18 +256,18 @@ namespace Suprema
                 if (uFS_STATUS != UFS_STATUS.OK)
                 {
                     UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-                    tbxMessage.AppendText("UFScanner Init: " + m_strError + "\r\n");
+                    //tbxMessage.AppendText("UFScanner Init: " + m_strError + "\r\n");
                     return;
                 }
-                tbxMessage.AppendText("UFScanner Init: OK\r\n");
+                //tbxMessage.AppendText("UFScanner Init: OK\r\n");
                 int count = m_ScannerManager.Scanners.Count;
-                tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
+                //tbxMessage.AppendText("UFScanner GetScannerNumber: " + count + "\r\n");
                 if (count == 0)
                 {
-                    tbxMessage.AppendText("There's no available scanner\r\n");
+                    //tbxMessage.AppendText("There's no available scanner\r\n");
                     return;
                 }
-                tbxMessage.AppendText("First scanner will be used\r\n");
+                //tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
                 UpdateDatabaseList();
             }
@@ -282,12 +281,12 @@ namespace Suprema
             Cursor.Current = this.Cursor;
             if (uFS_STATUS == UFS_STATUS.OK)
             {
-                tbxMessage.AppendText("UFScanner Uninit: OK\r\n");
+                //tbxMessage.AppendText("UFScanner Uninit: OK\r\n");
             }
             else
             {
                 UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-                tbxMessage.AppendText("UFScanner Uninit: " + m_strError + "\r\n");
+               // tbxMessage.AppendText("UFScanner Uninit: " + m_strError + "\r\n");
             }
            
             lvDatabaseList.Items.Clear();
@@ -301,7 +300,7 @@ namespace Suprema
         private static bool ExtractTemplate(byte[] Template, out int TemplateSize)
         {
             m_Scanner.ClearCaptureImageBuffer();
-            tbxMessage.AppendText("Colocar dedo\r\n");
+            //tbxMessage.AppendText("Colocar dedo\r\n");
             TemplateSize = 0;
             UFS_STATUS uFS_STATUS;
             while (true)
@@ -318,14 +317,14 @@ namespace Suprema
                     goto IL_A4;
                 }
                 UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-                tbxMessage.AppendText("UFScanner Extracto: " + m_strError + "\r\n");
+                //tbxMessage.AppendText("UFScanner Extracto: " + m_strError + "\r\n");
             }
             UFScanner.GetErrorString(uFS_STATUS, out m_strError);
-            tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
+            //tbxMessage.AppendText("UFScanner CaptureUnicaImage: " + m_strError + "\r\n");
             MessageBox.Show(Mensajes.IntentarNuevamente, Mensajes.IdentificaionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
             return false;
         IL_A4:
-            tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
+            //tbxMessage.AppendText("UFScanner Extracto: OK\r\n");
             return true;
         }
 
@@ -414,17 +413,17 @@ namespace Suprema
         {
             IniciarEscaneo();
             UserInfoForms userInfoForm = new UserInfoForms(false);
-            tbxMessage.AppendText("Ingrese data de usuario\r\n");
+            //tbxMessage.AppendText("Ingrese data de usuario\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
+                //tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
                 return;
             }
             UFD_STATUS uFD_STATUS = m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, m_Template1, m_Template1Size, null, 0, userInfoForm.Memo);
             if (uFD_STATUS != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-                tbxMessage.AppendText("UFDatabase AgregarData: " + m_strError + "\r\n");
+                //tbxMessage.AppendText("UFDatabase AgregarData: " + m_strError + "\r\n");
             }
             else
             {
@@ -659,65 +658,65 @@ namespace Suprema
             UFD_STATUS uFD_STATUS = m_Database.RemoveAllData();
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
+                //tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
                 UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-            tbxMessage.AppendText("UFDatabase RemoveAllData: " + m_strError + "\r\n");
+            //tbxMessage.AppendText("UFDatabase RemoveAllData: " + m_strError + "\r\n");
         }
         private void btnSelectionDelete_Click(object sender, EventArgs e)
         {
             if (lvDatabaseList.SelectedIndices.Count == 0)
             {
-                tbxMessage.AppendText("Seleccione el registro\r\n");
+                //tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             UFD_STATUS uFD_STATUS = m_Database.RemoveDataBySerial(serial);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
+                //tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
                 UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-            tbxMessage.AppendText("UFDatabase RemoveDataBySerial: " + m_strError + "\r\n");
+            //tbxMessage.AppendText("UFDatabase RemoveDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionUpdateUserInfo_Click(object sender, EventArgs e)
         {
             UserInfoForms userInfoForm = new UserInfoForms(true);
             if (lvDatabaseList.SelectedIndices.Count == 0)
             {
-                tbxMessage.AppendText("Seleccione el registro\r\n");
+                //tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
             userInfoForm.UserID = lvDatabaseList.SelectedItems[0].SubItems[1].Text;
             userInfoForm.FingerIndex = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[2].Text);
             userInfoForm.Memo = lvDatabaseList.SelectedItems[0].SubItems[5].Text;
-            tbxMessage.AppendText("Datos de usuario actualizado\r\n");
-            tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
+            //tbxMessage.AppendText("Datos de usuario actualizado\r\n");
+            //tbxMessage.AppendText("Id usuario y dedo indice no seran actualizados\r\n");
             if (userInfoForm.ShowDialog(this) != DialogResult.OK)
             {
-                tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
+                //tbxMessage.AppendText("El ingreso de datos ha sido cancelado por el usuario\r\n");
                 return;
             }
             UFD_STATUS uFD_STATUS = m_Database.UpdateDataBySerial(serial, null, 0, null, 0, userInfoForm.Memo);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
+                //tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
                 UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-            tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
+            //tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionUpdateTemplate_Click(object sender, EventArgs e)
         {
             if (lvDatabaseList.SelectedIndices.Count == 0)
             {
-                tbxMessage.AppendText("Seleccione el registro\r\n");
+                //tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int serial = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
@@ -729,19 +728,19 @@ namespace Suprema
             UFD_STATUS uFD_STATUS = m_Database.UpdateDataBySerial(serial, m_Template1, m_Template1Size, null, 0, null);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
+                //tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
                 UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-            tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
+            //tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
         }
         private void btnSelectionVerify_Click(object sender, EventArgs e)
         {
             byte[] array = new byte[1024];
             if (lvDatabaseList.SelectedIndices.Count == 0)
             {
-                tbxMessage.AppendText("Seleccione el registro\r\n");
+                //tbxMessage.AppendText("Seleccione el registro\r\n");
                 return;
             }
             int num = Convert.ToInt32(lvDatabaseList.SelectedItems[0].SubItems[0].Text);
@@ -749,7 +748,7 @@ namespace Suprema
             if (dataBySerial != UFD_STATUS.OK)
             {
                 UFDatabase.GetErrorString(dataBySerial, out m_strError);
-                tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
+                //tbxMessage.AppendText("UFDatabase UpdateDataBySerial: " + m_strError + "\r\n");
                 return;
             }
             int template1Size;
@@ -763,21 +762,21 @@ namespace Suprema
             if (uFM_STATUS != UFM_STATUS.OK)
             {
                 UFMatcher.GetErrorString(uFM_STATUS, out m_strError);
-                tbxMessage.AppendText("UFMatcher Verify: " + m_strError + "\r\n");
+               //tbxMessage.AppendText("UFMatcher Verify: " + m_strError + "\r\n");
                 return;
             }
             if (flag)
             {
-                tbxMessage.AppendText("Verificación exitosa (Serial = " + num + ")\r\n");
+                //tbxMessage.AppendText("Verificación exitosa (Serial = " + num + ")\r\n");
                 return;
             }
-            tbxMessage.AppendText("Verificación fallo\r\n");
+            //tbxMessage.AppendText("Verificación fallo\r\n");
         }
         private void bScanTemplateType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (m_Scanner == null)
             {
-                tbxMessage.AppendText("Sin instancias de escaner\r\n");
+                //tbxMessage.AppendText("Sin instancias de escaner\r\n");
                 return;
             }
             switch (this.cbScanTemplateType.SelectedIndex)
@@ -825,7 +824,6 @@ namespace Suprema
             this.btnSelectionDelete = new System.Windows.Forms.Button();
             this.btnDeleteAll = new System.Windows.Forms.Button();
             lvDatabaseList = new System.Windows.Forms.ListView();
-            tbxMessage = new System.Windows.Forms.TextBox();
             this.btnClear = new System.Windows.Forms.Button();
             pbImageFrame = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -833,13 +831,12 @@ namespace Suprema
             txtCoordenada = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.huelleroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eikonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.supremaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.marcarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.agregarColaboradorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sincronizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asistenciaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.huellasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             dataGridViewEmpleado = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.FiltroColaborador = new System.Windows.Forms.TextBox();
@@ -975,7 +972,7 @@ namespace Suprema
             lvDatabaseList.FullRowSelect = true;
             lvDatabaseList.GridLines = true;
             lvDatabaseList.HideSelection = false;
-            lvDatabaseList.Location = new System.Drawing.Point(263, 370);
+            lvDatabaseList.Location = new System.Drawing.Point(262, 400);
             lvDatabaseList.MultiSelect = false;
             lvDatabaseList.Name = "lvDatabaseList";
             lvDatabaseList.Size = new System.Drawing.Size(420, 252);
@@ -985,11 +982,6 @@ namespace Suprema
             // 
             // tbxMessage
             // 
-            tbxMessage.Location = new System.Drawing.Point(18, 628);
-            tbxMessage.Multiline = true;
-            tbxMessage.Name = "tbxMessage";
-            tbxMessage.Size = new System.Drawing.Size(609, 84);
-            tbxMessage.TabIndex = 7;
             // 
             // btnClear
             // 
@@ -1013,7 +1005,7 @@ namespace Suprema
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(521, 11);
+            this.label2.Location = new System.Drawing.Point(259, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(115, 13);
             this.label2.TabIndex = 11;
@@ -1022,7 +1014,7 @@ namespace Suprema
             // groupBox2
             // 
             this.groupBox2.Controls.Add(pbImageFrame);
-            this.groupBox2.Location = new System.Drawing.Point(12, 42);
+            this.groupBox2.Location = new System.Drawing.Point(10, 58);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(219, 252);
             this.groupBox2.TabIndex = 12;
@@ -1031,7 +1023,7 @@ namespace Suprema
             // 
             // txtCoordenada
             // 
-            txtCoordenada.Location = new System.Drawing.Point(18, 306);
+            txtCoordenada.Location = new System.Drawing.Point(16, 322);
             txtCoordenada.Name = "txtCoordenada";
             txtCoordenada.ReadOnly = true;
             txtCoordenada.Size = new System.Drawing.Size(207, 20);
@@ -1039,8 +1031,10 @@ namespace Suprema
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(156)))), ((int)(((byte)(203)))));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuToolStripMenuItem});
+            this.menuToolStripMenuItem,
+            this.configToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(867, 24);
@@ -1050,35 +1044,19 @@ namespace Suprema
             // menuToolStripMenuItem
             // 
             this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.huelleroToolStripMenuItem,
+            this.marcarToolStripMenuItem,
             this.agregarColaboradorToolStripMenuItem,
             this.sincronizarToolStripMenuItem});
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.menuToolStripMenuItem.Text = "Menú";
             // 
-            // huelleroToolStripMenuItem
+            // marcarToolStripMenuItem
             // 
-            this.huelleroToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.eikonToolStripMenuItem,
-            this.supremaToolStripMenuItem});
-            this.huelleroToolStripMenuItem.Name = "huelleroToolStripMenuItem";
-            this.huelleroToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.huelleroToolStripMenuItem.Text = "Marcar";
-            // 
-            // eikonToolStripMenuItem
-            // 
-            this.eikonToolStripMenuItem.Name = "eikonToolStripMenuItem";
-            this.eikonToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.eikonToolStripMenuItem.Text = "Eikon";
-            this.eikonToolStripMenuItem.Click += new System.EventHandler(this.eikonToolStripMenuItem_Click);
-            // 
-            // supremaToolStripMenuItem
-            // 
-            this.supremaToolStripMenuItem.Name = "supremaToolStripMenuItem";
-            this.supremaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.supremaToolStripMenuItem.Text = "Suprema";
-            this.supremaToolStripMenuItem.Click += new System.EventHandler(this.supremaToolStripMenuItem_Click);
+            this.marcarToolStripMenuItem.Name = "marcarToolStripMenuItem";
+            this.marcarToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.marcarToolStripMenuItem.Text = "Marcar";
+            this.marcarToolStripMenuItem.Click += new System.EventHandler(this.marcarToolStripMenuItem_Click);
             // 
             // agregarColaboradorToolStripMenuItem
             // 
@@ -1110,10 +1088,18 @@ namespace Suprema
             this.huellasToolStripMenuItem.Text = "Huellas";
             this.huellasToolStripMenuItem.Click += new System.EventHandler(this.huellasToolStripMenuItem_Click);
             // 
+            // configToolStripMenuItem
+            // 
+            this.configToolStripMenuItem.Enabled = false;
+            this.configToolStripMenuItem.Name = "configToolStripMenuItem";
+            this.configToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.configToolStripMenuItem.Text = "Config.";
+            this.configToolStripMenuItem.Click += new System.EventHandler(this.configToolStripMenuItem_Click);
+            // 
             // dataGridViewEmpleado
             // 
             dataGridViewEmpleado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewEmpleado.Location = new System.Drawing.Point(264, 72);
+            dataGridViewEmpleado.Location = new System.Drawing.Point(262, 107);
             dataGridViewEmpleado.Name = "dataGridViewEmpleado";
             dataGridViewEmpleado.Size = new System.Drawing.Size(554, 254);
             dataGridViewEmpleado.TabIndex = 17;
@@ -1121,7 +1107,7 @@ namespace Suprema
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(261, 42);
+            this.label3.Location = new System.Drawing.Point(259, 80);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(32, 13);
             this.label3.TabIndex = 18;
@@ -1129,7 +1115,7 @@ namespace Suprema
             // 
             // FiltroColaborador
             // 
-            this.FiltroColaborador.Location = new System.Drawing.Point(299, 39);
+            this.FiltroColaborador.Location = new System.Drawing.Point(297, 77);
             this.FiltroColaborador.Name = "FiltroColaborador";
             this.FiltroColaborador.Size = new System.Drawing.Size(519, 20);
             this.FiltroColaborador.TabIndex = 19;
@@ -1139,7 +1125,8 @@ namespace Suprema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(867, 346);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(236)))), ((int)(((byte)(244)))));
+            this.ClientSize = new System.Drawing.Size(867, 383);
             this.Controls.Add(this.FiltroColaborador);
             this.Controls.Add(this.label3);
             this.Controls.Add(dataGridViewEmpleado);
@@ -1147,7 +1134,6 @@ namespace Suprema
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnClear);
-            this.Controls.Add(tbxMessage);
             this.Controls.Add(lvDatabaseList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -1319,8 +1305,23 @@ namespace Suprema
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            dataColaborador.DefaultView.RowFilter = $"código = '{FiltroColaborador.Text}'  OR nombres LIKE '{FiltroColaborador.Text}%' OR Tipo_Documento LIKE '{FiltroColaborador.Text}%' OR Nro_Documento='{FiltroColaborador.Text}'";
+            dataColaborador.DefaultView.RowFilter = $"código = '{FiltroColaborador.Text}'  OR colaborador LIKE '{FiltroColaborador.Text}%' OR Tipo_Documento LIKE '{FiltroColaborador.Text}%' OR Nro_Documento='{FiltroColaborador.Text}'";
             dataGridViewEmpleado.DataSource = dataColaborador;
+        }
+
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new SeleccionBiometrico("Huella").Show();
+        }
+
+        private void marcarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SeleccionBiometrico.Biometrico==0) {
+                new Form_Main(1);
+            }
+            else {
+                MarcarHuella();
+            }
         }
     }
 
