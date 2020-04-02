@@ -17,6 +17,9 @@ namespace BiometriaTawaCSharp
 
         private static string BdSqlite = Program.DirectorioPrincipalProd + "UFDatabase.db";
 
+        private string pathBienImg = Program.DirectorioPrincipal + "Imagen" + Path.DirectorySeparatorChar + "bien.png";
+        private string pathMalImg = Program.DirectorioPrincipal + "Imagen" + Path.DirectorySeparatorChar + "mal.png";
+
         public RegistroEmpleado()
         {
             InitializeComponent();
@@ -310,13 +313,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "Imagen" +Path.DirectorySeparatorChar + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(pathBienImg);
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "Imagen" + Path.DirectorySeparatorChar + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(pathMalImg);
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }
@@ -410,7 +413,7 @@ namespace BiometriaTawaCSharp
                 EliminarHuellaLocal(txtCodEmpleado.Text);
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
-                pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "mal.png");
+                pbImageFrame.Image = Image.FromFile(pathMalImg);
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
