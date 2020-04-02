@@ -87,8 +87,8 @@ namespace Suprema
                 LlenarGridEmpleado(ObtenerEmpleado());
 
                 new CLocation().GetLocationProperty();
-                Api = LeerArchivo(@"C:\Api.txt");
-                ApiKey = LeerArchivo(@"C:\ApiKey.txt");
+                Api = LeerArchivo(@"C:\Key\Api.txt");
+                ApiKey = LeerArchivo(@"C:\Key\ApiKey.txt");
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">All</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>c79140c1-0b4b-44e0-a914-5264c25130ea</ProjectGuid>
+    <ProjectGuid>ff84a6a9-d440-45ea-a568-ad6c1e92bb90</ProjectGuid>
     <OutputType>msi</OutputType>
     <ProjectHome>.</ProjectHome>
     <StartupFile>Instalador.aip</StartupFile>

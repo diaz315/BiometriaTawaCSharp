@@ -215,7 +215,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bien.png" />
+    <Content Include="DLL\x64\SQLite.Interop.dll" />
+    <Content Include="DLL\x86\SQLite.Interop.dll" />
+    <Content Include="Imagen\bien.png" />
     <Content Include="DLL\Biometric.dll" />
     <Content Include="DLL\DPCtlUruNet.dll" />
     <Content Include="DLL\DPCtlXUru.dll" />
@@ -227,11 +229,11 @@
     <Content Include="DLL\UFMatcher.dll" />
     <Content Include="DLL\UFScanner.dll" />
     <Content Include="DLL\UFScanner_IZZIX.dll" />
-    <Content Include="EikonImg.png" />
-    <Content Include="mal.png" />
+    <Content Include="Imagen\EikonImg.png" />
+    <Content Include="Imagen\mal.png" />
     <Content Include="Rom.ico" />
-    <Content Include="RomImg.png" />
-    <Content Include="SupremaImg.png" />
+    <Content Include="Imagen\RomImg.png" />
+    <Content Include="Imagen\SupremaImg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

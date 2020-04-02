@@ -310,13 +310,13 @@ namespace BiometriaTawaCSharp
                         byte[] huellaByte = Convert.FromBase64String(dummyData);
 
                         Resultado.huellaByte = huellaByte;
-                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "bien.png");
+                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "Imagen" +Path.DirectorySeparatorChar + "bien.png");
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
                     }
                     else
                     {
-                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "mal.png");
+                        pbImageFrame.Image = Image.FromFile(Program.DirectorioPrincipal + "Imagen" + Path.DirectorySeparatorChar + "mal.png");
                         btnRegistrar.Enabled = false;
                         btnEliminarHuella.Visible = false;
                     }

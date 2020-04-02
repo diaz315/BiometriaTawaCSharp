@@ -27,16 +27,16 @@ C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 C:\Users\JD\Desktop\Asistencia Tawa Beta\Aplicacion\BiometricoRom\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
-D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\BiometriaTawaCSharp.exe.config
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\BiometriaTawaCSharp.exe
+D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\SourceAFIS.dll
+D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.dll
+D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\BiometriaTawaCSharp.exe.config
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\BiometriaTawaCSharp.pdb
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\Biometric.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\DPUruNet.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\EntityFramework.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\EntityFramework.SqlServer.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\Newtonsoft.Json.dll
-D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\SourceAFIS.dll
-D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.EF6.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\System.Data.SQLite.Linq.dll
 D:\Agile\BiometriaTawaCSharp\Biometrico\bin\Debug\EntityFramework.xml
@@ -51,10 +51,10 @@ D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.Properties
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Suprema.Huella.resources
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UareUSampleCSharp.ReaderSelection.resources
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.RegistroEmpleado.resources
+D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.SeleccionBiometrico.resources
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\UserInfoForms.resources
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csproj.GenerateResource.cache
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csproj.CoreCompileInputs.cache
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\Biometrico.csproj.CopyComplete
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.exe
 D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.pdb
-D:\Agile\BiometriaTawaCSharp\Biometrico\obj\Debug\BiometriaTawaCSharp.SeleccionBiometrico.resources
