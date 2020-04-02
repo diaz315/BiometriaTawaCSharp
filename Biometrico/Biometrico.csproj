@@ -79,17 +79,21 @@
     <Reference Include="SourceAFIS, Version=1.7.0.41358, Culture=neutral, PublicKeyToken=b195ffd29617dfb3, processorArchitecture=MSIL">
       <HintPath>..\packages\SourceAFIS.1.7\lib\net45\SourceAFIS.dll</HintPath>
     </Reference>
-    <Reference Include="Suprema.UFDatabase">
-      <HintPath>..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin\Suprema.UFDatabase.dll</HintPath>
+    <Reference Include="Suprema.UFDatabase, Version=3.5.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Suprema.UFDatabase.dll</HintPath>
     </Reference>
-    <Reference Include="Suprema.UFExtractor">
-      <HintPath>..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin\Suprema.UFExtractor.dll</HintPath>
+    <Reference Include="Suprema.UFExtractor, Version=3.5.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Suprema.UFExtractor.dll</HintPath>
     </Reference>
-    <Reference Include="Suprema.UFMatcher">
-      <HintPath>..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin\Suprema.UFMatcher.dll</HintPath>
+    <Reference Include="Suprema.UFMatcher, Version=3.5.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Suprema.UFMatcher.dll</HintPath>
     </Reference>
-    <Reference Include="Suprema.UFScanner">
-      <HintPath>..\..\..\..\Downloads\VerificacionISetup\SUPREMA\Suprema_PC_SDK_3.5.0[3.5.0.0]_Install\bin\Suprema.UFScanner.dll</HintPath>
+    <Reference Include="Suprema.UFScanner, Version=3.5.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Suprema.UFScanner.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

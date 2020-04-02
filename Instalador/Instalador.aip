@@ -14,10 +14,10 @@
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_EntityFramework.dll" Value="..\packages\EntityFramework.6.4.0\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_Newtonsoft.Json.dll" Value="..\packages\Newtonsoft.Json.12.0.3\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_SourceAFIS.dll" Value="..\Biometrico\DLL"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll" Value="..\Biometrico\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll" Value="..\Biometrico\bin\Debug"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFDatabase.dll" Value="..\Biometrico\DLL"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFExtractor.dll" Value="..\Biometrico\DLL"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFMatcher.dll" Value="..\Biometrico\DLL"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_Suprema.UFScanner.dll" Value="..\Biometrico\DLL"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.EF6.dll" Value="..\packages\System.Data.SQLite.EF6.1.0.112.0\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.Linq.dll" Value="..\packages\System.Data.SQLite.Linq.1.0.112.0\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.Data.SQLite.dll" Value="..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net45"/>
