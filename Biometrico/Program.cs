@@ -15,7 +15,7 @@ namespace BiometriaTawaCSharp
         public static double coindicendiaHuella = 0.50;
 
         //Setear el ambiente correspondiente
-        public static string DirectorioPrincipal = DirectorioPrincipalProd;
+        public static string DirectorioPrincipal = DirectorioPrincipalDev;
 
         /// <summary>
         /// Punto de entrada principal para la aplicación.

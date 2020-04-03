@@ -45,13 +45,13 @@ namespace BiometriaTawaCSharp
 
         public const string CodigoEmpleadoNoEncontrado = "No se ha encontrado el código de empleado";
 
-        public static string MarcacionExitosa = "Marcación éxitosa";
+        public const string MarcacionExitosa = "Marcación éxitosa";
 
-        public static string RegistroExitoso = "Se ha registrado con éxito la información.";
+        public const string RegistroExitoso = "Se ha registrado con éxito la información.";
 
-        public static string IngresarCodigo = "Por favor ingrese un código";
+        public const string IngresarCodigo = "Por favor ingrese un código";
 
-        public static string ColaboradorExistente = "Actualmente el colaborador se encuentra registrado en el sistema.";
+        public const string ColaboradorExistente = "Actualmente el colaborador se encuentra registrado en el sistema.";
 
         public static string ConteoActualizacionHuellas(int cantidad) {
             return "Se han actualizado con éxito las huellas con un total de  " + cantidad + " registros.";

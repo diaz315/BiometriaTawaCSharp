@@ -219,6 +219,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLL\Suprema.UFDatabase.dll" />
+    <Content Include="DLL\Suprema.UFExtractor.dll" />
+    <Content Include="DLL\Suprema.UFMatcher.dll" />
+    <Content Include="DLL\Suprema.UFScanner.dll" />
     <Content Include="DLL\x64\SQLite.Interop.dll" />
     <Content Include="DLL\x86\SQLite.Interop.dll" />
     <Content Include="Imagen\bien.png" />

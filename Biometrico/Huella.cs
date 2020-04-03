@@ -84,7 +84,7 @@ namespace Suprema
                 dataGridViewEmpleado.ReadOnly = true;
 
                 InitGridEmpleado();
-                LlenarGridEmpleado(ObtenerEmpleado());
+                LlenarGridEmpleado();
 
                 new CLocation().GetLocationProperty();
                 Api = LeerArchivo(@"C:\Key\Api.txt");
@@ -141,25 +141,15 @@ namespace Suprema
         {
             //tbxMessage.Clear();
         }
-        private static void AddRow(int numero, string Nombres, string TipoDoc, string NroDoc, string CodColaborador)
+        private static void AddRow(string info, string Nombres, string TipoDoc, string NroDoc, string CodColaborador)
         {
-            ListViewItem  listViewItem = lvDatabaseList.Items.Add(Convert.ToString(numero));
+            ListViewItem  listViewItem = lvDatabaseList.Items.Add(Convert.ToString(info));
             listViewItem.SubItems.Add(CodColaborador);
             listViewItem.SubItems.Add(Nombres);
             listViewItem.SubItems.Add(TipoDoc);
             listViewItem.SubItems.Add(NroDoc);
         }
 
-        public static void UpdateDatabaseList()
-        {
-            var Empleados = ObtenerEmpleado();
-            int i = 1;
-            foreach (Empleado obj in Empleados)
-            {
-                AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
-                i++;
-            }
-        }
 
         private static DataTable dataColaborador = new DataTable();
         public static void InitGridEmpleado()
@@ -171,16 +161,20 @@ namespace Suprema
             dataColaborador.Columns.Add("Nro_Documento");
         }
 
-        public static void LlenarGridEmpleado(List<Empleado> Empleados)
+        public static void LlenarGridEmpleado()
         {
+            var Empleados=ObtenerEmpleado();
             dataGridViewEmpleado.DataSource = null;
             dataColaborador.Clear();
 
             int i = 1;
             foreach (Empleado obj in Empleados)
             {
-                //AddRow(i, obj.nombres, obj.tipoDoc, obj.nroDoc, obj.codigo);
-                dataColaborador.Rows.Add(new object[] { i, obj.codigo,obj.nombres, obj.tipoDoc, obj.nroDoc});
+                string info="";
+                if (obj.pesoHuella == 0)
+                    info = "Sin huella";
+
+                dataColaborador.Rows.Add(new object[] { i+" "+info, obj.codigo,obj.nombres, obj.tipoDoc, obj.nroDoc});
                 i++;
             }
 
@@ -268,7 +262,6 @@ namespace Suprema
                 }
                 //tbxMessage.AppendText("First scanner will be used\r\n");
                 m_Scanner = m_ScannerManager.Scanners[0];
-                UpdateDatabaseList();
             }
 
         }
@@ -381,6 +374,9 @@ namespace Suprema
                 {
                     foreach (Empleado empleado in empleados)
                     {
+                        if (empleado.huella == "")
+                            continue;
+
                         fingers = new Fingerprint { Template = Utilidad<Empleado>.convertStringToByte(empleado.huella) };
                         AfisEngine afis = new AfisEngine();
                         Person probe = new Person(huellaOriginal);
@@ -415,29 +411,6 @@ namespace Suprema
             return resultado;
         }
 
-        private void btnEnroll_Click(object sender, EventArgs e)
-        {
-            IniciarEscaneo();
-            UserInfoForms userInfoForm = new UserInfoForms(false);
-            //tbxMessage.AppendText("Ingrese data de usuario\r\n");
-            if (userInfoForm.ShowDialog(this) != DialogResult.OK)
-            {
-                //tbxMessage.AppendText("El ingreso de data ha sido cancelada por el usuario\r\n");
-                return;
-            }
-            UFD_STATUS uFD_STATUS = m_Database.AddData(userInfoForm.UserID, userInfoForm.FingerIndex, m_Template1, m_Template1Size, null, 0, userInfoForm.Memo);
-            if (uFD_STATUS != UFD_STATUS.OK)
-            {
-                UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
-                //tbxMessage.AppendText("UFDatabase AgregarData: " + m_strError + "\r\n");
-            }
-            else
-            {
-                this.cbScanTemplateType.Enabled = false;
-            }
-            UpdateDatabaseList();
-        }
-
         public static void MarcarHuellaDos() {
             try
             {
@@ -451,7 +424,7 @@ namespace Suprema
                 }
                 else
                 {
-                    MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Mensajes.RegistroNoEncontrado, Mensajes.MarcacionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception Ex)
@@ -496,7 +469,7 @@ namespace Suprema
                 }
                 else
                 {
-                    MessageBox.Show("Registro no encontrado", Mensajes.MarcacionExitosa, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Mensajes.RegistroNoEncontrado, Mensajes.MarcacionFallida, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception Ex)
@@ -556,14 +529,14 @@ namespace Suprema
         {
             using (var conection = Utilidad<Empleado>.ConnSqlite(BdSqlite))
             {
-                var query = "Select Nombres,CodEmpleado,Documento,NroDocumento From Fingerprints where Estado=1";
+                var query = "Select Nombres,CodEmpleado,Documento,NroDocumento,Template1 From Fingerprints where Estado=1";
                 SQLiteCommand command = new SQLiteCommand(query, conection);
                 var reader = command.ExecuteReader();
                 var Empleado = new List<Empleado>();
 
                 while (reader.Read())
                 {
-                    Empleado.Add(new Empleado() { nombres = reader[0].ToString(), codigo = reader[1].ToString(), tipoDoc = reader[2].ToString(), nroDoc = reader[3].ToString() });
+                    Empleado.Add(new Empleado() { nombres = reader[0].ToString(), codigo = reader[1].ToString(), tipoDoc = reader[2].ToString(), nroDoc = reader[3].ToString(), pesoHuella= reader[4].ToString().Length });
                 }
                 
                 reader.Close();
@@ -607,7 +580,7 @@ namespace Suprema
                 ActualizarEmpleadoLocal(obj);
             }
 
-            LlenarGridEmpleado(ObtenerEmpleado());
+            LlenarGridEmpleado();
         }
 
         private static void ActualizarEmpleadoLocal(Empleado obj, bool mensaje = true)
@@ -616,7 +589,7 @@ namespace Suprema
             {
                 SQLiteCommand comm = new SQLiteCommand("UPDATE Fingerprints set Template1=?,Gui_Huella=? where CodEmpleado=?", conection);
 
-                string parImagen;
+                /*string parImagen;
                 if (huellaBase64 == null)
                 {
                     parImagen = obj.huella;
@@ -624,12 +597,12 @@ namespace Suprema
                 else
                 {
                     parImagen = Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template);
-                }
+                }*/
 
-                comm.Parameters.AddWithValue("@Template1", parImagen);
+                comm.Parameters.AddWithValue("@Template1", obj.huella);
                 comm.Parameters.AddWithValue("@Gui_Huella", obj.guiHuella);
                 comm.Parameters.AddWithValue("@CodEmpleado", obj.codigo);
-                int iResultado = comm.ExecuteNonQuery();
+                comm.ExecuteNonQuery();
                 conection.Close();
                 HuellaTomada = 0;
                 huellaBase64 = null;
@@ -650,7 +623,7 @@ namespace Suprema
                 {
                     SQLiteCommand comm = new SQLiteCommand(query, connection);
 
-                    string parImagen;
+                    /*string parImagen;
                     if (huellaBase64 == null)
                     {
                         parImagen = obj.huella;
@@ -658,19 +631,19 @@ namespace Suprema
                     else
                     {
                         parImagen = Utilidad<Empleado>.convertByteToString(Utilidad<Empleado>.ExtraerTemplate(huellaBase64).Template);
-                    }
+                    }*/
 
                     comm.Parameters.AddWithValue("@Nombres", obj.nombres.Trim());
                     comm.Parameters.AddWithValue("@TipoDoc", obj.tipoDoc.Trim());
                     comm.Parameters.AddWithValue("@FingerIndex", obj.dedo);
-                    comm.Parameters.AddWithValue("@Template1", parImagen);
+                    comm.Parameters.AddWithValue("@Template1", obj.huella);
                     comm.Parameters.AddWithValue("@NroDocumento", obj.nroDoc);
                     comm.Parameters.AddWithValue("@CodEmpleado", obj.codigo);
                     comm.Parameters.AddWithValue("@Estado", 1);
                     comm.Parameters.AddWithValue("@EmpleadoId", obj.id);
                     comm.Parameters.AddWithValue("@Gui_Huella", obj.guiHuella);
 
-                    int iResultado = comm.ExecuteNonQuery();
+                    comm.ExecuteNonQuery();
                     connection.Close();
 
                     HuellaTomada = 0;
@@ -691,7 +664,6 @@ namespace Suprema
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 //tbxMessage.AppendText("UFDatabase RemoveAllData: OK\r\n");
-                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -708,8 +680,6 @@ namespace Suprema
             UFD_STATUS uFD_STATUS = m_Database.RemoveDataBySerial(serial);
             if (uFD_STATUS == UFD_STATUS.OK)
             {
-                //tbxMessage.AppendText("UFDatabase RemoveDataBySerial: OK\r\n");
-                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -738,7 +708,6 @@ namespace Suprema
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 //tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
-                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -761,7 +730,6 @@ namespace Suprema
             if (uFD_STATUS == UFD_STATUS.OK)
             {
                 //tbxMessage.AppendText("UFD_UpdateDataBySerial: OK\r\n");
-                UpdateDatabaseList();
                 return;
             }
             UFDatabase.GetErrorString(uFD_STATUS, out m_strError);
@@ -1265,13 +1233,6 @@ namespace Suprema
                         var Emp = Utilidad<Empleado>.GetJson(new Empleado(), Api + Constante.ConsultarApi + empleado.codigo + "&clave=" + ApiKey);
                         if (Emp.guiHuella != empleado.guiHuella && Emp.huella != null && Emp.huella.Length > 0)
                         {
-                            string dummyData = Emp.huella.Trim().Replace(" ", "+");
-                            if (dummyData.Length % 4 > 0)
-                                dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
-                            byte[] huellaByte = Convert.FromBase64String(dummyData);
-
-                            Emp.huellaByte = huellaByte;
-
                             ActualizarEmpleadoLocal(Emp, false);
                             count++;
                         }

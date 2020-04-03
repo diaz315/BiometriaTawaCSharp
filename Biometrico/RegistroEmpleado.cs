@@ -148,7 +148,7 @@ namespace BiometriaTawaCSharp
             return ListEmpleado;
         }
 
-        private string RegistrarHuellaApi()
+        private Empleado RegistrarHuellaApi()
         {
             if(Huella.huellaBase64==null)
             {   
@@ -167,11 +167,13 @@ namespace BiometriaTawaCSharp
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Huella.ApiKey;             
             var empleado=Utilidad<Empleado>.GetJson(new Empleado(), Huella.Api+Constante.RegistrarHuellaApi + param);
-            if (empleado.error == true)
+            if (empleado.error)
             {
                 throw new Exception(empleado.mensaje);
             }
-            return empleado.guiHuella;
+
+            empleado.huella = huella;
+            return empleado;
         }
 
         private string ActualizarHuellaApi(string codEmpleado,string huella)
@@ -356,12 +358,15 @@ namespace BiometriaTawaCSharp
                         {
                             if (Huella.HuellaTomada == 1)
                             {
-                                Resultado.guiHuella=RegistrarHuellaApi();
+                                var resultado=RegistrarHuellaApi();
+
+                                Resultado.guiHuella=resultado.guiHuella;
+                                Resultado.huella=resultado.huella;
                             }
                         }
                         catch (Exception x)
                         {
-                            throw new Exception(x.Message + " "+Mensajes.RegistrosSinSeleccionar);
+                            throw new Exception(x.Message + " " + Mensajes.RegistrosSinSeleccionar);
                         }
 
                         Huella.RegistrarEmpleado(Resultado);
@@ -414,15 +419,14 @@ namespace BiometriaTawaCSharp
                 Resultado.huella = null;
                 btnEliminarHuella.Visible = false;
                 pbImageFrame.Image = Image.FromFile(pathMalImg);
+                Huella.LlenarGridEmpleado();
                 MessageBox.Show(Mensajes.EliminadoHuella, Mensajes.Exito, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            finally {
-                //Limpiar();
-            }
+
         }
 
         private void BiometricoEikon()
