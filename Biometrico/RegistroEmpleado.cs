@@ -162,7 +162,7 @@ namespace BiometriaTawaCSharp
                 Huella.huellaBase64 = Convert.ToBase64String(bytes);
             }
 
-            var huella = Convert.ToBase64String(Utilidad<Empleado>.ExtraerTemplate(Huella.huellaBase64).Template);//Convert.ToBase64String(Resultado.huellaByte);
+            var huella = Convert.ToBase64String(Utilidad<Empleado>.ExtraerTemplate(Huella.huellaBase64).Template);
             var coordenada = Huella.txtCoordenada.Text;
             var terminal = Utilidad<Empleado>.GetIp() + "::" + Utilidad<Empleado>.GetMacAddress().ToString();
             var param = "empleadoId=" + Resultado.id + "&huella=" + huella + "&terminal=" + terminal + "&coordenadas=" + coordenada+"&clave="+Huella.ApiKey;             
@@ -309,12 +309,12 @@ namespace BiometriaTawaCSharp
 
                     if (Resultado.huella != null)
                     {
-                        string dummyData = Resultado.huella.Trim().Replace(" ", "+");
+                        /*string dummyData = Resultado.huella.Trim().Replace(" ", "+");
                         if (dummyData.Length % 4 > 0)
                             dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
-                        byte[] huellaByte = Convert.FromBase64String(dummyData);
+                        byte[] huellaByte = Convert.FromBase64String(dummyData);*/
 
-                        Resultado.huellaByte = huellaByte;
+                        Resultado.huellaByte = new byte[1024];//huellaByte;
                         pbImageFrame.Image = Image.FromFile(pathBienImg);
                         btnRegistrar.Enabled = true;
                         btnEliminarHuella.Visible = true;
