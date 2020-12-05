@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using SourceAFIS.Simple;
 using System;
 using System.Collections.Specialized;
@@ -25,6 +25,41 @@ namespace BiometriaTawaCSharp
             }
 
             return clase;
+        }
+
+        public static String GetTimestamp()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmssffff");
+        }
+
+        public static void CrearTexto(string contenido) {
+            string path = @"c:\key\"+ GetTimestamp()+ ".txt";
+
+            try
+            {
+                // Create the file, or overwrite if the file exists.
+                using (FileStream fs = File.Create(path))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes(contenido);
+                    // Add some information to the file.
+                    fs.Write(info, 0, info.Length);
+                }
+
+                // Open the stream and read it back.
+                using (StreamReader sr = File.OpenText(path))
+                {
+                    string s = "";
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(s);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         public static Fingerprint ExtraerTemplate(string huellaBase64) {
@@ -122,7 +157,11 @@ namespace BiometriaTawaCSharp
         {
             try
             {
-                return Convert.FromBase64String(b64Str);
+                string dummyData = b64Str.Trim().Replace(" ", "+");
+                if (dummyData.Length % 4 > 0)
+                    dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+
+                return Convert.FromBase64String(dummyData);
             }
             catch (Exception Ex)
             {
